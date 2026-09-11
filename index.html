@@ -82,8 +82,11 @@ main{padding-top:12px;padding-bottom:calc(110px + var(--safe-b))}
 .count.confirm{background:var(--grape)}
 .todo-row.confirm{border-left-color:var(--grape)}
 
-.stay{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--t-stay-bg);border-radius:8px;padding:10px 12px;margin-bottom:14px;min-height:48px;cursor:pointer}
+.stay{display:flex;align-items:flex-start;gap:10px;width:100%;text-align:left;background:var(--t-stay-bg);border-radius:8px;padding:10px 12px;margin-bottom:14px;min-height:48px;cursor:pointer}
 .stay .stay-text{flex:1;min-width:0}
+.stay > svg{margin-top:8px;flex:0 0 auto}
+.stay .actions{margin-top:4px}
+.stay .links{margin-top:6px}
 .stay small{display:block;color:var(--ink-2);font-size:12px}
 .stay strong{display:block;font-weight:600;overflow-wrap:anywhere}
 .stay .open{flex:0 0 auto;font-size:13px;padding:6px 10px;border-radius:999px;background:var(--panel);border:1px solid var(--line);text-decoration:none;color:var(--sea)}
@@ -124,6 +127,9 @@ main{padding-top:12px;padding-bottom:calc(110px + var(--safe-b))}
 .meta{margin-top:6px;font-size:12px;color:var(--ink-3)}
 .link-chip.place{color:var(--ink);background:var(--panel)}
 .link-chip.route{background:var(--sea);border-color:var(--sea);color:#fff}
+.leg-arrow{align-self:center;color:var(--ink-3);font-size:14px}
+.places li{flex-wrap:wrap}
+.places .btns{display:flex;gap:6px;flex:0 0 auto}
 .stay .actions{display:flex;gap:6px;flex:0 0 auto}
 .loc-tools{display:flex;gap:16px;margin-top:2px}
 .map-frame{display:block;width:100%;height:calc(100vh - 300px);height:calc(100dvh - 300px);min-height:340px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
@@ -152,6 +158,23 @@ main{padding-top:12px;padding-bottom:calc(110px + var(--safe-b))}
 .hop-text .from{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hop-warn{display:block;color:var(--mikan);font-weight:700}
 .hop-go{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;min-height:34px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--sea);font-size:13px;text-decoration:none}
+
+/* Before the trip */
+.prep-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:6px}
+.prep-card strong{display:block;font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
+.prep-card small{color:var(--ink-2);font-size:13px}
+.bar{height:8px;border-radius:999px;background:var(--bg);overflow:hidden;margin-top:8px}
+.bar span{display:block;height:100%;background:var(--olive);border-radius:999px}
+.prep-row{display:flex;align-items:flex-start;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 12px 8px 8px;margin-bottom:6px}
+.check{flex:0 0 auto;width:40px;height:40px;border-radius:10px;border:2px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;color:transparent;font-size:20px;font-weight:800}
+.check[aria-pressed=true]{background:var(--olive);border-color:var(--olive);color:#fff}
+.prep-row .txt{flex:1;min-width:0;padding-top:8px;cursor:pointer}
+.prep-row .ttl{font-weight:600;overflow-wrap:anywhere}
+.prep-row.done .ttl{text-decoration:line-through;color:var(--ink-3)}
+.prep-row .notes{margin-top:2px}
+.owner{display:inline-block;margin-top:4px;font-size:12px;font-weight:600;color:var(--sea);background:var(--t-stay-bg);border-radius:4px;padding:1px 7px}
+.who-am-i{margin-bottom:12px}
+.who-am-i .seg{flex:1 1 100%}
 
 /* Split bill */
 .split-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:14px}
@@ -242,6 +265,8 @@ select.input{background-image:linear-gradient(45deg,transparent 50%,var(--ink-2)
 .seg button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
 .textbtn{border:0;background:none;color:var(--sea);padding:6px 0;font-size:14px;min-height:34px}
 .textbtn.clear-time{margin:-8px 0 12px}
+.check-line{display:flex;align-items:center;gap:10px;margin:4px 0 6px;font-size:15px}
+.check-line input{width:22px;height:22px;accent-color:var(--sea)}
 .link-row{display:grid;grid-template-columns:1fr 1.4fr 40px;gap:6px;margin-bottom:6px}
 .link-row .icon-btn{width:40px;height:46px;color:var(--ink-3)}
 .files{display:flex;flex-wrap:wrap;gap:8px}
@@ -302,6 +327,7 @@ select.input{background-image:linear-gradient(45deg,transparent 50%,var(--ink-2)
     </div>
     <div class="views" role="tablist">
       <button type="button" role="tab" data-view="day" aria-selected="true">每日行程</button>
+      <button type="button" role="tab" data-view="prep" aria-selected="false">行前注意事項</button>
       <button type="button" role="tab" data-view="todo" aria-selected="false">待處理<span class="count" id="todoCount" hidden></span></button>
       <button type="button" role="tab" data-view="confirm" aria-selected="false">待確認<span class="count confirm" id="confirmCount" hidden></span></button>
       <button type="button" role="tab" data-view="map" aria-selected="false">地圖</button>
@@ -417,6 +443,31 @@ const b64ToUtf8 = (b64) => new TextDecoder().decode(b64ToBytes(b64));
 function normalizeFiles(list) {
   return (Array.isArray(list) ? list : []).filter((f) => f && f.path).map((f) => ({ path: String(f.path), name: String(f.name || ''), type: String(f.type || ''), size: Number(f.size) || 0 }));
 }
+function normalizeLinks(list) {
+  return (Array.isArray(list) ? list : []).filter((l) => l && safeUrl(l.url)).map((l) => ({ label: String(l.label || ''), url: safeUrl(l.url) }));
+}
+function normalizeHotel(raw) {
+  const x = raw && typeof raw === 'object' ? raw : {};
+  const links = normalizeLinks(x.links);
+  if (!links.length && x.url && safeUrl(x.url)) links.push({ label: '', url: safeUrl(x.url) }); // older single-link format
+  return { name: String(x.name || ''), location: String(x.location || ''), links, files: normalizeFiles(x.files) };
+}
+const PREP_SECTIONS = ['證件', '網路與手機', '錢', '行李', '預約', '其他'];
+function normalizePrep(raw) {
+  const x = raw && typeof raw === 'object' ? raw : {};
+  return {
+    items: (Array.isArray(x.items) ? x.items : []).map((it, i) => ({
+      id: String(it.id || uid()),
+      order: Number.isFinite(it.order) ? it.order : i,
+      section: PREP_SECTIONS.includes(it.section) ? it.section : '其他',
+      text: String(it.text || ''),
+      detail: String(it.detail || ''),
+      owner: String(it.owner || ''),
+      done: Boolean(it.done),
+      updatedBy: String(it.updatedBy || ''), updatedAt: String(it.updatedAt || ''),
+    })),
+  };
+}
 function normalizeSplit(raw) {
   const sp = raw && typeof raw === 'object' ? raw : {};
   const people = (Array.isArray(sp.people) ? sp.people : []).filter((p) => p && p.id && p.name).map((p) => ({ id: String(p.id), name: String(p.name) }));
@@ -453,11 +504,12 @@ function normalize(raw) {
     updatedBy: String(d.updatedBy || ''),
     mapUrl: String(d.mapUrl || ''),
     split: normalizeSplit(d.split),
+    prep: normalizePrep(d.prep),
     days: (Array.isArray(d.days) ? d.days : []).map((day, i) => ({
       id: String(day.id || 'd' + (i + 1)),
       date: String(day.date || ''),
       area: String(day.area || ''),
-      hotel: { name: String((day.hotel && day.hotel.name) || ''), url: String((day.hotel && day.hotel.url) || '') },
+      hotel: normalizeHotel(day.hotel),
       items: (Array.isArray(day.items) ? day.items : []).map((it, j) => ({
         id: String(it.id || uid()),
         order: Number.isFinite(it.order) ? it.order : j,
@@ -468,7 +520,8 @@ function normalize(raw) {
         doneFrom: it.booking === 'done' && it.doneFrom === 'confirm' ? 'confirm' : it.booking === 'done' ? 'needed' : '',
         notes: String(it.notes || ''),
         location: String(it.location || ''),
-        links: (Array.isArray(it.links) ? it.links : []).filter((l) => l && safeUrl(l.url)).map((l) => ({ label: String(l.label || ''), url: safeUrl(l.url) })),
+        locationTo: it.type === 'transport' ? String(it.locationTo || '') : '',
+        links: normalizeLinks(it.links),
         files: normalizeFiles(it.files),
         updatedBy: String(it.updatedBy || ''), updatedAt: String(it.updatedAt || ''),
       })),
@@ -502,6 +555,28 @@ const M = {
     if (f) Object.assign(f.item, { booking, doneFrom: booking === 'done' ? (f.item.booking === 'confirm' ? 'confirm' : 'needed') : '', updatedBy: by, updatedAt: at });
   },
   setMap: (url) => (d) => { d.mapUrl = url; },
+  updateHotelDays: (dayIds, areaDayId, area, hotel) => (d) => {
+    d.days.forEach((day) => {
+      if (day.id === areaDayId) day.area = area;
+      if (dayIds.includes(day.id)) day.hotel = clone(hotel);
+    });
+  },
+  upsertPrep: (item) => (d) => {
+    d.prep = normalizePrep(d.prep);
+    d.prep.items = d.prep.items.filter((x) => x.id !== item.id);
+    d.prep.items.push(clone(item));
+  },
+  addPrep: (items) => (d) => {
+    d.prep = normalizePrep(d.prep);
+    const have = new Set(d.prep.items.map((x) => x.text));
+    items.forEach((it) => { if (!have.has(it.text)) d.prep.items.push(clone(it)); });
+  },
+  setPrepDone: (id, done, by, at) => (d) => {
+    d.prep = normalizePrep(d.prep);
+    const it = d.prep.items.find((x) => x.id === id);
+    if (it) Object.assign(it, { done, updatedBy: by, updatedAt: at });
+  },
+  deletePrep: (id) => (d) => { d.prep = normalizePrep(d.prep); d.prep.items = d.prep.items.filter((x) => x.id !== id); },
   splitSettings: (patch) => (d) => { d.split = Object.assign(normalizeSplit(d.split), clone(patch)); },
   upsertExpense: (exp) => (d) => {
     d.split = normalizeSplit(d.split);
@@ -818,9 +893,36 @@ function docTile(f) { return h('span', { class: 'doc' }, h('b', null, fileLabel(
 /* Google Maps links. Without an origin, directions start from where you are. */
 const isMapsLink = (s) => /^https?:\/\/(maps\.app\.goo\.gl|goo\.gl\/maps|(www\.)?google\.[a-z.]+\/maps)/i.test(String(s || '').trim());
 function placeUrl(loc) { return isMapsLink(loc) ? safeUrl(loc) : 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(loc); }
-function routeUrl(loc) { return isMapsLink(loc) ? '' : 'https://www.google.com/maps/dir/?api=1&travelmode=transit&destination=' + encodeURIComponent(loc); }
+function routeUrl(loc) {
+  const c = coordsFromText(String(loc || ''));
+  if (c) return `https://www.google.com/maps/dir/?api=1&travelmode=transit&destination=${c.lat},${c.lng}`;
+  return isMapsLink(loc) ? '' : 'https://www.google.com/maps/dir/?api=1&travelmode=transit&destination=' + encodeURIComponent(loc);
+}
 function placeLabel(loc) { return isMapsLink(loc) ? 'Google 地圖' : loc; }
 function myMapsId(url) { const m = /[?&]mid=([A-Za-z0-9_-]+)/.exec(String(url || '')); return m ? m[1] : ''; }
+/* Directions between two places; '' if either is a short share link we can't read. */
+function legUrl(fromLoc, toLoc, mode = 'transit') {
+  const usable = (l) => l && !(isMapsLink(l) && !coordsFromText(l));
+  if (!usable(fromLoc) || !usable(toLoc)) return '';
+  const ask = (l) => { const c = coordsFromText(l); return c ? `${c.lat},${c.lng}` : l; };
+  return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(ask(fromLoc))}&destination=${encodeURIComponent(ask(toLoc))}&travelmode=${mode}`;
+}
+/* Where a stop starts and ends. Transport stops can have separate departure and arrival places. */
+function stopPoints(it) {
+  const a = it.location, b = it.type === 'transport' ? it.locationTo : '';
+  return { entry: a || b, exit: b || a, both: Boolean(a && b) };
+}
+function itemPlaceChips(it) {
+  const pts = stopPoints(it);
+  if (!pts.both) return locationChips(pts.entry);
+  const stop = (e) => e.stopPropagation();
+  const place = (loc) => h('a', { class: 'link-chip place', href: placeUrl(loc), target: '_blank', rel: 'noopener noreferrer', onclick: stop }, icon('pin'), h('span', null, placeLabel(loc)));
+  const leg = legUrl(it.location, it.locationTo);
+  return [
+    place(it.location), h('span', { class: 'leg-arrow', 'aria-hidden': 'true' }, '→'), place(it.locationTo),
+    leg ? h('a', { class: 'link-chip route', href: leg, target: '_blank', rel: 'noopener noreferrer', onclick: stop, 'aria-label': `從 ${placeLabel(it.location)} 到 ${placeLabel(it.locationTo)} 的路線` }, icon('route'), h('span', null, '路線')) : null,
+  ];
+}
 function locationChips(loc) {
   if (!loc) return null;
   const stop = (e) => e.stopPropagation();
@@ -948,7 +1050,7 @@ function hopEl(from, to, gapMin, quietFail = false) {
     lines = [h('b', null, '用 Google 地圖查路線'), '（估不出時間，地點可以寫得更完整，例如加上車站或地址）'];
   }
 
-  const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(ask(from.loc))}&destination=${encodeURIComponent(ask(to.loc))}&travelmode=${mode}`;
+  const url = legUrl(from.loc, to.loc, mode);
   return h('li', { class: 'hop', 'aria-label': `從 ${from.label} 到 ${to.label} 的交通建議` },
     h('div', { class: 't' }),
     h('div', { class: 'hop-body' },
@@ -959,7 +1061,12 @@ function hopEl(from, to, gapMin, quietFail = false) {
       h('a', { class: 'hop-go', href: url, target: '_blank', rel: 'noopener noreferrer' }, icon('route'), '路線')));
 }
 
-const hotelLoc = (hotel) => (hotel && (coordsFromText(hotel.url || '') ? hotel.url : hotel.name)) || '';
+function hotelLoc(hotel) {
+  if (!hotel) return '';
+  if (hotel.location) return hotel.location;
+  const withCoords = (hotel.links || []).find((l) => coordsFromText(l.url));
+  return withCoords ? withCoords.url : hotel.name;
+}
 
 /* Timeline rows for a day, with travel suggestions between stops that have a place. */
 function timelineRows(idx) {
@@ -970,13 +1077,14 @@ function timelineRows(idx) {
   const lastNight = idx > 0 ? days[idx - 1].hotel : null;
   let prev = lastNight && lastNight.name ? { label: lastNight.name, loc: hotelLoc(lastNight), end: null, isHotel: true } : null;
   items.forEach((it) => {
-    if (it.location) {
+    const pts = stopPoints(it);
+    if (pts.entry) {
       if (prev) {
         const gap = prev.end && it.time ? toMin(it.time) - toMin(prev.end) : null;
-        const hop = hopEl(prev, { label: it.title, loc: it.location }, gap, Boolean(prev.isHotel));
+        const hop = hopEl(prev, { label: it.title, loc: pts.entry }, gap, Boolean(prev.isHotel));
         if (hop) rows.push(hop);
       }
-      prev = { label: it.title, loc: it.location, end: it.end || null };
+      prev = { label: it.title, loc: pts.exit, end: it.end || null };
     }
     rows.push(itemEl(it, costOf(it.id)));
   });
@@ -1049,7 +1157,7 @@ function render() {
   document.title = title;
   document.querySelectorAll('.views button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.view === state.view)));
   const fab = $('addBtn');
-  fab.hidden = !state.data || !(state.view === 'day' || (state.view === 'split' && state.data.split.people.length));
+  fab.hidden = !state.data || !(state.view === 'day' || (state.view === 'prep' && state.data.prep.items.length) || (state.view === 'split' && state.data.split.people.length));
   fab.replaceChildren(icon('plus'), state.view === 'split' ? '記一筆' : '新增');
   const countOf = (st) => (state.data ? state.data.days.reduce((n, d) => n + d.items.filter((i) => i.booking === st).length, 0) : 0);
   [['todoCount', countOf('needed')], ['confirmCount', countOf('confirm')]].forEach(([id, n]) => { $(id).hidden = !n; $(id).textContent = n; });
@@ -1063,7 +1171,7 @@ function render() {
       : h('div', { class: 'empty-day' }, '載入行程中…'));
     return;
   }
-  if (state.view === 'todo') renderStatusList('needed'); else if (state.view === 'confirm') renderStatusList('confirm'); else if (state.view === 'map') renderMap(); else if (state.view === 'split') renderSplit(); else renderDay();
+  if (state.view === 'prep') renderPrep(); else if (state.view === 'todo') renderStatusList('needed'); else if (state.view === 'confirm') renderStatusList('confirm'); else if (state.view === 'map') renderMap(); else if (state.view === 'split') renderSplit(); else renderDay();
 }
 
 function statusLine() {
@@ -1208,14 +1316,16 @@ function renderDay() {
       d.items.some((it) => it.booking === 'needed') ? h('span', { class: 'flag', title: '有待處理的項目' })
         : d.items.some((it) => it.booking === 'confirm') ? h('span', { class: 'flag confirm', title: '有待確認的項目' }) : null)));
 
-  const hotelUrl = safeUrl(day.hotel.url);
+  const hotelRoute = day.hotel.name ? routeUrl(hotelLoc(day.hotel)) : '';
+  const stopTap = (e) => e.stopPropagation();
   const stay = h('div', { class: 'stay', role: 'button', tabindex: '0', onclick: () => openDaySheet(day.id),
-      onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDaySheet(day.id); } } },
+      onkeydown: (e) => { if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openDaySheet(day.id); } } },
     icon('bed'),
-    h('div', { class: 'stay-text' }, h('small', null, '今晚住宿'), h('strong', null, day.hotel.name || '還沒填')),
-    h('div', { class: 'actions' },
-      hotelUrl ? h('a', { class: 'open', href: hotelUrl, target: '_blank', rel: 'noopener noreferrer', onclick: (e) => e.stopPropagation() }, '開啟') : null,
-      day.hotel.name ? h('a', { class: 'open', href: routeUrl(day.hotel.name), target: '_blank', rel: 'noopener noreferrer', onclick: (e) => e.stopPropagation() }, '路線') : null));
+    h('div', { class: 'stay-text' }, h('small', null, '今晚住宿'), h('strong', null, day.hotel.name || '還沒填'),
+      day.hotel.links.length ? h('div', { class: 'links' }, day.hotel.links.map((l) =>
+        h('a', { class: 'link-chip', href: l.url, target: '_blank', rel: 'noopener noreferrer', onclick: stopTap }, icon('link'), h('span', null, linkLabel(l))))) : null,
+      day.hotel.files.length ? h('div', { class: 'thumbs' }, day.hotel.files.map(thumbEl)) : null),
+    hotelRoute ? h('div', { class: 'actions' }, h('a', { class: 'open', href: hotelRoute, target: '_blank', rel: 'noopener noreferrer', onclick: stopTap }, '路線')) : null);
 
   const items = sortedItems(day);
   const list = items.length
@@ -1276,9 +1386,107 @@ function itemEl(it, cost) {
       badge || cost ? h('div', { class: 'badges' }, badge,
         cost ? h('span', { class: 'badge cost' }, `${personName(state.data.split, cost.paidBy)}付 ${money(cost.amount, cost.currency)}`) : null) : null,
       it.notes ? notesEl(it.notes) : null,
-      it.location || it.links.length ? h('div', { class: 'links' }, locationChips(it.location), it.links.map((l) =>
+      stopPoints(it).entry || it.links.length ? h('div', { class: 'links' }, itemPlaceChips(it), it.links.map((l) =>
         h('a', { class: 'link-chip', href: l.url, target: '_blank', rel: 'noopener noreferrer', onclick: (e) => e.stopPropagation() }, icon('link'), h('span', null, linkLabel(l))))) : null,
       it.files.length ? h('div', { class: 'thumbs' }, it.files.map(thumbEl)) : null));
+}
+
+/* Generic checklist for a trip from Taiwan to Japan; added only when someone asks for it. */
+const PREP_SUGGESTIONS = [
+  ['證件', '護照', '確認效期，回國那天也還有效。'],
+  ['證件', '填好 Visit Japan Web', '入境和海關用的 QR code，出發前填好並截圖存在手機裡。'],
+  ['證件', '開車的人：駕照正本和日文譯本', '日文譯本到監理站辦，開車時和護照一起帶。'],
+  ['證件', '旅遊平安險、不便險', ''],
+  ['網路與手機', 'eSIM 或漫遊', '出發前先安裝好，到日本再開啟。'],
+  ['網路與手機', '下載 Google 地圖離線地圖', ''],
+  ['網路與手機', '手機加入交通 IC 卡', 'iPhone 可以在錢包加入 Suica 或 ICOCA。'],
+  ['錢', '換日圓現金', '小店、神社和巴士常常只收現金。'],
+  ['錢', '信用卡開通海外刷卡', ''],
+  ['行李', '常用藥品', ''],
+  ['行李', '好走的鞋', ''],
+  ['行李', '行動電源放隨身行李', '不能放託運行李。'],
+  ['行李', '充電器', '日本插座和台灣一樣是雙平腳，電壓 100V，一般手機充電器可以直接用。'],
+  ['預約', '確認預約都訂好了', '到「待處理」分頁看還有什麼沒完成。'],
+];
+
+function renderPrep() {
+  const items = state.data.prep.items;
+  const people = state.data.split.people;
+  const addSuggestions = () => {
+    const now = new Date().toISOString();
+    const list = PREP_SUGGESTIONS.map(([section, text, detail], i) => ({ id: uid() + i, order: Date.now() + i, section, text, detail, owner: '', done: false, updatedBy: who(), updatedAt: now }));
+    commit(M.addPrep(list), `${who()}：加入行前建議清單`);
+  };
+  if (!items.length) {
+    main.replaceChildren(h('section', { class: 'sign' },
+      h('div', { class: 'sign-face' }, h('div', { class: 'sign-area' }, '行前')),
+      h('div', { class: 'sign-band' }, h('span', { class: 'band-text' }, '出發前要準備和注意的事')),
+      h('div', { class: 'login-body' },
+        h('p', null, '列出出發前要做的事，完成就打勾，大家都看得到進度。可以先加入一份常見的清單，再自己增減。'),
+        h('div', { class: 'stack' },
+          h('button', { class: 'btn primary block', type: 'button', onclick: addSuggestions }, '加入建議清單'),
+          h('button', { class: 'btn ghost block', type: 'button', onclick: () => openPrepSheet(null) }, '自己新增')))));
+    return;
+  }
+  const done = items.filter((x) => x.done).length;
+  const card = h('section', { class: 'prep-card' },
+    h('small', null, '準備進度'),
+    h('strong', null, `${done} / ${items.length}`),
+    h('div', { class: 'bar', role: 'progressbar', 'aria-valuemin': '0', 'aria-valuemax': String(items.length), 'aria-valuenow': String(done) },
+      h('span', { style: `width:${Math.round((done / items.length) * 100)}%` })));
+  const ownerName = (id) => { const p = people.find((x) => x.id === id); return p ? p.name : ''; };
+  const row = (it) => h('div', { class: 'prep-row' + (it.done ? ' done' : '') },
+    h('button', { class: 'check', type: 'button', 'aria-pressed': String(it.done), 'aria-label': it.done ? `取消完成：${it.text}` : `完成：${it.text}`,
+      onclick: () => commit(M.setPrepDone(it.id, !it.done, who(), new Date().toISOString()), `${who()}：${it.done ? '取消完成' : '完成'}「${it.text}」`) }, '✓'),
+    h('div', { class: 'txt', role: 'button', tabindex: '0', onclick: () => openPrepSheet(it.id), onkeydown: (e) => { if (e.key === 'Enter') openPrepSheet(it.id); } },
+      h('div', { class: 'ttl' }, it.text),
+      it.detail ? notesEl(it.detail) : null,
+      ownerName(it.owner) ? h('span', { class: 'owner' }, `${ownerName(it.owner)} 負責`) : null));
+  const sorted = [...items].sort((a, b) => a.order - b.order);
+  const missing = PREP_SUGGESTIONS.some(([, text]) => !items.some((x) => x.text === text));
+  main.replaceChildren(...[
+    card,
+    ...PREP_SECTIONS.map((sec) => {
+      const list = sorted.filter((x) => x.section === sec);
+      return list.length ? [h('div', { class: 'todo-day' }, sec), ...list.map(row)] : [];
+    }),
+    missing ? h('button', { class: 'textbtn', type: 'button', onclick: addSuggestions }, '加入建議清單裡還沒有的項目') : null,
+  ].flat().filter(Boolean));
+}
+
+function openPrepSheet(id) {
+  const people = state.data.split.people;
+  const found = id ? state.data.prep.items.find((x) => x.id === id) : null;
+  const base = found ? clone(found) : { id: uid(), order: Date.now(), section: '其他', text: '', detail: '', owner: '', done: false };
+  let section = base.section, owner = people.some((p) => p.id === base.owner) ? base.owner : '';
+  const err = h('p', { class: 'form-error', hidden: true });
+  const text = input(base.text, 'text', { placeholder: '例如：填好入境資料' });
+  const detail = h('textarea', { class: 'input', rows: '3', placeholder: '說明、網址（可不填）' });
+  detail.value = base.detail;
+  const snapshot = () => JSON.stringify([text.value, detail.value, section, owner]);
+  const initial = snapshot();
+  const body = h('div', null,
+    err,
+    field('事項', text),
+    field('說明', detail),
+    field('分類', seg(PREP_SECTIONS.map((x) => ({ id: x, label: x })), section, (v) => { section = v; })),
+    people.length ? field('誰負責', seg([{ id: '', label: '不指定' }, ...people.map((p) => ({ id: p.id, label: p.name }))], owner, (v) => { owner = v; })) : null,
+    found ? h('button', { class: 'btn danger block', type: 'button', style: 'margin-top:18px', onclick: () => {
+      if (!confirm(`確定刪除「${base.text}」？`)) return;
+      sheet.close(true);
+      commit(M.deletePrep(base.id), `${who()}：刪除行前事項「${base.text}」`);
+    } }, '刪除這一項') : null);
+  const sheet = openSheet(found ? '編輯行前事項' : '新增行前事項', body,
+    [h('button', { class: 'btn ghost', type: 'button', onclick: () => sheet.close() }, '取消'),
+     h('button', { class: 'btn primary', type: 'button', onclick: () => {
+       const t = text.value.trim();
+       if (!t) { err.textContent = '請填事項。'; err.hidden = false; return; }
+       const item = Object.assign({}, base, { text: t, detail: detail.value.trim(), section, owner, updatedBy: who(), updatedAt: new Date().toISOString() });
+       sheet.close(true);
+       commit(M.upsertPrep(item), `${who()}：${found ? '修改' : '新增'}行前事項「${t}」`);
+     } }, found ? '儲存修改' : '加入')],
+    { guard: () => snapshot() === initial || confirm('還沒儲存，確定要關閉嗎？') });
+  if (!found) setTimeout(() => text.focus(), 250);
 }
 
 function renderMap() {
@@ -1301,19 +1509,31 @@ function renderMap() {
     days.map((d, i) => h('button', { class: 'chip-day', type: 'button', 'aria-current': String(i === idx), onclick: () => { state.dayId = d.id; render(); } },
       h('span', { class: 'd' }, md(d.date)), h('span', { class: 'w' }, wd(d.date)))));
 
-  const places = sortedItems(day).filter((it) => it.location);
+  const places = sortedItems(day).filter((it) => stopPoints(it).entry);
   const rows = places.map((it) => {
-    const route = routeUrl(it.location);
+    const pts = stopPoints(it);
+    if (pts.both) {
+      const leg = legUrl(it.location, it.locationTo);
+      return h('li', null,
+        h('div', { class: 'txt' }, h('div', null, it.title), h('small', null, `${it.time ? it.time + '　' : ''}${placeLabel(it.location)} → ${placeLabel(it.locationTo)}`)),
+        h('div', { class: 'btns' },
+          h('a', { class: 'btn small ghost', href: placeUrl(it.location), target: '_blank', rel: 'noopener noreferrer' }, '出發地'),
+          h('a', { class: 'btn small ghost', href: placeUrl(it.locationTo), target: '_blank', rel: 'noopener noreferrer' }, '抵達地'),
+          leg ? h('a', { class: 'btn small primary', href: leg, target: '_blank', rel: 'noopener noreferrer' }, '路線') : null));
+    }
+    const route = routeUrl(pts.entry);
     return h('li', null,
-      h('div', { class: 'txt' }, h('div', null, it.title), h('small', null, `${it.time ? it.time + '　' : ''}${placeLabel(it.location)}`)),
-      h('a', { class: 'btn small ghost', href: placeUrl(it.location), target: '_blank', rel: 'noopener noreferrer' }, '地圖'),
-      route ? h('a', { class: 'btn small primary', href: route, target: '_blank', rel: 'noopener noreferrer' }, '路線') : null);
+      h('div', { class: 'txt' }, h('div', null, it.title), h('small', null, `${it.time ? it.time + '　' : ''}${placeLabel(pts.entry)}`)),
+      h('div', { class: 'btns' },
+        h('a', { class: 'btn small ghost', href: placeUrl(pts.entry), target: '_blank', rel: 'noopener noreferrer' }, '地圖'),
+        route ? h('a', { class: 'btn small primary', href: route, target: '_blank', rel: 'noopener noreferrer' }, '路線') : null));
   });
   if (day.hotel.name) {
     rows.push(h('li', null,
       h('div', { class: 'txt' }, h('div', null, '回飯店'), h('small', null, day.hotel.name)),
-      h('a', { class: 'btn small ghost', href: placeUrl(day.hotel.name), target: '_blank', rel: 'noopener noreferrer' }, '地圖'),
-      h('a', { class: 'btn small primary', href: routeUrl(day.hotel.name), target: '_blank', rel: 'noopener noreferrer' }, '路線')));
+      h('div', { class: 'btns' },
+        h('a', { class: 'btn small ghost', href: placeUrl(hotelLoc(day.hotel)), target: '_blank', rel: 'noopener noreferrer' }, '地圖'),
+        routeUrl(hotelLoc(day.hotel)) ? h('a', { class: 'btn small primary', href: routeUrl(hotelLoc(day.hotel)), target: '_blank', rel: 'noopener noreferrer' }, '路線') : null)));
   }
 
   main.replaceChildren(...[
@@ -1538,7 +1758,7 @@ function attachmentPicker(initial, showError) {
 function openEditor(itemId) {
   const found = itemId ? findItem(state.data, itemId) : null;
   const base = found ? clone(found.item)
-    : { id: uid(), order: Date.now(), time: '', end: '', title: '', type: 'sight', booking: '', notes: '', location: '', links: [], files: [] };
+    : { id: uid(), order: Date.now(), time: '', end: '', title: '', type: 'sight', booking: '', notes: '', location: '', locationTo: '', links: [], files: [] };
   let dayId = found ? found.day.id : state.dayId;
   let type = base.type, booking = base.booking;
   const doneFromFor = (st) => (st !== 'done' ? '' : base.booking === 'done' ? (base.doneFrom || 'needed') : base.booking === 'confirm' ? 'confirm' : 'needed');
@@ -1554,16 +1774,34 @@ function openEditor(itemId) {
   const notes = h('textarea', { class: 'input', rows: '4', placeholder: '班次、票價、注意事項…' });
   notes.value = base.notes;
   const location = input(base.location, 'text', { placeholder: '景點名稱、地址，或 Google 地圖連結', autocapitalize: 'off' });
-
-  const linkList = h('div');
-  const addLinkRow = (l = { label: '', url: '' }) => {
-    const row = h('div', { class: 'link-row' },
-      input(l.label, 'text', { placeholder: '名稱', 'aria-label': '連結名稱' }),
-      input(l.url, 'url', { placeholder: '貼上網址', 'aria-label': '網址', inputmode: 'url', autocapitalize: 'off' }),
-      h('button', { class: 'icon-btn', type: 'button', 'aria-label': '移除連結', onclick: () => row.remove() }, icon('close')));
-    linkList.append(row);
+  const locationTo = input(base.locationTo, 'text', { placeholder: '車站、港口、地址，或 Google 地圖連結', autocapitalize: 'off' });
+  const locLabel = h('label', { class: 'label' });
+  const toField = h('div', { class: 'field' }, h('label', { class: 'label' }, '抵達地'), locationTo);
+  const fillBtn = h('button', { class: 'textbtn', type: 'button' });
+  const locHint = h('span', { class: 'hint' });
+  const updateLocFields = () => {
+    const tr = type === 'transport';
+    locLabel.textContent = tr ? '出發地' : '地點';
+    location.placeholder = tr ? '車站、港口、地址，或 Google 地圖連結' : '景點名稱、地址，或 Google 地圖連結';
+    toField.hidden = !tr;
+    fillBtn.textContent = tr ? '從標題帶入出發地和抵達地' : '用標題當地點';
+    locHint.textContent = tr
+      ? '標題寫成「甲地 → 乙地」的話可以直接帶入。填了兩個地點，行程上會出現這段的「路線」按鈕。'
+      : '填了之後，行程上會出現「地圖」和「路線」按鈕，前後有地點的行程之間也會建議怎麼移動。';
   };
-  base.links.forEach(addLinkRow);
+  /* "客運 縣廳通 → 大街道" → start 縣廳通, arrival 大街道 */
+  const MODE_WORDS = /^(客運|巴士|公車|電車|火車|列車|渡輪|普通渡輪|高速船|高速|船|JR|搭|坐|搭乘|計程車|機場巴士|新幹線|地鐵|纜車|走路|步行)$/i;
+  const cleanPlace = (t) => t.split(/\s+/).filter((w) => w && !MODE_WORDS.test(w)).join(' ');
+  fillBtn.addEventListener('click', () => {
+    const t = title.value.trim();
+    if (type !== 'transport') { location.value = t; return; }
+    const parts = t.split(/\s*(?:→|⇒|➡|->|—>|～|~)\s*/);
+    if (parts.length >= 2) { location.value = cleanPlace(parts[0]); locationTo.value = cleanPlace(parts[parts.length - 1]); }
+    else { locationTo.value = cleanPlace(t); }
+  });
+  updateLocFields();
+
+  const itemLinks = linkRows(base.links);
   const files = attachmentPicker(base.files, fail);
 
   // Cost for this stop, kept as a linked entry in the 花費 tab.
@@ -1604,11 +1842,8 @@ function openEditor(itemId) {
     updateCost();
   }
 
-  const collectLinks = () => [...linkList.children].map((row) => {
-    const [l, u] = row.querySelectorAll('input');
-    return { label: l.value.trim(), url: safeUrl(u.value) };
-  }).filter((l) => l.url);
-  const snapshot = () => JSON.stringify([title.value, dayId, start.value, end.value, type, booking, notes.value, location.value, collectLinks(), files.signature(), costAmount.value, costCur, costPayer, costShares]);
+  const collectLinks = () => itemLinks.values();
+  const snapshot = () => JSON.stringify([title.value, dayId, start.value, end.value, type, booking, notes.value, location.value, locationTo.value, collectLinks(), files.signature(), costAmount.value, costCur, costPayer, costShares]);
   const initial = snapshot();
 
   const body = h('div', null,
@@ -1617,17 +1852,20 @@ function openEditor(itemId) {
     field('日期', daySel),
     h('div', { class: 'row2' }, field('開始', start), field('結束（可不填）', end)),
     h('button', { class: 'textbtn clear-time', type: 'button', onclick: () => { start.value = ''; end.value = ''; } }, '清除時間（改成時間未定）'),
-    field('類型', seg(TYPES, type, (v) => { type = v; })),
+    field('類型', seg(TYPES, type, (v) => { type = v; updateLocFields(); })),
     field('狀態', seg(BOOKINGS, booking, (v) => { booking = v; })),
     costSection,
-    h('div', { class: 'field' }, h('label', { class: 'label' }, '地點'), location,
-      h('div', { class: 'loc-tools' },
-        h('button', { class: 'textbtn', type: 'button', onclick: () => { location.value = title.value.trim(); } }, '用標題當地點'),
-        h('button', { class: 'textbtn', type: 'button', onclick: () => { const v = location.value.trim(); if (v) window.open(placeUrl(v), '_blank', 'noopener'); } }, '在地圖上確認')),
-      h('span', { class: 'hint' }, '填了之後，行程上會出現「地圖」和「路線」按鈕，前後有地點的行程之間也會建議怎麼移動。')),
+    h('div', { class: 'field' }, locLabel, location), toField,
+    h('div', { class: 'field' },
+      h('div', { class: 'loc-tools' }, fillBtn,
+        h('button', { class: 'textbtn', type: 'button', onclick: () => {
+          const a = location.value.trim(), b = type === 'transport' ? locationTo.value.trim() : '';
+          const url = a && b ? legUrl(a, b) : (a || b) ? placeUrl(a || b) : '';
+          if (url) window.open(url, '_blank', 'noopener');
+        } }, '在地圖上確認')),
+      locHint),
     field('備註', notes),
-    h('div', { class: 'field' }, h('span', { class: 'label' }, '連結'), linkList,
-      h('button', { class: 'textbtn', type: 'button', onclick: () => addLinkRow() }, '＋ 新增連結'),
+    h('div', { class: 'field' }, h('span', { class: 'label' }, '連結'), itemLinks.el,
       h('span', { class: 'hint' }, '訂房確認、Google 雲端硬碟裡的票券 PDF、地圖都可以貼。')),
     h('div', { class: 'field' }, h('span', { class: 'label' }, '附件'), files.el,
       h('span', { class: 'hint' }, '截圖、照片、PDF 票券或其他檔案都可以，一次可以選好幾個。照片會自動縮小；單一檔案上限 20 MB。')),
@@ -1666,7 +1904,7 @@ function openEditor(itemId) {
       return;
     }
     const item = Object.assign({}, base, {
-      title: t, time: s, end: e, type, booking, doneFrom: doneFromFor(booking), notes: notes.value.replace(/\s+$/, ''), location: location.value.trim(),
+      title: t, time: s, end: e, type, booking, doneFrom: doneFromFor(booking), notes: notes.value.replace(/\s+$/, ''), location: location.value.trim(), locationTo: type === 'transport' ? locationTo.value.trim() : '',
       links: collectLinks(), files: allFiles,
       updatedBy: who(), updatedAt: new Date().toISOString(),
     });
@@ -1766,8 +2004,11 @@ function renderSplit() {
     return;
   }
   const base = sp.currency;
-  const other = base === 'TWD' ? 'JPY' : 'TWD';
   const sum = splitSummary(sp);
+  // Each device says who is using it, so "who paid" defaults to the right person.
+  const whoAmI = sp.people.some((p) => p.name === cfg.name) ? null : h('div', { class: 'notice who-am-i' },
+    h('p', null, '這台手機是誰在用？選一下，記帳時「誰付的」就會預設是你，修改紀錄也會用這個名字。'),
+    seg(sp.people.map((p) => ({ id: p.name, label: p.name })), '', (name) => { cfg.name = name; saveCfg(); render(); toast(`好的，${name}`); }));
   const expenses = sp.expenses.filter((e) => e.kind === 'expense');
 
   const card = h('section', { class: 'split-card' },
@@ -1818,9 +2059,9 @@ function renderSplit() {
   };
 
   main.replaceChildren(...[
-    card, tools,
+    whoAmI, card, tools,
     ...groups.map((g) => [h('div', { class: 'exp-day' }, dayLabel(g.dayId)), ...g.items.map(row)]),
-  ].flat());
+  ].flat().filter(Boolean));
 }
 
 function peopleSteppers(sp, shares, onChange) {
@@ -1993,10 +2234,7 @@ function openSplitSetup() {
   if (!isAdmin()) return;
   const sp = state.data.split;
   const used = (pid) => sp.expenses.some((e) => e.paidBy === pid || e.to === pid || (e.shares[pid] || 0) > 0);
-  const start = sp.people.length ? sp.people : [
-    { id: 'p' + uid(), name: cfg.name || '姊姊' },
-    { id: 'p' + uid(), name: cfg.name === '妹妹' ? '姊姊' : '妹妹' },
-  ];
+  const start = sp.people.length ? sp.people : ['爸', '媽', '培', '菲'].map((name) => ({ id: 'p' + uid(), name }));
   let currency = sp.currency;
   const errorEl = h('p', { class: 'form-error', hidden: true });
   const list = h('div');
@@ -2035,35 +2273,99 @@ function openSplitSetup() {
      } }, sp.people.length ? '儲存' : '開始記帳')]);
 }
 
+function usedPaths() {
+  const d = state.data, used = new Set();
+  const add = (list) => (list || []).forEach((f) => used.add(f.path));
+  d.days.forEach((day) => { add(day.hotel.files); day.items.forEach((it) => add(it.files)); });
+  d.split.expenses.forEach((e) => add(e.files));
+  return used;
+}
 function cleanupFiles(files) {
   if (!connected() || state.queue.length) return;
-  files.filter((f) => f.path).forEach((f) => GH.remove(f.path, `${who()}：刪除附件`).catch(() => {}));
+  const used = usedPaths();
+  files.filter((f) => f.path && !used.has(f.path)).forEach((f) => GH.remove(f.path, `${who()}：刪除附件`).catch(() => {}));
 }
 
 /* ------------------------------------------------------------------ */
 /*  Day sheet (area + hotel)                                           */
 /* ------------------------------------------------------------------ */
+/* Link rows shared by the itinerary editor and the hotel editor. */
+function linkRows(initial) {
+  const list = h('div');
+  const add = (l = { label: '', url: '' }) => {
+    const row = h('div', { class: 'link-row' },
+      input(l.label, 'text', { placeholder: '名稱', 'aria-label': '連結名稱' }),
+      input(l.url, 'url', { placeholder: '貼上網址', 'aria-label': '網址', inputmode: 'url', autocapitalize: 'off' }),
+      h('button', { class: 'icon-btn', type: 'button', 'aria-label': '移除連結', onclick: () => row.remove() }, icon('close')));
+    list.append(row);
+  };
+  initial.forEach(add);
+  return {
+    el: h('div', null, list, h('button', { class: 'textbtn', type: 'button', onclick: () => add() }, '＋ 新增連結')),
+    values: () => [...list.children].map((row) => {
+      const [l, u] = row.querySelectorAll('input');
+      return { label: l.value.trim(), url: safeUrl(u.value) };
+    }).filter((l) => l.url),
+  };
+}
+
 function openDaySheet(dayId) {
-  const idx = state.data.days.findIndex((d) => d.id === dayId);
-  const day = state.data.days[idx];
+  const days = state.data.days;
+  const idx = days.findIndex((d) => d.id === dayId);
+  const day = days[idx];
   if (!day) return;
+  // The run of consecutive nights at the same hotel (e.g. three nights in a row).
+  const run = [idx];
+  if (day.hotel.name) {
+    for (let i = idx - 1; i >= 0 && days[i].hotel.name === day.hotel.name; i--) run.unshift(i);
+    for (let i = idx + 1; i < days.length && days[i].hotel.name === day.hotel.name; i++) run.push(i);
+  }
+  const errorEl = h('p', { class: 'form-error', hidden: true });
+  const fail = (m) => { errorEl.textContent = m; errorEl.hidden = false; };
   const area = input(day.area, 'text', { placeholder: '例如：市區' });
   const hotel = input(day.hotel.name, 'text', { placeholder: '飯店名稱' });
-  const url = input(day.hotel.url, 'url', { placeholder: '訂房確認或地圖連結', inputmode: 'url', autocapitalize: 'off' });
-  const values = () => JSON.stringify([area.value, hotel.value, url.value]);
+  const where = input(day.hotel.location, 'text', { placeholder: '地址，或 Google 地圖連結', autocapitalize: 'off' });
+  const links = linkRows(day.hotel.links);
+  const files = attachmentPicker(day.hotel.files, fail);
+  const applyAll = h('input', { type: 'checkbox', checked: run.length > 1 });
+  const values = () => JSON.stringify([area.value, hotel.value, where.value, links.values(), files.signature(), applyAll.checked]);
   const initial = values();
+  const runText = run.length > 1 ? `${md(days[run[0]].date)}～${md(days[run[run.length - 1]].date)} 這 ${run.length} 晚一起更新` : '';
+
+  const saveBtn = h('button', { class: 'btn primary', type: 'button' }, '儲存');
   const sheet = openSheet(`${dayName(idx)} ${md(day.date)}（${wd(day.date)}）`,
     h('div', null,
+      errorEl,
       field('地點', area, '顯示在站名牌上。'),
-      field('今晚住宿', hotel),
-      field('住宿連結', url, '訂房確認信、Google 地圖或雲端硬碟連結都可以。貼電腦版 Google 地圖網址（網址裡有 @緯度,經度）的話，也能估算回飯店要多久。')),
-    [h('button', { class: 'btn ghost', type: 'button', onclick: () => sheet.close() }, '取消'),
-     h('button', { class: 'btn primary', type: 'button', onclick: () => {
-       sheet.close(true);
-       commit(M.updateDay(dayId, { area: area.value.trim(), hotel: { name: hotel.value.trim(), url: safeUrl(url.value) } }),
-         `${who()}：修改${dayName(idx)}的地點和住宿`);
-     } }, '儲存')],
+      h('h3', { class: 'section-title' }, '今晚住宿'),
+      field('飯店名稱', hotel),
+      field('飯店地址或地圖連結', where, '用來開「路線」和估算回飯店要多久。沒填的話會用飯店名稱找。'),
+      h('div', { class: 'field' }, h('span', { class: 'label' }, '連結'), links.el,
+        h('span', { class: 'hint' }, '訂房確認、飯店官網、Google 雲端硬碟都可以貼。')),
+      h('div', { class: 'field' }, h('span', { class: 'label' }, '附件'), files.el,
+        h('span', { class: 'hint' }, '訂房確認截圖、收據等。')),
+      run.length > 1 ? h('label', { class: 'check-line' }, applyAll, h('span', null, runText)) : null),
+    [h('button', { class: 'btn ghost', type: 'button', onclick: () => sheet.close() }, '取消'), saveBtn],
     { guard: () => values() === initial || confirm('還沒儲存，確定要關閉嗎？') });
+
+  saveBtn.addEventListener('click', async () => {
+    if (files.hasPending() && !navigator.onLine) return fail('目前沒有網路，附件無法上傳。');
+    saveBtn.disabled = true;
+    let allFiles;
+    try {
+      allFiles = await files.upload('hotel', hotel.value.trim() || '住宿', (i, n) => { saveBtn.textContent = `上傳附件 ${i}/${n}…`; });
+    } catch (err) {
+      fail('附件上傳失敗：' + err.message);
+      saveBtn.disabled = false;
+      saveBtn.textContent = '儲存';
+      return;
+    }
+    const next = { name: hotel.value.trim(), location: where.value.trim(), links: links.values(), files: allFiles };
+    const ids = (applyAll.checked ? run : [idx]).map((i) => days[i].id);
+    sheet.close(true);
+    await commit(M.updateHotelDays(ids, dayId, area.value.trim(), next), `${who()}：修改${dayName(idx)}的地點和住宿`);
+    cleanupFiles(files.removed);
+  });
 }
 
 /* ------------------------------------------------------------------ */
@@ -2129,13 +2431,16 @@ function openSettings() {
     }
   });
 
-  const inviteName = input('妹妹', 'text');
+  const others = state.data.split.people.map((p) => p.name).filter((n) => n !== cfg.name);
+  const defaultInvitee = others[0] || '';
+  const inviteName = input(defaultInvitee, 'text', { placeholder: '對方的名字' });
+  const nameChips = others.length ? h('div', { class: 'loc-tools' }, others.map((n) => h('button', { class: 'textbtn', type: 'button', onclick: () => { inviteName.value = n; inviteOut.hidden = true; } }, n))) : null;
   let inviteAdmin = false;
   const memberHint = '家人用這個連結登入後可以看和編輯行程、記帳，但看不到設定。';
   const inviteHint = h('span', { class: 'hint' }, memberHint);
   const inviteFor = seg([{ id: 'member', label: '家人' }, { id: 'admin', label: '我自己的其他裝置' }], 'member', (v) => {
     inviteAdmin = v === 'admin';
-    inviteName.value = inviteAdmin ? cfg.name : (inviteName.value === cfg.name ? '妹妹' : inviteName.value);
+    inviteName.value = inviteAdmin ? cfg.name : (inviteName.value === cfg.name ? defaultInvitee : inviteName.value);
     inviteOut.hidden = true;
     inviteHint.textContent = inviteAdmin ? '這個連結可以進入設定，只能傳給自己。' : memberHint;
   });
@@ -2196,7 +2501,7 @@ function openSettings() {
     h('h3', { class: 'section-title' }, '邀請家人'),
     h('p', { class: 'lead' }, '產生一個連結傳給對方，她點開、確認名字就能用，不需要 GitHub 帳號。登入一次之後，下次打開就直接進入。'),
     h('div', { class: 'field' }, h('span', { class: 'label' }, '連結給誰用'), inviteFor, inviteHint),
-    field('名字', inviteName),
+    field('名字', inviteName), nameChips,
     h('details', { class: 'advanced' }, h('summary', null, '另外給她一個 token（可以單獨停用）'),
       field('她專用的 token', inviteToken, '不填的話，連結會使用你目前的 token。')),
     h('div', { class: 'stack' }, inviteBtn, inviteStatus.el, inviteOut),
@@ -2225,11 +2530,12 @@ function openSettings() {
 $('settingsBtn').append(icon('gear'));
 
 $('settingsBtn').addEventListener('click', openSettings);
-$('addBtn').addEventListener('click', () => { if (state.view === 'split') openExpenseSheet(null); else openEditor(null); });
+$('addBtn').addEventListener('click', () => { if (state.view === 'split') openExpenseSheet(null); else if (state.view === 'prep') openPrepSheet(null); else openEditor(null); });
 $('syncBtn').addEventListener('click', () => { if (state.queue.length) flush(); else pull(); });
 document.querySelectorAll('.views button').forEach((b) => b.addEventListener('click', () => {
   state.view = b.dataset.view;
   render();
+  b.scrollIntoView({ inline: 'nearest', block: 'nearest' });
   window.scrollTo({ top: 0 });
 }));
 

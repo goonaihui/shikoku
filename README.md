@@ -80,7 +80,7 @@ Once she's set up on her home screen, you can both delete (收回) the invite me
 ## Using it
 
 - **Switch days:** tap the day chips, the arrows on the blue sign, or swipe left/right.
-- **Edit the place name or tonight's hotel:** tap the sign or the hotel row.
+- **Edit the place name or tonight's hotel:** tap the sign or the hotel name. The hotel can have an address or map link (used for 路線 and travel estimates), any number of links (booking confirmation, hotel site), and attachments (booking screenshots, receipts). If you stay several nights in a row at the same hotel, tick 「這 N 晚一起更新」 to update all of them at once.
 - **Add, edit, or delete a stop:** tap **新增**, or tap any stop.
 - **To-dos:** every stop has a 狀態: 無, 待處理, 待確認, or 已完成.
   - **待處理** is for things to do, like booking, buying, or reserving. They're listed in the **待處理** tab; tap **完成** when done.
@@ -89,11 +89,19 @@ Once she's set up on her home screen, you can both delete (收回) the invite me
 - **Attachments:** in the editor, tap **加入附件** and pick as many files as you like at once: screenshots, photos, PDF tickets, or anything else, up to 20 MB each. Photos are shrunk before upload (text stays readable). Tap an attachment to open it: images and PDFs open inside the app, other files can be downloaded. Everything is stored in `attachments/` in the data repo.
 - **Google Drive files:** for anything bigger than 20 MB, add a Drive link under 連結. Set Drive sharing so your sister's Google account can open it.
 - **Places:** fill in **地點** on a stop (a place name, an address, or a pasted Google Maps link). The stop then shows a place button that opens Google Maps and a **路線** button with public-transport directions from where you are. The hotel row has a **路線** button too, for getting back.
+- **Transport stops (交通):** set the type to 交通 and the place field splits into **出發地** and **抵達地**. Tap **從標題帶入出發地和抵達地** to fill them from a title like 「客運 甲地 → 乙地」 (words like 客運 or 渡輪 are dropped). The stop then shows both places and a **路線** button for that leg, and the travel suggestions use the departure place for getting there and the arrival place for what comes next.
 - **Getting between stops:** when two stops in a row both have a 地點, a small row appears between them suggesting how to get there, e.g. 「步行約 12 分鐘」 or 「電車或巴士，粗估 35 分鐘，計程車約 15 分鐘」, with a **路線** button that opens Google Maps for that exact leg. Each day also starts with a suggestion from last night's hotel and ends with one back to tonight's hotel. If the time you left between two stops looks too short, the row shows an orange warning.
   - The times are rough estimates based on distance, not real timetables. Use **路線** for actual trains and buses.
   - To estimate distances, the app looks up each place name once on OpenStreetMap and remembers it on the phone. It understands Traditional Chinese spellings like 道後溫泉. If a place can't be found, write it more fully (add the station or an address). For hotels, pasting a desktop Google Maps link (one containing @latitude,longitude) into the hotel's 連結 field lets it estimate the trip back.
   - You can turn the estimates off in Settings. Only the place names are sent, never dates or other trip details.
 - **地圖 tab:** shows your Google My Maps map. The first time, the admin taps **加入地圖** and pastes the map's share link (in My Maps, set sharing to "anyone with the link can view"). Below the map is the list of that day's places, each with **地圖** and **路線**.
+
+## 行前注意事項 (before the trip)
+
+- A shared checklist of things to prepare. Tap the square to tick an item off; the progress bar shows how much is done.
+- The first time, tap **加入建議清單** for a common list for a trip from Taiwan to Japan (passport, Visit Japan Web, eSIM, cash, medicine, power bank rules, and so on), then add, edit, or delete items with **新增** or by tapping an item.
+- Each item has a category, an optional note (links in it are tappable), and optionally who's responsible.
+- Everyone can edit this list, including members.
 
 ## Admin and members
 
@@ -105,13 +113,14 @@ Once she's set up on her home screen, you can both delete (收回) the invite me
 
 ## Costs (花費)
 
-- **Set up once (admin):** open the **花費** tab → **開始記帳**. List the people who pay (e.g. 姊姊 and 妹妹), pick the currency to settle in, and set the exchange rate (1 日圓 = ? 台幣). Use the rate you actually exchanged at if you like.
+- **Set up once (admin):** open the **花費** tab → **開始記帳**. The list starts with 爸、媽、培、菲; edit it if needed, pick the currency to settle in, and set the exchange rate (1 日圓 = ? 台幣). Use the rate you actually exchanged at if you like.
 - **Cost of a stop:** open any stop in the itinerary and fill in **花費**: the amount (日圓 or 台幣), who paid, and, under 怎麼分, how to split it (everyone shares equally by default). The stop then shows e.g. 「妹妹付 ¥1,000」, and the cost is added to the **花費** tab and the final settlement. Clear the amount to remove it; deleting the stop removes its cost too.
 - **Other costs:** in the **花費** tab, tap **記一筆**. Enter what it was, the amount in 日圓 or 台幣, who paid, and how to split it. Everyone gets 1 share by default. Change the shares to split unevenly: for example, if 姊姊 covers the parents' portion, give 姊姊 more shares; 0 shares means that person isn't part of it. You can attach receipt photos.
 - **See who owes whom:** the top card shows the total, what each person paid and owes, and the fewest payments that settle everything, e.g. 「妹妹 給 姊姊 NT$1,160」.
 - **Settle up:** when someone pays the other back, tap **記錄已給** next to that line (or **記錄還款**). The balances update right away.
 - Costs paid before the trip (flights, hotels) go under **出發前／行程外**.
-- Both of you can add costs at the same time; entries never overwrite each other.
+- **Who's using this phone:** if a phone's name doesn't match anyone in the list, the 花費 tab asks 「這台手機是誰在用？」. Picking a name makes that person the default payer and labels their edits.
+- Several people can add costs at the same time; entries never overwrite each other.
 
 ## Staying logged in
 
@@ -134,6 +143,7 @@ You can also edit `data.json` directly on GitHub. The structure:
 {
   "title": "家族旅行",
   "mapUrl": "",
+  "prep": { "items": [{ "id": "x1", "section": "證件", "text": "護照", "detail": "", "owner": "", "done": false }] },
   "split": {
     "people": [{ "id": "p1", "name": "姊姊" }, { "id": "p2", "name": "妹妹" }],
     "currency": "TWD",
@@ -148,7 +158,7 @@ You can also edit `data.json` directly on GitHub. The structure:
       "id": "d1",
       "date": "2025-01-01",
       "area": "市區",
-      "hotel": { "name": "飯店名稱", "url": "" },
+      "hotel": { "name": "飯店名稱", "location": "", "links": [], "files": [] },
       "items": [
         {
           "id": "i001", "order": 1,
@@ -158,6 +168,7 @@ You can also edit `data.json` directly on GitHub. The structure:
           "booking": "",
           "notes": "",
           "location": "",
+          "locationTo": "",
           "links": [{ "label": "", "url": "https://..." }],
           "files": [{ "path": "attachments/d1/xxxx.pdf", "name": "ticket.pdf", "type": "application/pdf", "size": 182044 }]
         }
