@@ -132,6 +132,37 @@ main{padding-top:12px;padding-bottom:calc(110px + var(--safe-b))}
 .places .btns{display:flex;gap:6px;flex:0 0 auto}
 .stay .actions{display:flex;gap:6px;flex:0 0 auto}
 .loc-tools{display:flex;gap:16px;margin-top:2px}
+.trip-map{position:relative;isolation:isolate;height:calc(100vh - 330px);height:calc(100dvh - 330px);min-height:320px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#E9EFEC}
+.trip-map.picking{cursor:crosshair;outline:3px solid var(--mikan);outline-offset:-3px}
+.map-note{position:absolute;left:10px;right:10px;bottom:10px;z-index:1000;background:rgba(255,255,255,.95);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--ink-2);box-shadow:0 2px 8px rgba(0,0,0,.12);pointer-events:none}
+.map-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 14px}
+.map-bar .spacer{flex:1}
+.pin-wrap{background:none;border:0}
+.pin{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--t-other);color:#fff;font:700 14px/1 var(--font);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.pin.t-transport{background:var(--t-transport)}
+.pin.t-sight{background:var(--t-sight)}
+.pin.t-meal{background:var(--t-meal)}
+.pin.t-stay,.pin.hotel{background:var(--t-stay)}
+.pin.hotel{border-radius:8px}
+.pin.arrival{background:#fff;color:var(--t-transport);border-color:var(--t-transport)}
+.pin.day{background:var(--sea)}
+.popup{min-width:180px;font-family:var(--font)}
+.popup b{display:block;font-size:15px;color:var(--ink)}
+.popup small{display:block;color:var(--ink-2);margin:2px 0 8px;font-size:12px}
+.popup .row{display:flex;gap:6px}
+.popup a.btn{color:#fff}
+.popup a.btn.ghost{color:var(--ink)}
+.leaflet-container{font-family:var(--font)}
+.places .num{flex:0 0 auto;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;background:var(--t-other)}
+.places .num.t-transport{background:var(--t-transport)}
+.places .num.t-sight{background:var(--t-sight)}
+.places .num.t-meal{background:var(--t-meal)}
+.places .num.t-stay,.places .num.hotel{background:var(--t-stay)}
+.places .num.hotel{border-radius:6px}
+.places li .txt{cursor:pointer}
+.todo-section{display:flex;align-items:center;gap:8px;font-size:17px;margin:18px 0 4px}
+.todo-section:first-of-type{margin-top:4px}
+.todo-row .tag{font-size:12px;color:var(--ink-3);margin-left:6px}
 .map-frame{display:block;width:100%;height:calc(100vh - 300px);height:calc(100dvh - 300px);min-height:340px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
 .map-actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}
 .places{list-style:none;margin:0;padding:0}
@@ -168,10 +199,24 @@ main{padding-top:12px;padding-bottom:calc(110px + var(--safe-b))}
 .prep-row{display:flex;align-items:flex-start;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 12px 8px 8px;margin-bottom:6px}
 .check{flex:0 0 auto;width:40px;height:40px;border-radius:10px;border:2px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;color:transparent;font-size:20px;font-weight:800}
 .check[aria-pressed=true]{background:var(--olive);border-color:var(--olive);color:#fff}
+.check.tally{color:var(--ink-2);font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;cursor:default}
+.check.tally[aria-pressed=true]{color:#fff;font-size:20px}
+.who-ticks{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.who-ticks button{display:inline-flex;align-items:center;gap:4px;min-height:34px;padding:4px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:14px;font-weight:600;color:var(--ink)}
+.who-ticks button::before{content:"";width:14px;height:14px;border-radius:4px;border:2px solid var(--line);box-sizing:border-box}
+.who-ticks button[aria-pressed=true]{background:var(--olive);border-color:var(--olive);color:#fff}
+.who-ticks button[aria-pressed=true]::before{content:"✓";border:0;width:auto;height:auto;font-size:13px;line-height:1}
+.who-ticks button.me{box-shadow:0 0 0 2px var(--sea) inset}
 .prep-row .txt{flex:1;min-width:0;padding-top:8px;cursor:pointer}
 .prep-row .ttl{font-weight:600;overflow-wrap:anywhere}
 .prep-row.done .ttl{text-decoration:line-through;color:var(--ink-3)}
 .prep-row .notes{margin-top:2px}
+.prep-sub{display:flex;align-items:center;gap:8px;margin:12px 0 6px 2px}
+.prep-sub .sub-name{border:0;background:none;padding:2px 0;font-size:15px;font-weight:700;color:var(--ink);min-height:30px}
+.prep-sub .sub-count{font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.prep-sub .textbtn{margin-left:auto;min-height:30px;padding:2px 0}
+.prep-row.nested{margin-left:14px}
+.add-sub{display:block;margin:4px 0 0 14px}
 .owner{display:inline-block;margin-top:4px;font-size:12px;font-weight:600;color:var(--sea);background:var(--t-stay-bg);border-radius:4px;padding:1px 7px}
 .who-am-i{margin-bottom:12px}
 
@@ -327,8 +372,7 @@ select.input{background-image:linear-gradient(45deg,transparent 50%,var(--ink-2)
     <div class="views" role="tablist">
       <button type="button" role="tab" data-view="day" aria-selected="true">每日行程</button>
       <button type="button" role="tab" data-view="prep" aria-selected="false">行前注意事項</button>
-      <button type="button" role="tab" data-view="todo" aria-selected="false">待處理<span class="count" id="todoCount" hidden></span></button>
-      <button type="button" role="tab" data-view="confirm" aria-selected="false">待確認<span class="count confirm" id="confirmCount" hidden></span></button>
+      <button type="button" role="tab" data-view="todo" aria-selected="false">待辦<span class="count" id="todoCount" hidden></span></button>
       <button type="button" role="tab" data-view="map" aria-selected="false">地圖</button>
       <button type="button" role="tab" data-view="split" aria-selected="false">花費</button>
     </div>
@@ -453,6 +497,8 @@ function normalizeHotel(raw) {
   return { name: String(x.name || ''), location: String(x.location || ''), links, files: normalizeFiles(x.files) };
 }
 const PREP_SECTIONS = ['證件', '網路與手機', '錢', '行李', '預約', '其他'];
+const LUGGAGE_SUBS = ['衣物', '盥洗用品', '電子產品', '藥品'];
+const SUGGESTED_SUB = { '常用藥品': '藥品', '好走的鞋': '衣物', '行動電源放隨身行李': '電子產品', '充電器': '電子產品' };
 function normalizePrep(raw) {
   const x = raw && typeof raw === 'object' ? raw : {};
   return {
@@ -460,9 +506,11 @@ function normalizePrep(raw) {
       id: String(it.id || uid()),
       order: Number.isFinite(it.order) ? it.order : i,
       section: PREP_SECTIONS.includes(it.section) ? it.section : '其他',
+      sub: it.section === '行李' ? String(it.sub || SUGGESTED_SUB[it.text] || '') : '',
       text: String(it.text || ''),
       detail: String(it.detail || ''),
       owner: String(it.owner || ''),
+      doneBy: it.owner === '*' && Array.isArray(it.doneBy) ? [...new Set(it.doneBy.map(String))] : [],
       done: Boolean(it.done),
       updatedBy: String(it.updatedBy || ''), updatedAt: String(it.updatedAt || ''),
     })),
@@ -571,10 +619,26 @@ const M = {
     const have = new Set(d.prep.items.map((x) => x.text));
     items.forEach((it) => { if (!have.has(it.text)) d.prep.items.push(clone(it)); });
   },
+  /* For items everyone is responsible for: tick or untick one person; done once all have ticked. */
+  togglePrepPerson: (id, personId, by, at) => (d) => {
+    d.prep = normalizePrep(d.prep);
+    const it = d.prep.items.find((x) => x.id === id);
+    if (!it) return;
+    const people = normalizeSplit(d.split).people.length ? normalizeSplit(d.split).people : DEFAULT_PEOPLE;
+    const set = new Set(it.doneBy);
+    if (set.has(personId)) set.delete(personId); else set.add(personId);
+    it.doneBy = people.map((p) => p.id).filter((pid) => set.has(pid));
+    it.done = people.every((p) => set.has(p.id));
+    Object.assign(it, { updatedBy: by, updatedAt: at });
+  },
   setPrepDone: (id, done, by, at) => (d) => {
     d.prep = normalizePrep(d.prep);
     const it = d.prep.items.find((x) => x.id === id);
     if (it) Object.assign(it, { done, updatedBy: by, updatedAt: at });
+  },
+  renamePrepSub: (from, to) => (d) => {
+    d.prep = normalizePrep(d.prep);
+    d.prep.items.forEach((x) => { if (x.section === '行李' && x.sub === from) x.sub = to; });
   },
   deletePrep: (id) => (d) => { d.prep = normalizePrep(d.prep); d.prep.items = d.prep.items.filter((x) => x.id !== id); },
   splitSettings: (patch) => (d) => { d.split = Object.assign(normalizeSplit(d.split), clone(patch)); },
@@ -899,7 +963,7 @@ function routeUrl(loc) {
   if (c) return `https://www.google.com/maps/dir/?api=1&travelmode=transit&destination=${c.lat},${c.lng}`;
   return isMapsLink(loc) ? '' : 'https://www.google.com/maps/dir/?api=1&travelmode=transit&destination=' + encodeURIComponent(loc);
 }
-function placeLabel(loc) { return isMapsLink(loc) ? 'Google 地圖' : loc; }
+function placeLabel(loc) { return isMapsLink(loc) ? 'Google 地圖' : /^\s*-?\d{1,2}\.\d+\s*,\s*-?\d{1,3}\.\d+\s*$/.test(loc) ? '地圖上的位置' : loc; }
 function myMapsId(url) { const m = /[?&]mid=([A-Za-z0-9_-]+)/.exec(String(url || '')); return m ? m[1] : ''; }
 /* Directions between two places; '' if either is a short share link we can't read. */
 function legUrl(fromLoc, toLoc, mode = 'transit') {
@@ -993,7 +1057,7 @@ async function pumpGeo() {
       geoCache[k] = found || { none: true, at: Date.now() };
       store.set(GEO_KEY, JSON.stringify(geoCache));
       clearTimeout(geoRenderTimer);
-      geoRenderTimer = setTimeout(() => { if (state.view === 'day' && connected()) render(); }, 400);
+      geoRenderTimer = setTimeout(() => { if ((state.view === 'day' || state.view === 'map') && connected() && !state.sheets.length) render(); }, 400);
     } catch {
       geoQueue.length = 0; // offline or rate-limited: try again next time the day is shown
       break;
@@ -1161,7 +1225,9 @@ function render() {
   fab.hidden = !state.data || !(state.view === 'day' || (state.view === 'prep' && state.data.prep.items.length) || state.view === 'split');
   fab.replaceChildren(icon('plus'), state.view === 'split' ? '記一筆' : '新增');
   const countOf = (st) => (state.data ? state.data.days.reduce((n, d) => n + d.items.filter((i) => i.booking === st).length, 0) : 0);
-  [['todoCount', countOf('needed')], ['confirmCount', countOf('confirm')]].forEach(([id, n]) => { $(id).hidden = !n; $(id).textContent = n; });
+  const openTodos = countOf('needed') + countOf('confirm');
+  $('todoCount').hidden = !openTodos;
+  $('todoCount').textContent = openTodos;
   $('settingsBtn').hidden = !isAdmin();
 
   if (!state.data) {
@@ -1172,7 +1238,7 @@ function render() {
       : h('div', { class: 'empty-day' }, '載入行程中…'));
     return;
   }
-  if (state.view === 'prep') renderPrep(); else if (state.view === 'todo') renderStatusList('needed'); else if (state.view === 'confirm') renderStatusList('confirm'); else if (state.view === 'map') renderMap(); else if (state.view === 'split') renderSplit(); else renderDay();
+  if (state.view === 'prep') renderPrep(); else if (state.view === 'todo') renderTodos(); else if (state.view === 'map') renderMap(); else if (state.view === 'split') renderSplit(); else renderDay();
 }
 
 function statusLine() {
@@ -1407,7 +1473,7 @@ const PREP_SUGGESTIONS = [
   ['行李', '好走的鞋', ''],
   ['行李', '行動電源放隨身行李', '不能放託運行李。'],
   ['行李', '充電器', '日本插座和台灣一樣是雙平腳，電壓 100V，一般手機充電器可以直接用。'],
-  ['預約', '確認預約都訂好了', '到「待處理」分頁看還有什麼沒完成。'],
+  ['預約', '確認預約都訂好了', '到「待辦」分頁看還有什麼沒完成。'],
 ];
 
 function renderPrep() {
@@ -1415,7 +1481,7 @@ function renderPrep() {
   const people = splitView().people;
   const addSuggestions = () => {
     const now = new Date().toISOString();
-    const list = PREP_SUGGESTIONS.map(([section, text, detail], i) => ({ id: uid() + i, order: Date.now() + i, section, text, detail, owner: '', done: false, updatedBy: who(), updatedAt: now }));
+    const list = PREP_SUGGESTIONS.map(([section, text, detail], i) => ({ id: uid() + i, order: Date.now() + i, section, sub: SUGGESTED_SUB[text] || '', text, detail, owner: '', done: false, updatedBy: who(), updatedAt: now }));
     commit(M.addPrep(list), `${who()}：加入行前建議清單`);
   };
   if (!items.length) {
@@ -1436,42 +1502,100 @@ function renderPrep() {
     h('div', { class: 'bar', role: 'progressbar', 'aria-valuemin': '0', 'aria-valuemax': String(items.length), 'aria-valuenow': String(done) },
       h('span', { style: `width:${Math.round((done / items.length) * 100)}%` })));
   const ownerName = (id) => { const p = people.find((x) => x.id === id); return p ? p.name : ''; };
-  const row = (it) => h('div', { class: 'prep-row' + (it.done ? ' done' : '') },
-    h('button', { class: 'check', type: 'button', 'aria-pressed': String(it.done), 'aria-label': it.done ? `取消完成：${it.text}` : `完成：${it.text}`,
-      onclick: () => commit(M.setPrepDone(it.id, !it.done, who(), new Date().toISOString()), `${who()}：${it.done ? '取消完成' : '完成'}「${it.text}」`) }, '✓'),
-    h('div', { class: 'txt', role: 'button', tabindex: '0', onclick: () => openPrepSheet(it.id), onkeydown: (e) => { if (e.key === 'Enter') openPrepSheet(it.id); } },
-      h('div', { class: 'ttl' }, it.text),
-      it.detail ? notesEl(it.detail) : null,
-      ownerName(it.owner) ? h('span', { class: 'owner' }, `${ownerName(it.owner)} 負責`) : null));
+  const me = meId(splitView());
+  const row = (it, nested = false) => {
+    const everyone = it.owner === '*';
+    const ticked = people.filter((p) => it.doneBy.includes(p.id)).length;
+    const box = everyone
+      ? h('span', { class: 'check tally', 'aria-pressed': String(it.done), 'aria-label': `${ticked} / ${people.length} 人完成` }, it.done ? '✓' : `${ticked}/${people.length}`)
+      : h('button', { class: 'check', type: 'button', 'aria-pressed': String(it.done), 'aria-label': it.done ? `取消完成：${it.text}` : `完成：${it.text}`,
+          onclick: () => commit(M.setPrepDone(it.id, !it.done, who(), new Date().toISOString()), `${who()}：${it.done ? '取消完成' : '完成'}「${it.text}」`) }, '✓');
+    return h('div', { class: 'prep-row' + (it.done ? ' done' : '') + (nested ? ' nested' : '') },
+      box,
+      h('div', { class: 'txt', role: 'button', tabindex: '0', onclick: () => openPrepSheet(it.id), onkeydown: (e) => { if (e.target === e.currentTarget && e.key === 'Enter') openPrepSheet(it.id); } },
+        h('div', { class: 'ttl' }, it.text),
+        it.detail ? notesEl(it.detail) : null,
+        everyone
+          ? h('div', { class: 'who-ticks', role: 'group', 'aria-label': '每個人各自打勾' }, people.map((p) => {
+              const on = it.doneBy.includes(p.id);
+              return h('button', { class: p.id === me ? 'me' : null, type: 'button', 'aria-pressed': String(on), onclick: (e) => {
+                e.stopPropagation();
+                commit(M.togglePrepPerson(it.id, p.id, who(), new Date().toISOString()), `${who()}：${p.name}${on ? '取消' : '完成'}「${it.text}」`);
+              } }, p.name);
+            }))
+          : ownerName(it.owner) ? h('span', { class: 'owner' }, `${ownerName(it.owner)} 負責`) : null));
+  };
   const sorted = [...items].sort((a, b) => a.order - b.order);
   const missing = PREP_SUGGESTIONS.some(([, text]) => !items.some((x) => x.text === text));
   main.replaceChildren(...[
     card,
     ...PREP_SECTIONS.map((sec) => {
       const list = sorted.filter((x) => x.section === sec);
-      return list.length ? [h('div', { class: 'todo-day' }, sec), ...list.map(row)] : [];
+      if (!list.length) return [];
+      if (sec !== '行李') return [h('div', { class: 'todo-day' }, sec), ...list.map((it) => row(it))];
+      return [h('div', { class: 'todo-day' }, sec), ...luggageGroups(list, row)];
     }),
     missing ? h('button', { class: 'textbtn', type: 'button', onclick: addSuggestions }, '加入建議清單裡還沒有的項目') : null,
   ].flat().filter(Boolean));
 }
 
-function openPrepSheet(id) {
+/* 行李 is split into small groups such as 衣物 or 電子產品. */
+function luggageSubsInUse(list) {
+  const custom = [];
+  list.forEach((x) => { if (x.sub && !LUGGAGE_SUBS.includes(x.sub) && !custom.includes(x.sub)) custom.push(x.sub); });
+  return [...LUGGAGE_SUBS.filter((sub) => list.some((x) => x.sub === sub)), ...custom];
+}
+function luggageGroups(list, row) {
+  const subs = luggageSubsInUse(list);
+  if (list.some((x) => !x.sub)) subs.push('');
+  const out = [];
+  subs.forEach((sub) => {
+    const items = list.filter((x) => x.sub === sub);
+    const done = items.filter((x) => x.done).length;
+    out.push(h('div', { class: 'prep-sub' },
+      sub
+        ? h('button', { class: 'sub-name', type: 'button', title: '重新命名', onclick: () => {
+            const next = (prompt('小分類名稱', sub) || '').trim();
+            if (next && next !== sub) commit(M.renamePrepSub(sub, next), `${who()}：把行李小分類「${sub}」改成「${next}」`);
+          } }, sub)
+        : h('span', { class: 'sub-name' }, '未分類'),
+      h('span', { class: 'sub-count' }, `${done}/${items.length}`),
+      h('button', { class: 'textbtn', type: 'button', onclick: () => openPrepSheet(null, { section: '行李', sub }) }, '＋ 新增')));
+    items.forEach((it) => out.push(row(it, true)));
+  });
+  out.push(h('button', { class: 'textbtn add-sub', type: 'button', onclick: () => openPrepSheet(null, { section: '行李', newSub: true }) }, '＋ 新增小分類'));
+  return out;
+}
+
+function openPrepSheet(id, preset = {}) {
   const people = splitView().people;
   const found = id ? state.data.prep.items.find((x) => x.id === id) : null;
-  const base = found ? clone(found) : { id: uid(), order: Date.now(), section: '其他', text: '', detail: '', owner: '', done: false };
-  let section = base.section, owner = people.some((p) => p.id === base.owner) ? base.owner : '';
+  const base = found ? clone(found) : { id: uid(), order: Date.now(), section: preset.section || '其他', sub: preset.sub || '', text: '', detail: '', owner: '', done: false };
+  let section = base.section, owner = base.owner === '*' || people.some((p) => p.id === base.owner) ? base.owner : '';
   const err = h('p', { class: 'form-error', hidden: true });
   const text = input(base.text, 'text', { placeholder: '例如：填好入境資料' });
   const detail = h('textarea', { class: 'input', rows: '3', placeholder: '說明、網址（可不填）' });
   detail.value = base.detail;
-  const snapshot = () => JSON.stringify([text.value, detail.value, section, owner]);
+  // Luggage subcategory: pick one of the chips or type a new name.
+  const subInput = input(base.sub, 'text', { placeholder: '或輸入新的小分類' });
+  const subChoices = [...new Set([...LUGGAGE_SUBS, ...luggageSubsInUse(state.data.prep.items.filter((x) => x.section === '行李'))])];
+  const subChips = h('div', { class: 'seg' });
+  const drawSubChips = () => subChips.replaceChildren(
+    h('button', { type: 'button', 'aria-pressed': String(!subInput.value.trim()), onclick: () => { subInput.value = ''; drawSubChips(); } }, '不分'),
+    ...subChoices.map((name) => h('button', { type: 'button', 'aria-pressed': String(subInput.value.trim() === name), onclick: () => { subInput.value = name; drawSubChips(); } }, name)));
+  subInput.addEventListener('input', drawSubChips);
+  drawSubChips();
+  const subField = h('div', { class: 'field', hidden: section !== '行李' }, h('span', { class: 'label' }, '小分類'), subChips, h('div', { style: 'margin-top:8px' }, subInput));
+  const snapshot = () => JSON.stringify([text.value, detail.value, section, owner, subInput.value]);
   const initial = snapshot();
   const body = h('div', null,
     err,
     field('事項', text),
     field('說明', detail),
-    field('分類', seg(PREP_SECTIONS.map((x) => ({ id: x, label: x })), section, (v) => { section = v; })),
-    people.length ? field('誰負責', seg([{ id: '', label: '不指定' }, ...people.map((p) => ({ id: p.id, label: p.name }))], owner, (v) => { owner = v; })) : null,
+    field('分類', seg(PREP_SECTIONS.map((x) => ({ id: x, label: x })), section, (v) => { section = v; subField.hidden = v !== '行李'; })),
+    subField,
+    people.length ? field('誰負責', seg([{ id: '', label: '不指定' }, { id: '*', label: '所有人' }, ...people.map((p) => ({ id: p.id, label: p.name }))], owner, (v) => { owner = v; }),
+      '選「所有人」的話，每個人要各自打勾，全部勾完才算完成。') : null,
     found ? h('button', { class: 'btn danger block', type: 'button', style: 'margin-top:18px', onclick: () => {
       if (!confirm(`確定刪除「${base.text}」？`)) return;
       sheet.close(true);
@@ -1482,68 +1606,196 @@ function openPrepSheet(id) {
      h('button', { class: 'btn primary', type: 'button', onclick: () => {
        const t = text.value.trim();
        if (!t) { err.textContent = '請填事項。'; err.hidden = false; return; }
-       const item = Object.assign({}, base, { text: t, detail: detail.value.trim(), section, owner, updatedBy: who(), updatedAt: new Date().toISOString() });
+       const item = Object.assign({}, base, { text: t, detail: detail.value.trim(), section, sub: section === '行李' ? subInput.value.trim() : '', owner, updatedBy: who(), updatedAt: new Date().toISOString() });
+       if (owner === '*' && base.owner !== '*') { item.doneBy = base.done ? people.map((p) => p.id) : []; item.done = Boolean(base.done); }
+       if (owner === '*') item.done = people.every((p) => item.doneBy.includes(p.id));
+       if (owner !== '*') item.doneBy = [];
        sheet.close(true);
        commit(M.upsertPrep(item), `${who()}：${found ? '修改' : '新增'}行前事項「${t}」`);
      } }, found ? '儲存修改' : '加入')],
     { guard: () => snapshot() === initial || confirm('還沒儲存，確定要關閉嗎？') });
-  if (!found) setTimeout(() => text.focus(), 250);
+  if (!found) setTimeout(() => (preset.newSub ? subInput : text).focus(), 250);
+}
+
+/* ---- Map tab: the itinerary's places on an interactive map ---- */
+const LEAFLET = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/';
+let leafletPromise = null;
+function loadLeaflet() {
+  if (!leafletPromise) {
+    leafletPromise = new Promise((resolve, reject) => {
+      document.head.append(h('link', { rel: 'stylesheet', href: LEAFLET + 'leaflet.css' }));
+      const sc = document.createElement('script');
+      sc.src = LEAFLET + 'leaflet.js';
+      sc.onload = () => resolve(window.L);
+      sc.onerror = () => { leafletPromise = null; reject(new Error('地圖載入失敗，請檢查網路。')); };
+      document.head.append(sc);
+    });
+  }
+  return leafletPromise;
+}
+const mapUI = { el: null, map: null, layer: null, markers: new Map(), fitKey: '', pick: false };
+
+/* The places of one day in visiting order: last night's hotel, each stop (and a transport stop's arrival), tonight's hotel. */
+function dayPlaces(dayIdx) {
+  const days = state.data.days, day = days[dayIdx], out = [];
+  const lastNight = dayIdx > 0 ? days[dayIdx - 1].hotel : null;
+  if (lastNight && lastNight.name) out.push({ key: `h${dayIdx}a`, kind: 'hotel', label: lastNight.name, sub: '昨晚住宿', loc: hotelLoc(lastNight), dayIdx });
+  let n = 0;
+  sortedItems(day).forEach((it) => {
+    const pts = stopPoints(it);
+    if (!pts.entry) return;
+    n += 1;
+    out.push({ key: `i${it.id}`, kind: 'stop', n, it, label: it.title, sub: `${it.time ? it.time + '　' : ''}${placeLabel(pts.entry)}`, loc: pts.entry, dayIdx });
+    if (pts.both) out.push({ key: `i${it.id}b`, kind: 'arrival', n, it, label: it.title, sub: `抵達 ${placeLabel(it.locationTo)}`, loc: it.locationTo, dayIdx });
+  });
+  if (day.hotel.name) {
+    const same = lastNight && lastNight.name === day.hotel.name;
+    out.push({ key: `h${dayIdx}b`, kind: 'hotel', label: day.hotel.name, sub: '今晚住宿', loc: hotelLoc(day.hotel), dayIdx, hidden: same });
+  }
+  out.forEach((p) => { p.ll = geoOf(p.loc); });
+  return out;
+}
+
+function popupEl(p) {
+  const route = p.kind === 'arrival' ? legUrl(p.it.location, p.it.locationTo) : routeUrl(p.loc);
+  return h('div', { class: 'popup' },
+    h('b', null, p.label),
+    h('small', null, `${state.mapAll ? dayName(p.dayIdx) + '　' : ''}${p.sub}`),
+    h('div', { class: 'row' },
+      h('a', { class: 'btn small ghost', href: placeUrl(p.loc), target: '_blank', rel: 'noopener noreferrer' }, 'Google 地圖'),
+      route ? h('a', { class: 'btn small primary', href: route, target: '_blank', rel: 'noopener noreferrer' }, '路線') : null),
+    p.it ? h('button', { class: 'textbtn', type: 'button', onclick: () => openEditor(p.it.id) }, '編輯行程') : null);
+}
+
+function drawTripMap(L, places, fitKey) {
+  if (!mapUI.map) {
+    mapUI.map = L.map(mapUI.el, { zoomControl: true }).setView([36.2, 138.25], 5);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      subdomains: 'abcd', maxZoom: 19, referrerPolicy: 'strict-origin-when-cross-origin',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    }).addTo(mapUI.map);
+    mapUI.map.attributionControl.setPrefix('<a href="https://leafletjs.com">Leaflet</a>');
+    mapUI.layer = L.layerGroup().addTo(mapUI.map);
+    mapUI.map.on('click', (e) => {
+      if (!mapUI.pick) return;
+      setPickMode(false);
+      const dayIdx = currentIndex();
+      openEditor(null, { dayId: state.data.days[dayIdx].id, location: `${e.latlng.lat.toFixed(5)},${e.latlng.lng.toFixed(5)}` });
+    });
+  }
+  const map = mapUI.map;
+  map.invalidateSize();
+  mapUI.layer.clearLayers();
+  mapUI.markers.clear();
+
+  const located = places.filter((p) => p.ll);
+  let prev = null;
+  located.forEach((p) => {
+    const latlng = [p.ll.lat, p.ll.lng];
+    if (prev && prev.dayIdx === p.dayIdx) {
+      const leg = p.kind === 'arrival';
+      L.polyline([[prev.ll.lat, prev.ll.lng], latlng], { color: leg ? '#1F4E7A' : '#7F909C', weight: leg ? 4 : 3, opacity: 0.85, dashArray: leg ? null : '6 8' }).addTo(mapUI.layer);
+    }
+    prev = p;
+    if (p.hidden) return;
+    const label = p.kind === 'hotel' ? '宿' : state.mapAll ? String(p.dayIdx + 1) : String(p.n);
+    const cls = p.kind === 'hotel' ? 'hotel' : state.mapAll ? 'day' : `t-${p.it.type}${p.kind === 'arrival' ? ' arrival' : ''}`;
+    const marker = L.marker(latlng, {
+      icon: L.divIcon({ className: 'pin-wrap', html: `<span class="pin ${cls}">${label}</span>`, iconSize: [30, 30], iconAnchor: [15, 15], popupAnchor: [0, -14] }),
+      title: p.label, riseOnHover: true, zIndexOffset: p.kind === 'hotel' ? -100 : 0,
+    }).addTo(mapUI.layer);
+    marker.bindPopup(popupEl(p));
+    mapUI.markers.set(p.key, marker);
+  });
+
+  const key = `${fitKey}:${located.length}`;
+  if (mapUI.fitKey !== key) {
+    mapUI.fitKey = key;
+    if (located.length === 1) map.setView([located[0].ll.lat, located[0].ll.lng], 15);
+    else if (located.length > 1) map.fitBounds(L.latLngBounds(located.map((p) => [p.ll.lat, p.ll.lng])), { padding: [36, 36], maxZoom: 16 });
+  }
+  const waiting = places.some((p) => !p.ll && p.loc && geoWaiting(p.loc));
+  const note = mapUI.el.querySelector('.map-note');
+  const text = mapUI.pick ? '點地圖上的位置，新增一個行程。'
+    : waiting ? '正在找地點的位置…'
+    : !places.length ? '這天的行程還沒有填地點。' : !located.length ? '找不到這些地點的位置，可以把地點寫得更完整。' : '';
+  if (text) { if (note) note.textContent = text; else mapUI.el.append(h('div', { class: 'map-note' }, text)); }
+  else if (note) note.remove();
+}
+
+function setPickMode(on) {
+  mapUI.pick = on;
+  if (mapUI.el) mapUI.el.classList.toggle('picking', on);
+  if (state.view === 'map') render();
 }
 
 function renderMap() {
-  const mid = myMapsId(state.data.mapUrl);
   const days = state.data.days;
   if (!days.length) { main.replaceChildren(h('div', { class: 'empty-day' }, 'data.json 裡沒有任何天數。')); return; }
-  const idx = currentIndex();
-  const day = days[idx];
+  const mid = myMapsId(state.data.mapUrl);
+  if (!mid && state.mapKind === 'mymaps') state.mapKind = 'trip';
+  const kindSeg = mid || isAdmin()
+    ? seg([{ id: 'trip', label: '行程地圖' }, { id: 'mymaps', label: '我的地圖' }], state.mapKind || 'trip', (v) => { state.mapKind = v; setPickMode(false); render(); })
+    : null;
 
-  const mapPart = mid
-    ? [h('iframe', { class: 'map-frame', src: `https://www.google.com/maps/d/embed?mid=${encodeURIComponent(mid)}`, title: '行程地圖', loading: 'lazy', allowfullscreen: true, referrerpolicy: 'strict-origin-when-cross-origin' }),
-       h('div', { class: 'map-actions' },
-         h('a', { class: 'btn small ghost', href: `https://www.google.com/maps/d/viewer?mid=${encodeURIComponent(mid)}`, target: '_blank', rel: 'noopener noreferrer' }, '開啟完整地圖'),
-         isAdmin() ? h('button', { class: 'btn small ghost', type: 'button', onclick: openMapSheet }, '更換地圖') : null)]
-    : h('div', { class: 'notice' },
-        h('p', null, isAdmin() ? '還沒有行程地圖。貼上 Google「我的地圖」的分享連結，大家都能在這裡看到。' : '還沒有行程地圖，管理員加入之後就會出現在這裡。'),
-        isAdmin() ? h('button', { class: 'btn small primary', type: 'button', onclick: openMapSheet }, '加入地圖') : null);
-
-  const strip = h('div', { class: 'strip', 'aria-label': '選擇日期' },
-    days.map((d, i) => h('button', { class: 'chip-day', type: 'button', 'aria-current': String(i === idx), onclick: () => { state.dayId = d.id; render(); } },
-      h('span', { class: 'd' }, md(d.date)), h('span', { class: 'w' }, wd(d.date)))));
-
-  const places = sortedItems(day).filter((it) => stopPoints(it).entry);
-  const rows = places.map((it) => {
-    const pts = stopPoints(it);
-    if (pts.both) {
-      const leg = legUrl(it.location, it.locationTo);
-      return h('li', null,
-        h('div', { class: 'txt' }, h('div', null, it.title), h('small', null, `${it.time ? it.time + '　' : ''}${placeLabel(it.location)} → ${placeLabel(it.locationTo)}`)),
-        h('div', { class: 'btns' },
-          h('a', { class: 'btn small ghost', href: placeUrl(it.location), target: '_blank', rel: 'noopener noreferrer' }, '出發地'),
-          h('a', { class: 'btn small ghost', href: placeUrl(it.locationTo), target: '_blank', rel: 'noopener noreferrer' }, '抵達地'),
-          leg ? h('a', { class: 'btn small primary', href: leg, target: '_blank', rel: 'noopener noreferrer' }, '路線') : null));
-    }
-    const route = routeUrl(pts.entry);
-    return h('li', null,
-      h('div', { class: 'txt' }, h('div', null, it.title), h('small', null, `${it.time ? it.time + '　' : ''}${placeLabel(pts.entry)}`)),
-      h('div', { class: 'btns' },
-        h('a', { class: 'btn small ghost', href: placeUrl(pts.entry), target: '_blank', rel: 'noopener noreferrer' }, '地圖'),
-        route ? h('a', { class: 'btn small primary', href: route, target: '_blank', rel: 'noopener noreferrer' }, '路線') : null));
-  });
-  if (day.hotel.name) {
-    rows.push(h('li', null,
-      h('div', { class: 'txt' }, h('div', null, '回飯店'), h('small', null, day.hotel.name)),
-      h('div', { class: 'btns' },
-        h('a', { class: 'btn small ghost', href: placeUrl(hotelLoc(day.hotel)), target: '_blank', rel: 'noopener noreferrer' }, '地圖'),
-        routeUrl(hotelLoc(day.hotel)) ? h('a', { class: 'btn small primary', href: routeUrl(hotelLoc(day.hotel)), target: '_blank', rel: 'noopener noreferrer' }, '路線') : null)));
+  if (state.mapKind === 'mymaps') {
+    main.replaceChildren(...[
+      h('div', { class: 'map-bar' }, kindSeg),
+      mid
+        ? [h('iframe', { class: 'map-frame', src: `https://www.google.com/maps/d/embed?mid=${encodeURIComponent(mid)}`, title: '我的地圖', loading: 'lazy', allowfullscreen: true, referrerpolicy: 'strict-origin-when-cross-origin' }),
+           h('div', { class: 'map-actions' },
+             h('a', { class: 'btn small ghost', href: `https://www.google.com/maps/d/viewer?mid=${encodeURIComponent(mid)}`, target: '_blank', rel: 'noopener noreferrer' }, '開啟完整地圖'),
+             isAdmin() ? h('a', { class: 'btn small ghost', href: `https://www.google.com/maps/d/edit?mid=${encodeURIComponent(mid)}`, target: '_blank', rel: 'noopener noreferrer' }, '到 Google 編輯') : null,
+             isAdmin() ? h('button', { class: 'btn small ghost', type: 'button', onclick: openMapSheet }, '更換連結') : null)]
+        : h('div', { class: 'notice' }, h('p', null, '還沒有連結 Google「我的地圖」。'),
+            h('button', { class: 'btn small primary', type: 'button', onclick: openMapSheet }, '加入連結')),
+    ].flat().filter(Boolean));
+    return;
   }
 
+  const idx = currentIndex();
+  const strip = h('div', { class: 'strip', 'aria-label': '選擇日期' },
+    h('button', { class: 'chip-day', type: 'button', 'aria-current': String(Boolean(state.mapAll)), onclick: () => { state.mapAll = true; render(); } },
+      h('span', { class: 'd' }, '全部'), h('span', { class: 'w' }, `${days.length} 天`)),
+    days.map((d, i) => h('button', { class: 'chip-day', type: 'button', 'aria-current': String(!state.mapAll && i === idx), onclick: () => { state.mapAll = false; state.dayId = d.id; render(); } },
+      h('span', { class: 'd' }, md(d.date)), h('span', { class: 'w' }, wd(d.date)))));
+
+  const places = state.mapAll ? days.flatMap((d, i) => dayPlaces(i)) : dayPlaces(idx);
+  if (!mapUI.el) mapUI.el = h('div', { class: 'trip-map', role: 'region', 'aria-label': '行程地圖' });
+  mapUI.el.classList.toggle('picking', mapUI.pick);
+
+  const bar = h('div', { class: 'map-bar' },
+    kindSeg, h('span', { class: 'spacer' }),
+    state.mapAll ? null : h('button', { class: `btn small ${mapUI.pick ? 'primary' : 'ghost'}`, type: 'button', onclick: () => setPickMode(!mapUI.pick) }, mapUI.pick ? '取消新增' : '＋ 在地圖上新增'));
+
+  const focus = (p) => {
+    const m = mapUI.markers.get(p.hidden ? p.key.replace(/b$/, 'a') : p.key);
+    if (!m || !mapUI.map) return;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    mapUI.map.setView(m.getLatLng(), Math.max(mapUI.map.getZoom(), 15));
+    m.openPopup();
+  };
+  const rows = (state.mapAll ? [] : places.filter((p) => !p.hidden)).map((p) => {
+    const route = p.kind === 'arrival' ? legUrl(p.it.location, p.it.locationTo) : routeUrl(p.loc);
+    const numCls = p.kind === 'hotel' ? 'hotel' : `t-${p.it.type}`;
+    return h('li', null,
+      h('span', { class: `num ${numCls}` }, p.kind === 'hotel' ? '宿' : p.kind === 'arrival' ? `${p.n}′` : String(p.n)),
+      h('div', { class: 'txt', role: 'button', tabindex: '0', onclick: () => focus(p), onkeydown: (e) => { if (e.key === 'Enter') focus(p); } },
+        h('div', null, p.label), h('small', null, p.ll ? p.sub : `${p.sub}（地圖上找不到）`)),
+      h('div', { class: 'btns' },
+        route ? h('a', { class: 'btn small primary', href: route, target: '_blank', rel: 'noopener noreferrer' }, '路線') : null));
+  });
+
   main.replaceChildren(...[
-    mapPart,
-    h('h2', { class: 'section-head' }, `${dayName(idx)} ${md(day.date)}（${wd(day.date)}）${day.area} 的地點`),
     strip,
-    rows.length ? h('ul', { class: 'places' }, rows)
-      : h('div', { class: 'empty-day' }, '這天的行程還沒有填地點。編輯行程時填入「地點」，就會出現在這裡。'),
-  ].flat().filter(Boolean));
+    mapUI.el,
+    bar,
+    rows.length ? h('ul', { class: 'places' }, rows) : null,
+  ].filter(Boolean));
+  const fitKey = state.mapAll ? 'all' : `day:${state.dayId}`;
+  loadLeaflet()
+    .then((L) => { if (state.view === 'map' && document.contains(mapUI.el)) requestAnimationFrame(() => drawTripMap(L, places, fitKey)); })
+    .catch((e) => { mapUI.el.replaceChildren(h('div', { class: 'map-note' }, e.message)); });
   requestAnimationFrame(() => {
     const on = strip.querySelector('[aria-current=true]');
     if (on) strip.scrollLeft = on.offsetLeft - strip.clientWidth / 2 + on.clientWidth / 2;
@@ -1555,7 +1807,7 @@ function openMapSheet() {
   const url = input(state.data.mapUrl, 'url', { placeholder: 'https://www.google.com/maps/d/…', inputmode: 'url', autocapitalize: 'off', spellcheck: 'false' });
   const err = h('p', { class: 'form-error', hidden: true });
   const sheet = openSheet('行程地圖', h('div', null,
-      h('p', { class: 'lead' }, '在 Google「我的地圖」按「分享」，把「知道連結的人都能查看」打開，再把連結貼在這裡。'),
+      h('p', { class: 'lead' }, '在 Google「我的地圖」按「分享」，打開「知道連結的人都能查看」，再把連結貼在這裡。要在「我的地圖」上加標記，請到 Google 我的地圖裡編輯；這裡只能看。'),
       err, field('我的地圖連結', url)),
     [h('button', { class: 'btn ghost', type: 'button', onclick: () => sheet.close(true) }, '取消'),
      h('button', { class: 'btn primary', type: 'button', onclick: () => {
@@ -1566,35 +1818,48 @@ function openMapSheet() {
      } }, '儲存')]);
 }
 
-function renderStatusList(status) {
-  const copy = status === 'confirm'
-    ? { left: (n) => `還有 ${n} 項待確認`, clear: '待確認的都確定了', empty: '在行程裡把「狀態」設成「待確認」，就會出現在這裡。適合還沒決定的事，例如要不要買票券。', btn: '確認了', log: '已確認', doneHead: '已確認' }
-    : { left: (n) => `還有 ${n} 項待處理`, clear: '待處理的都完成了', empty: '在行程裡把「狀態」設成「待處理」，就會出現在這裡。適合要預約、要買、要做的事。', btn: '完成', log: '已完成', doneHead: '已完成' };
-  const groups = [], done = [];
-  state.data.days.forEach((day, i) => {
-    const items = sortedItems(day);
-    const open = items.filter((it) => it.booking === status);
-    if (open.length) groups.push({ day, i, items: open });
-    items.filter((it) => it.booking === 'done' && it.doneFrom === status).forEach((it) => done.push({ day, it }));
-  });
-  const total = groups.reduce((n, g) => n + g.items.length, 0);
-  const row = (day, it, isDone) => h('div', { class: 'todo-row' + (isDone ? ' done' : status === 'confirm' ? ' confirm' : ''), role: 'button', tabindex: '0', onclick: () => openEditor(it.id),
+function renderTodos() {
+  const kinds = [
+    { status: 'needed', title: '待處理', btn: '完成', log: '已完成', cls: '' },
+    { status: 'confirm', title: '待確認', btn: '確認了', log: '已確認', cls: ' confirm' },
+  ];
+  const row = (day, it, kind, isDone) => h('div', { class: 'todo-row' + (isDone ? ' done' : kind.cls), role: 'button', tabindex: '0', onclick: () => openEditor(it.id),
       onkeydown: (e) => { if (e.key === 'Enter') openEditor(it.id); } },
     h('div', { class: 'txt' },
       h('div', { class: 'item-title' }, it.title),
-      h('div', { class: 'sub' }, `${md(day.date)}（${wd(day.date)}）${it.time ? ' ' + it.time : ''}`)),
+      h('div', { class: 'sub' }, `${md(day.date)}（${wd(day.date)}）${it.time ? ' ' + it.time : ''}`, isDone ? h('span', { class: 'tag' }, kind.log) : null)),
     isDone ? null : h('button', { class: 'btn small primary', type: 'button', onclick: (e) => {
       e.stopPropagation();
-      commit(M.setBooking(it.id, 'done', who(), new Date().toISOString()), `${who()}：「${it.title}」${copy.log}`);
-    } }, copy.btn));
+      commit(M.setBooking(it.id, 'done', who(), new Date().toISOString()), `${who()}：「${it.title}」${kind.log}`);
+    } }, kind.btn));
+
+  const parts = [];
+  let open = 0;
+  const done = [];
+  kinds.forEach((kind) => {
+    const groups = [];
+    state.data.days.forEach((day, i) => {
+      const items = sortedItems(day);
+      const list = items.filter((it) => it.booking === kind.status);
+      if (list.length) groups.push({ day, i, list });
+      items.filter((it) => it.booking === 'done' && it.doneFrom === kind.status).forEach((it) => done.push({ day, it, kind }));
+    });
+    const count = groups.reduce((n, g) => n + g.list.length, 0);
+    open += count;
+    if (!count) return;
+    parts.push(h('h2', { class: 'todo-section' }, kind.title, h('span', { class: 'count' + kind.cls }, count)));
+    groups.forEach((g) => {
+      parts.push(h('div', { class: 'todo-day' }, `${dayName(g.i)} ${md(g.day.date)}（${wd(g.day.date)}）${g.day.area}`));
+      g.list.forEach((it) => parts.push(row(g.day, it, kind, false)));
+    });
+  });
 
   main.replaceChildren(...[
-    h('h2', { class: 'todo-head' }, total ? copy.left(total) : copy.clear),
-    total ? null : h('div', { class: 'empty-day' }, copy.empty),
-    ...groups.map((g) => [h('div', { class: 'todo-day' }, `${dayName(g.i)} ${md(g.day.date)}（${wd(g.day.date)}）${g.day.area}`), ...g.items.map((it) => row(g.day, it, false))]),
-    done.length ? h('div', { class: 'todo-day' }, copy.doneHead) : null,
-    ...done.map(({ day, it }) => row(day, it, true)),
-  ].flat().filter(Boolean));
+    open ? null : h('div', { class: 'empty-day' }, done.length ? '待辦都完成了。' : '把行程的「狀態」設成「待處理」或「待確認」，就會出現在這裡。'),
+    ...parts,
+    done.length ? h('h2', { class: 'todo-section' }, '已完成') : null,
+    ...done.map(({ day, it, kind }) => row(day, it, kind, true)),
+  ].filter(Boolean));
 }
 
 /* ------------------------------------------------------------------ */
@@ -1828,11 +2093,12 @@ function costRows(sp, existing) {
   };
 }
 
-function openEditor(itemId) {
+function openEditor(itemId, preset = null) {
   const found = itemId ? findItem(state.data, itemId) : null;
   const base = found ? clone(found.item)
     : { id: uid(), order: Date.now(), time: '', end: '', title: '', type: 'sight', booking: '', notes: '', location: '', locationTo: '', links: [], files: [] };
-  let dayId = found ? found.day.id : state.dayId;
+  if (!found && preset && preset.location) base.location = preset.location;
+  let dayId = found ? found.day.id : (preset && preset.dayId) || state.dayId;
   let type = base.type, booking = base.booking;
   const doneFromFor = (st) => (st !== 'done' ? '' : base.booking === 'done' ? (base.doneFrom || 'needed') : base.booking === 'confirm' ? 'confirm' : 'needed');
 
@@ -1892,7 +2158,6 @@ function openEditor(itemId) {
     field('日期', daySel),
     h('div', { class: 'row2' }, field('開始', start), field('結束（可不填）', end)),
     h('button', { class: 'textbtn clear-time', type: 'button', onclick: () => { start.value = ''; end.value = ''; } }, '清除時間（改成時間未定）'),
-    h('div', { class: 'field' }, h('span', { class: 'label' }, '花費'), costs.el),
     field('類型', seg(TYPES, type, (v) => { type = v; updateLocFields(); })),
     field('狀態', seg(BOOKINGS, booking, (v) => { booking = v; })),
     h('div', { class: 'field' }, locLabel, location), toField,
@@ -1909,6 +2174,7 @@ function openEditor(itemId) {
       h('span', { class: 'hint' }, '訂房確認、Google 雲端硬碟裡的票券 PDF、地圖都可以貼。')),
     h('div', { class: 'field' }, h('span', { class: 'label' }, '附件'), files.el,
       h('span', { class: 'hint' }, '截圖、照片、PDF 票券或其他檔案都可以，一次可以選好幾個。照片會自動縮小；單一檔案上限 20 MB。')),
+    h('div', { class: 'field' }, h('span', { class: 'label' }, '花費'), costs.el),
     found && found.item.updatedBy ? h('p', { class: 'meta' }, `最後由 ${found.item.updatedBy} 修改於 ${stampText(found.item.updatedAt)}`) : null,
     found ? h('button', { class: 'btn danger block', type: 'button', style: 'margin-top:18px', onclick: () => {
       if (!confirm(linked.length ? `確定刪除「${base.title}」？\n這個行程記的 ${linked.length} 筆花費也會一起刪除。` : `確定刪除「${base.title}」？`)) return;
