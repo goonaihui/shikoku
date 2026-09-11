@@ -113,13 +113,13 @@ Once she's set up on her home screen, you can both delete (收回) the invite me
 
 ## Costs (花費)
 
-- **Set up once (admin):** open the **花費** tab → **開始記帳**. The list starts with 爸、媽、培、菲; edit it if needed, pick the currency to settle in, and set the exchange rate (1 日圓 = ? 台幣). Use the rate you actually exchanged at if you like.
-- **Cost of a stop:** open any stop in the itinerary and fill in **花費**: the amount (日圓 or 台幣), who paid, and, under 怎麼分, how to split it (everyone shares equally by default). The stop then shows e.g. 「妹妹付 ¥1,000」, and the cost is added to the **花費** tab and the final settlement. Clear the amount to remove it; deleting the stop removes its cost too.
+- **No setup needed:** costs are shared among 爸、媽、培、菲 by default. The admin can change the people or the exchange rate with **設定** in the 花費 tab.
+- **Cost of a stop:** open any stop in the itinerary. Right under the time is **花費**: enter the amount (日圓 or 台幣) and tap who paid. **怎麼分** is folded away and defaults to everyone equally. Tap **＋ 再加一筆花費** if different people paid for different parts. Each cost shows on the stop, e.g. 「培付 ¥2,000」, and appears in the **花費** tab. Clear an amount or tap **移除這筆** to remove it; deleting the stop removes its costs too.
 - **Other costs:** in the **花費** tab, tap **記一筆**. Enter what it was, the amount in 日圓 or 台幣, who paid, and how to split it. Everyone gets 1 share by default. Change the shares to split unevenly: for example, if 姊姊 covers the parents' portion, give 姊姊 more shares; 0 shares means that person isn't part of it. You can attach receipt photos.
 - **See who owes whom:** the top card shows the total, what each person paid and owes, and the fewest payments that settle everything, e.g. 「妹妹 給 姊姊 NT$1,160」.
 - **Settle up:** when someone pays the other back, tap **記錄已給** next to that line (or **記錄還款**). The balances update right away.
 - Costs paid before the trip (flights, hotels) go under **出發前／行程外**.
-- **Who's using this phone:** if a phone's name doesn't match anyone in the list, the 花費 tab asks 「這台手機是誰在用？」. Picking a name makes that person the default payer and labels their edits.
+- **Who's using this phone:** if a phone's name doesn't match anyone in the list, the top of the 花費 tab shows 「這台手機是」 with everyone's names. Picking a name makes that person the default payer and labels their edits.
 - Several people can add costs at the same time; entries never overwrite each other.
 
 ## Staying logged in
