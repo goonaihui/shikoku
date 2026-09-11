@@ -1,0 +1,1379 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#E8EEED">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="行程">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>旅行行程</title>
+<style>
+:root{
+  --bg:#E8EEED; --panel:#FFFFFF; --ink:#17293B; --ink-2:#4F6172; --ink-3:#7F909C; --line:#C9D5D6;
+  --sea:#1F4E7A; --sea-deep:#163A5C;
+  --mikan:#C9660A; --olive:#4F7424; --olive-soft:#E3ECD5; --red:#A8322B;
+  --t-transport:#6FA56B; --t-transport-bg:#EAF3E6;
+  --t-sight:#DB955A;     --t-sight-bg:#FBEDE1;
+  --t-meal:#8B79C6;      --t-meal-bg:#EDE9F7;
+  --t-stay:#5B8CBE;      --t-stay-bg:#E3EDF7;
+  --t-other:#98A6A9;     --t-other-bg:#F2F5F5;
+  --font:-apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Noto Sans CJK TC", "Hiragino Sans", "Microsoft JhengHei", sans-serif;
+  --safe-t:env(safe-area-inset-top, 0px);
+  --safe-b:env(safe-area-inset-bottom, 0px);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.55;-webkit-tap-highlight-color:transparent}
+body.locked{overflow:hidden}
+body.is-locked > :not(.lock){visibility:hidden}
+body.signed-out .views, body.signed-out #syncBtn, body.signed-out #settingsBtn, body.signed-out .fab{display:none}
+button{font:inherit;color:inherit;cursor:pointer}
+input,select,textarea{font:inherit;font-size:16px;color:var(--ink)}
+a{color:var(--sea)}
+:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
+.wrap{max-width:640px;margin:0 auto;padding:0 14px}
+
+/* Top bar */
+.topbar{position:sticky;top:0;z-index:20;background:var(--bg);padding-top:var(--safe-t)}
+.topbar-inner{display:flex;align-items:center;gap:8px;min-height:54px}
+.app-title{flex:1;margin:0;font-size:18px;font-weight:700;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sync{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 11px;font-size:13px;color:var(--ink-2);min-height:34px;max-width:52vw}
+.sync span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ink-3);flex:0 0 auto}
+.sync[data-kind=ok] .dot{background:var(--olive)}
+.sync[data-kind=saving] .dot{background:var(--sea)}
+.sync[data-kind=pending] .dot{background:var(--mikan)}
+.sync[data-kind=error] .dot{background:var(--red)}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border:0;background:transparent;border-radius:10px;color:var(--ink)}
+.views{display:flex;gap:18px;border-bottom:1px solid var(--line)}
+.views button{border:0;background:none;padding:8px 0 9px;font-size:15px;color:var(--ink-2);border-bottom:2px solid transparent;margin-bottom:-1px;min-height:40px}
+.views button[aria-selected=true]{color:var(--ink);font-weight:700;border-bottom-color:var(--ink)}
+.count{display:inline-block;min-width:20px;padding:0 6px;margin-left:4px;border-radius:999px;background:var(--mikan);color:#fff;font-size:12px;font-weight:700;line-height:20px;text-align:center}
+main{padding-top:12px;padding-bottom:calc(110px + var(--safe-b))}
+
+/* Station-name-board motif (day header, login, lock) */
+.sign{border-radius:10px;overflow:hidden;background:var(--panel);border:1px solid var(--line);margin-bottom:10px}
+.sign-face{display:block;width:100%;border:0;background:none;padding:16px 16px 12px;text-align:center}
+.sign-area{font-size:clamp(28px, 9vw, 40px);font-weight:800;letter-spacing:.1em;line-height:1.15;overflow-wrap:anywhere}
+.sign-area.empty{color:var(--ink-3);font-weight:600;font-size:22px;letter-spacing:.02em}
+.sign-day{margin-top:6px;color:var(--ink-2);font-size:15px;font-variant-numeric:tabular-nums}
+.sign-band{display:flex;justify-content:space-between;align-items:stretch;background:var(--sea);color:#fff;border-top:3px solid var(--sea-deep);min-height:46px}
+.sign-band button{flex:1 1 50%;min-width:0;display:flex;align-items:center;gap:6px;border:0;background:none;color:#fff;padding:9px 14px;font-size:14px;text-align:left}
+.sign-band button.next{justify-content:flex-end;text-align:right}
+.sign-band button:disabled{visibility:hidden}
+.sign-band .lbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sign-band .arr{font-size:12px;opacity:.85}
+.sign-band .band-text{flex:1;display:flex;align-items:center;justify-content:center;font-size:14px;padding:8px 14px;text-align:center}
+
+.strip{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.strip::-webkit-scrollbar{display:none}
+.chip-day{position:relative;flex:0 0 auto;min-width:50px;padding:6px 4px 5px;border:1px solid var(--line);background:var(--panel);border-radius:8px;text-align:center;line-height:1.2}
+.chip-day .d{display:block;font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
+.chip-day .w{display:block;font-size:12px;color:var(--ink-2)}
+.chip-day[aria-current=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip-day[aria-current=true] .w{color:#C9D4DE}
+.chip-day .flag{position:absolute;top:4px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--mikan)}
+
+.stay{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--t-stay-bg);border-radius:8px;padding:10px 12px;margin-bottom:14px;min-height:48px;cursor:pointer}
+.stay .stay-text{flex:1;min-width:0}
+.stay small{display:block;color:var(--ink-2);font-size:12px}
+.stay strong{display:block;font-weight:600;overflow-wrap:anywhere}
+.stay .open{flex:0 0 auto;font-size:13px;padding:6px 10px;border-radius:999px;background:var(--panel);border:1px solid var(--line);text-decoration:none;color:var(--sea)}
+
+/* Timeline */
+.timeline{list-style:none;margin:0;padding:0}
+.item{display:grid;grid-template-columns:54px 1fr;gap:10px;margin-bottom:8px}
+.t{text-align:right;padding-top:9px;font-variant-numeric:tabular-nums;line-height:1.25}
+.t-start{display:block;font-weight:700;font-size:16px}
+.t-end{display:block;font-size:13px;color:var(--ink-3)}
+.t-none{display:block;font-size:12px;color:var(--ink-3)}
+.body{display:block;width:100%;text-align:left;border-left:4px solid var(--t-other);background:var(--t-other-bg);border-radius:8px;padding:9px 12px 10px;cursor:pointer}
+.type-transport .body{border-left-color:var(--t-transport);background:var(--t-transport-bg)}
+.type-sight .body{border-left-color:var(--t-sight);background:var(--t-sight-bg)}
+.type-meal .body{border-left-color:var(--t-meal);background:var(--t-meal-bg)}
+.type-stay .body{border-left-color:var(--t-stay);background:var(--t-stay-bg)}
+.item-title{font-size:16px;font-weight:600;overflow-wrap:anywhere}
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.badge{font-size:12px;font-weight:700;border-radius:4px;padding:1px 7px;line-height:20px}
+.badge.need{background:var(--mikan);color:#fff}
+.badge.done{background:var(--olive-soft);color:var(--olive)}
+.notes{margin:5px 0 0;font-size:14px;color:var(--ink-2);white-space:pre-wrap;overflow-wrap:anywhere}
+.links{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.link-chip{display:inline-flex;align-items:center;gap:5px;max-width:100%;min-height:34px;padding:5px 11px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:13px;color:var(--sea);text-decoration:none}
+.link-chip span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.thumbs{display:flex;gap:6px;margin-top:8px;overflow-x:auto;scrollbar-width:none}
+.thumbs::-webkit-scrollbar{display:none}
+.thumb{position:relative;flex:0 0 auto;width:64px;height:64px;padding:0;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--panel)}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb.broken::after{content:"無法載入";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--ink-3)}
+.meta{margin-top:6px;font-size:12px;color:var(--ink-3)}
+.empty-day{padding:28px 16px;text-align:center;color:var(--ink-2);background:var(--panel);border-radius:8px;border:1px dashed var(--line)}
+
+.notice{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--ink-3);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:14px;color:var(--ink-2)}
+.notice p{margin:0;flex:1 1 220px}
+.notice.error{border-left-color:var(--red)}
+
+/* Booking view */
+.todo-head{font-size:20px;margin:4px 0 12px}
+.todo-day{font-size:13px;color:var(--ink-2);margin:16px 0 6px;font-weight:600}
+.todo-row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--mikan);border-radius:8px;padding:10px 10px 10px 12px;margin-bottom:6px;cursor:pointer}
+.todo-row.done{border-left-color:var(--olive);opacity:.8}
+.todo-row .txt{flex:1;min-width:0}
+.todo-row .sub{font-size:13px;color:var(--ink-2)}
+.todo-row .item-title{font-size:15px}
+
+/* Login */
+.login-body{padding:16px 16px 18px}
+.login-body > p{margin:0 0 16px;color:var(--ink-2);font-size:14px}
+details.advanced{margin:-4px 0 14px}
+details.advanced summary{cursor:pointer;color:var(--sea);font-size:14px;padding:6px 0;min-height:34px}
+details.advanced[open] summary{margin-bottom:8px}
+
+/* Lock screen */
+.lock{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:calc(16px + var(--safe-t)) 20px calc(16px + var(--safe-b));overflow-y:auto}
+.lock-panel{width:100%;max-width:320px;text-align:center}
+.lock .sign{margin-bottom:0}
+.lock .sign-area{font-size:30px}
+.pin-dots{display:flex;justify-content:center;gap:16px;margin:22px 0 8px}
+.pin-dots span{width:14px;height:14px;border-radius:50%;border:2px solid var(--ink)}
+.pin-dots span.on{background:var(--ink)}
+.pin-msg{min-height:22px;color:var(--ink-2);font-size:14px;margin:0 0 16px}
+.pin-msg.err{color:var(--red)}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.keypad button{height:62px;border:1px solid var(--line);background:var(--panel);border-radius:14px;font-size:26px;font-weight:600;font-variant-numeric:tabular-nums}
+.keypad button:active{background:var(--t-stay-bg)}
+.keypad button.aux{font-size:14px;font-weight:500;background:transparent;border-color:transparent;color:var(--sea)}
+.shake{animation:shake .32s}
+@keyframes shake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+
+/* Buttons & forms */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:10px;padding:11px 16px;min-height:46px;font-weight:600;text-decoration:none}
+.btn.primary{background:var(--sea);color:#fff}
+.btn.ghost{background:var(--panel);border:1px solid var(--line);color:var(--ink)}
+.btn.danger{background:var(--panel);border:1px solid #E6C3BF;color:var(--red)}
+.btn.small{min-height:38px;padding:6px 12px;font-size:14px;border-radius:8px}
+.btn.block{width:100%}
+.btn:disabled{opacity:.55;cursor:default}
+.fab{position:fixed;z-index:15;right:max(16px, calc((100vw - 640px) / 2 + 16px));bottom:calc(18px + var(--safe-b));display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;background:var(--sea);color:#fff;font-weight:700;padding:12px 20px 12px 16px;min-height:50px;box-shadow:0 6px 18px rgba(22,58,92,.3)}
+.fab[hidden]{display:none}
+
+.field{margin-bottom:14px}
+.label{display:block;font-size:13px;color:var(--ink-2);margin-bottom:5px;font-weight:600}
+.hint{display:block;font-size:12px;color:var(--ink-3);margin-top:4px}
+.lead{margin:0 0 14px;font-size:14px;color:var(--ink-2)}
+.input{display:block;width:100%;border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:#fff;min-height:46px;-webkit-appearance:none;appearance:none}
+textarea.input{min-height:96px;resize:vertical;line-height:1.5}
+select.input{background-image:linear-gradient(45deg,transparent 50%,var(--ink-2) 50%),linear-gradient(135deg,var(--ink-2) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
+.input:focus{outline:2px solid var(--sea);outline-offset:0;border-color:var(--sea)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;min-height:38px;font-size:14px}
+.seg button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.textbtn{border:0;background:none;color:var(--sea);padding:6px 0;font-size:14px;min-height:34px}
+.textbtn.clear-time{margin:-8px 0 12px}
+.link-row{display:grid;grid-template-columns:1fr 1.4fr 40px;gap:6px;margin-bottom:6px}
+.link-row .icon-btn{width:40px;height:46px;color:var(--ink-3)}
+.files{display:flex;flex-wrap:wrap;gap:8px}
+.file-tile{position:relative;width:76px;height:76px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--panel)}
+.file-tile img{width:100%;height:100%;object-fit:cover;display:block}
+.file-tile .x{position:absolute;top:3px;right:3px;width:26px;height:26px;border-radius:50%;border:0;background:rgba(23,41,59,.78);color:#fff;display:flex;align-items:center;justify-content:center;padding:0}
+.file-tile .x svg{width:14px;height:14px}
+.file-tile.new::after{content:"未上傳";position:absolute;left:0;right:0;bottom:0;font-size:11px;text-align:center;background:rgba(201,102,10,.9);color:#fff;line-height:18px}
+.add-file{position:relative;width:76px;height:76px;border-radius:8px;border:1px dashed var(--ink-3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;color:var(--ink-2);background:#fff;cursor:pointer}
+.add-file input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.form-error{color:var(--red);font-size:14px;margin:0 0 10px}
+.section-title{font-size:15px;margin:22px 0 10px;padding-top:14px;border-top:1px solid var(--line)}
+.section-title:first-child{margin-top:0;padding-top:0;border-top:0}
+.stack{display:flex;flex-direction:column;gap:8px}
+.status-line{font-size:14px;color:var(--ink-2);margin:8px 0 0}
+.status-line.err{color:var(--red)}
+
+/* Sheets */
+.backdrop{position:fixed;inset:0;z-index:50;background:rgba(15,30,45,.45);display:flex;align-items:flex-end;justify-content:center;animation:fade .15s ease-out}
+.sheet{width:100%;max-width:640px;max-height:92vh;max-height:92dvh;background:var(--panel);border-radius:16px 16px 0 0;display:flex;flex-direction:column;animation:rise .22s ease-out}
+.sheet-head{display:flex;align-items:center;gap:8px;padding:10px 8px 10px 16px;border-bottom:1px solid var(--line)}
+.sheet-title{flex:1;margin:0;font-size:17px}
+.sheet-body{overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.sheet-foot{display:flex;gap:10px;padding:10px 16px calc(10px + var(--safe-b));border-top:1px solid var(--line)}
+.sheet-foot .btn.primary{flex:1}
+@media (min-width:700px){
+  .backdrop{align-items:center;padding:24px}
+  .sheet{border-radius:14px;max-height:86vh}
+  .sheet-foot{padding-bottom:12px}
+}
+.viewer{position:fixed;inset:0;z-index:80;background:rgba(8,16,24,.95);display:flex;flex-direction:column;animation:fade .15s ease-out}
+.viewer-bar{display:flex;align-items:center;gap:8px;padding:calc(6px + var(--safe-t)) 8px 6px 14px;color:#fff}
+.viewer-bar .name{flex:1;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.85}
+.viewer-bar .icon-btn{color:#fff}
+.viewer-bar a{color:#fff;font-size:14px;padding:8px 10px}
+.viewer-img{flex:1;overflow:auto;display:flex;align-items:flex-start;justify-content:center;padding-bottom:var(--safe-b)}
+.viewer-img img{max-width:100%;height:auto;display:block}
+.toast{position:fixed;z-index:90;left:50%;bottom:calc(84px + var(--safe-b));transform:translateX(-50%);max-width:calc(100vw - 32px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;box-shadow:0 6px 18px rgba(0,0,0,.2);animation:fade .15s ease-out}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes rise{from{transform:translateY(24px);opacity:.6}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body class="signed-out">
+<header class="topbar">
+  <div class="wrap">
+    <div class="topbar-inner">
+      <h1 class="app-title" id="tripTitle">旅行行程</h1>
+      <button class="sync" id="syncBtn" type="button" data-kind="saving"><span class="dot"></span><span id="syncText">同步中…</span></button>
+      <button class="icon-btn" id="settingsBtn" type="button" aria-label="設定"></button>
+    </div>
+    <div class="views" role="tablist">
+      <button type="button" role="tab" data-view="day" aria-selected="true">每日行程</button>
+      <button type="button" role="tab" data-view="todo" aria-selected="false">待預約<span class="count" id="todoCount" hidden></span></button>
+    </div>
+  </div>
+</header>
+<main class="wrap" id="main"></main>
+<button class="fab" id="addBtn" type="button" hidden></button>
+
+<script>
+'use strict';
+(() => {
+/* This file contains no trip data. The itinerary lives in data.json in a
+   private GitHub repo, and can only be read with a GitHub token. */
+
+/* ------------------------------------------------------------------ */
+/*  Constants and small helpers                                        */
+/* ------------------------------------------------------------------ */
+const WEEK = ['日', '一', '二', '三', '四', '五', '六'];
+const NUM = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二', '十三', '十四', '十五'];
+const TYPES = [
+  { id: 'transport', label: '交通' }, { id: 'sight', label: '景點' }, { id: 'meal', label: '用餐' },
+  { id: 'stay', label: '住宿' }, { id: 'other', label: '其他' },
+];
+const BOOKINGS = [{ id: '', label: '不用預約' }, { id: 'needed', label: '需預約' }, { id: 'done', label: '已預約' }];
+const ICONS = {
+  gear: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
+  close: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  plus: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+  link: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>',
+  bed: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18V6M3 14h18v4M21 14v-1.5A3.5 3.5 0 0 0 17.5 9H11v5"/><circle cx="7" cy="11" r="2"/></svg>',
+  image: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 9"/></svg>',
+  back: '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 5H9l-6 7 6 7h12z"/><path d="M17 9l-5 6M12 9l5 6"/></svg>',
+};
+function icon(name) { const t = document.createElement('template'); t.innerHTML = ICONS[name]; return t.content.firstChild; }
+
+function h(tag, props, ...kids) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(props || {})) {
+    if (v == null || v === false) continue;
+    if (k === 'class') el.className = v;
+    else if (k.startsWith('on') && typeof v === 'function') el.addEventListener(k.slice(2), v);
+    else if (k === 'value') el.value = v;
+    else el.setAttribute(k, v === true ? '' : String(v));
+  }
+  for (const kid of kids.flat(Infinity)) {
+    if (kid == null || kid === false) continue;
+    el.append(kid instanceof Node ? kid : document.createTextNode(String(kid)));
+  }
+  return el;
+}
+const $ = (id) => document.getElementById(id);
+const clone = (o) => JSON.parse(JSON.stringify(o));
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const uid = () => 'i' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const validTime = (t) => (/^\d{2}:\d{2}$/.test(t || '') ? t : '');
+function parseDate(s) { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ''); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; }
+function md(s) { const d = parseDate(s); return d ? `${d.getMonth() + 1}/${d.getDate()}` : ''; }
+function wd(s) { const d = parseDate(s); return d ? WEEK[d.getDay()] : ''; }
+function dayName(i) { return `第${NUM[i] || i + 1}天`; }
+function pad(n) { return String(n).padStart(2, '0'); }
+function todayStr() { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; }
+function stampText(iso) { const d = new Date(iso || ''); return isNaN(d) ? '' : `${d.getMonth() + 1}/${d.getDate()} ${pad(d.getHours())}:${pad(d.getMinutes())}`; }
+function safeUrl(u) {
+  let s = String(u || '').trim();
+  if (!s) return '';
+  if (!/^[a-z][a-z0-9+.-]*:/i.test(s)) s = 'https://' + s;
+  try { const x = new URL(s); return x.protocol === 'http:' || x.protocol === 'https:' ? x.href : ''; } catch { return ''; }
+}
+function linkLabel(l) {
+  if (l.label) return l.label;
+  try {
+    const host = new URL(l.url).hostname.replace(/^www\./, '');
+    return /(^|\.)(drive|docs)\.google\.com$/.test(host) ? 'Google 雲端硬碟' : host;
+  } catch { return l.url; }
+}
+
+const store = (() => {
+  const mem = {};
+  return {
+    get(k) { try { const v = localStorage.getItem(k); if (v !== null) return v; } catch {} return k in mem ? mem[k] : null; },
+    set(k, v) { mem[k] = v; try { localStorage.setItem(k, v); } catch {} },
+    del(k) { delete mem[k]; try { localStorage.removeItem(k); } catch {} },
+  };
+})();
+
+function utf8ToB64(str) { return bytesToB64(new TextEncoder().encode(str)); }
+function bytesToB64(bytes) {
+  let bin = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  return btoa(bin);
+}
+function b64ToBytes(b64) {
+  const bin = atob(String(b64).replace(/\s/g, ''));
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes;
+}
+const b64ToUtf8 = (b64) => new TextDecoder().decode(b64ToBytes(b64));
+
+/* ------------------------------------------------------------------ */
+/*  Data model                                                         */
+/* ------------------------------------------------------------------ */
+function normalize(raw) {
+  const d = raw && typeof raw === 'object' ? raw : {};
+  return {
+    version: 1,
+    title: String(d.title || '旅行行程'),
+    updatedAt: String(d.updatedAt || ''),
+    updatedBy: String(d.updatedBy || ''),
+    days: (Array.isArray(d.days) ? d.days : []).map((day, i) => ({
+      id: String(day.id || 'd' + (i + 1)),
+      date: String(day.date || ''),
+      area: String(day.area || ''),
+      hotel: { name: String((day.hotel && day.hotel.name) || ''), url: String((day.hotel && day.hotel.url) || '') },
+      items: (Array.isArray(day.items) ? day.items : []).map((it, j) => ({
+        id: String(it.id || uid()),
+        order: Number.isFinite(it.order) ? it.order : j,
+        time: validTime(it.time), end: validTime(it.end),
+        title: String(it.title || ''),
+        type: TYPES.some((t) => t.id === it.type) ? it.type : 'other',
+        booking: it.booking === 'needed' || it.booking === 'done' ? it.booking : '',
+        notes: String(it.notes || ''),
+        links: (Array.isArray(it.links) ? it.links : []).filter((l) => l && safeUrl(l.url)).map((l) => ({ label: String(l.label || ''), url: safeUrl(l.url) })),
+        files: (Array.isArray(it.files) ? it.files : []).filter((f) => f && f.path).map((f) => ({ path: String(f.path), name: String(f.name || '') })),
+        updatedBy: String(it.updatedBy || ''), updatedAt: String(it.updatedAt || ''),
+      })),
+    })),
+  };
+}
+function findItem(data, id) {
+  for (const day of data.days) { const item = day.items.find((x) => x.id === id); if (item) return { day, item }; }
+  return null;
+}
+function sortedItems(day) {
+  return [...day.items].sort((a, b) => {
+    if (!a.time !== !b.time) return a.time ? 1 : -1;
+    if (a.time !== b.time) return a.time < b.time ? -1 : 1;
+    return a.order - b.order;
+  });
+}
+function touch(data) { data.updatedAt = new Date().toISOString(); data.updatedBy = who(); }
+
+/* Each change is a small function, so it can be re-applied on top of whatever
+   is newest on GitHub. Edits to different items by two people never clash. */
+const M = {
+  upsertItem: (item, dayId) => (d) => {
+    d.days.forEach((day) => { day.items = day.items.filter((x) => x.id !== item.id); });
+    const day = d.days.find((x) => x.id === dayId);
+    if (day) day.items.push(clone(item));
+  },
+  deleteItem: (id) => (d) => { d.days.forEach((day) => { day.items = day.items.filter((x) => x.id !== id); }); },
+  setBooking: (id, booking, by, at) => (d) => {
+    const f = findItem(d, id);
+    if (f) Object.assign(f.item, { booking, updatedBy: by, updatedAt: at });
+  },
+  updateDay: (dayId, patch) => (d) => { const day = d.days.find((x) => x.id === dayId); if (day) Object.assign(day, clone(patch)); },
+};
+
+/* ------------------------------------------------------------------ */
+/*  Settings stored on this device                                     */
+/* ------------------------------------------------------------------ */
+const CFG_KEY = 'trip:config';
+const PIN_KEY = 'trip:pin';
+const FAIL_KEY = 'trip:pin-fails';
+const LOCK_AFTER_MS = 5 * 60 * 1000;
+
+let cfg = Object.assign({ owner: '', repo: '', branch: 'main', path: 'data.json', token: '', name: '' }, (() => {
+  try { return JSON.parse(store.get(CFG_KEY) || '{}'); } catch { return {}; }
+})());
+function saveCfg() { store.set(CFG_KEY, JSON.stringify(cfg)); }
+const connected = () => Boolean(cfg.owner && cfg.repo && cfg.token);
+const who = () => cfg.name || '有人';
+const cacheKey = () => `trip:data:${cfg.owner}/${cfg.repo}@${cfg.branch}/${cfg.path}`;
+
+(() => {
+  const qs = new URLSearchParams(location.search);
+  if (!connected()) {
+    let changed = false;
+    for (const k of ['owner', 'repo', 'branch', 'path']) {
+      const v = qs.get(k);
+      if (v) { cfg[k] = v; changed = true; }
+    }
+    if (changed) saveCfg();
+  }
+  if ([...qs.keys()].length) history.replaceState(null, '', location.pathname + location.hash);
+})();
+
+/* ------------------------------------------------------------------ */
+/*  GitHub contents API                                                */
+/* ------------------------------------------------------------------ */
+const GH = {
+  repoUrl() { return `https://api.github.com/repos/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}`; },
+  url(path) { return this.repoUrl() + '/contents/' + path.split('/').map(encodeURIComponent).join('/'); },
+  headers(raw) {
+    return {
+      Authorization: `Bearer ${cfg.token}`,
+      Accept: raw ? 'application/vnd.github.raw+json' : 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+    };
+  },
+  async send(url, init) {
+    try { return await fetch(url, Object.assign({ cache: 'no-store' }, init)); } catch {
+      const e = new Error('連不上 GitHub，請檢查網路。');
+      e.network = true;
+      throw e;
+    }
+  },
+  async req(method, path, { body, raw, ref } = {}) {
+    const url = this.url(path) + (ref ? '?ref=' + encodeURIComponent(cfg.branch) : '');
+    const headers = this.headers(raw);
+    if (body) headers['Content-Type'] = 'application/json';
+    return this.send(url, { method, headers, body: body ? JSON.stringify(body) : undefined });
+  },
+  async error(res) {
+    let msg = '';
+    try { msg = (await res.json()).message || ''; } catch {}
+    let text;
+    if (res.status === 401) text = 'Token 無效或已過期。';
+    else if (res.status === 403) text = /rate limit/i.test(msg) ? 'GitHub 請求次數暫時用完，請稍後再試。' : '這個 token 沒有 repo 的寫入權限。';
+    else if (res.status === 404) text = '找不到 repo。請檢查帳號、repo 名稱，以及 token 是否有權限。';
+    else if (res.status === 409) text = '資料剛被別人修改。';
+    else if (res.status === 422 && /branch/i.test(msg)) text = `找不到分支「${cfg.branch}」。`;
+    else text = `GitHub 回傳錯誤 ${res.status}${msg ? '：' + msg : ''}`;
+    const e = new Error(text);
+    e.status = res.status; e.ghMessage = msg;
+    return e;
+  },
+  async readJSON(path) {
+    const res = await this.req('GET', path, { ref: true });
+    if (res.status === 404) {
+      const repoRes = await this.send(this.repoUrl(), { headers: this.headers() });
+      if (repoRes.ok) return null; // repo reachable, file missing
+      throw await this.error(repoRes);
+    }
+    if (!res.ok) throw await this.error(res);
+    const meta = await res.json();
+    let text;
+    if (meta.encoding === 'base64' && meta.content) text = b64ToUtf8(meta.content);
+    else {
+      const rawRes = await this.req('GET', path, { ref: true, raw: true });
+      if (!rawRes.ok) throw await this.error(rawRes);
+      text = await rawRes.text();
+    }
+    try { return { data: JSON.parse(text), sha: meta.sha }; } catch {
+      throw new Error(`${path} 不是有效的 JSON，請到 GitHub 檢查這個檔案。`);
+    }
+  },
+  async write(path, base64, message, sha) {
+    const body = { message, content: base64, branch: cfg.branch };
+    if (sha) body.sha = sha;
+    const res = await this.req('PUT', path, { body });
+    if (!res.ok) throw await this.error(res);
+    return (await res.json()).content.sha;
+  },
+  async writeNew(path, base64, message) {
+    for (let attempt = 0; ; attempt++) {
+      try { return await this.write(path, base64, message); } catch (e) {
+        if (e.status === 409 && attempt < 4) { await sleep(500 * (attempt + 1)); continue; }
+        throw e;
+      }
+    }
+  },
+  async readBlob(path) {
+    const res = await this.req('GET', path, { ref: true, raw: true });
+    if (!res.ok) throw await this.error(res);
+    return res.blob();
+  },
+  async remove(path, message) {
+    const res = await this.req('GET', path, { ref: true });
+    if (!res.ok) return;
+    const meta = await res.json();
+    await this.req('DELETE', path, { body: { message, sha: meta.sha, branch: cfg.branch } });
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/*  State and sync                                                     */
+/* ------------------------------------------------------------------ */
+const state = { data: null, remote: null, view: 'day', dayId: null, queue: [], flushing: false, lastPull: 0, loadError: '', sheets: [] };
+
+function setSync(kind, text) { $('syncBtn').dataset.kind = kind; $('syncText').textContent = text; }
+function cacheRemote() { if (state.remote && connected()) store.set(cacheKey(), JSON.stringify(state.remote)); }
+function adoptRemote(data) {
+  state.remote = normalize(data);
+  const local = clone(state.remote);
+  state.queue.forEach((job) => job.mutate(local));
+  state.data = local;
+  cacheRemote();
+}
+
+async function pull({ quiet = false } = {}) {
+  if (!connected() || state.flushing || state.queue.length) return;
+  if (!quiet) setSync('saving', '同步中…');
+  try {
+    const r = await GH.readJSON(cfg.path);
+    if (!r) throw new Error(`repo 裡找不到 ${cfg.path}。`);
+    const incoming = normalize(r.data);
+    if (state.flushing || state.queue.length || !connected()) return;
+    if (JSON.stringify(incoming) !== JSON.stringify(state.remote)) {
+      const hadData = Boolean(state.remote);
+      adoptRemote(incoming);
+      state.loadError = '';
+      render();
+      if (hadData && incoming.updatedBy && incoming.updatedBy !== cfg.name) toast(`${incoming.updatedBy} 更新了行程`);
+    }
+    state.lastPull = Date.now();
+    setSync('ok', '已同步');
+  } catch (e) {
+    if (!connected()) return;
+    if (!state.data) { state.loadError = e.message; render(); }
+    setSync(e.network ? 'pending' : 'error', e.network ? '離線中' : '同步失敗');
+    if (!quiet) toast(e.message);
+  }
+}
+
+function commit(mutate, message) {
+  mutate(state.data);
+  touch(state.data);
+  render();
+  state.queue.push({ mutate, message });
+  return flush();
+}
+
+async function flush() {
+  if (state.flushing || !state.queue.length || !connected()) return;
+  state.flushing = true;
+  try {
+    while (state.queue.length) {
+      setSync('saving', '儲存中…');
+      await pushJob(state.queue[0]);
+      state.queue.shift();
+      adoptRemote(state.remote);
+      render();
+    }
+    state.lastPull = Date.now();
+    setSync('ok', '已儲存');
+  } catch (e) {
+    if (e.network) setSync('pending', `${state.queue.length} 項未儲存`);
+    else { setSync('error', '儲存失敗'); toast(e.message); }
+  } finally {
+    state.flushing = false;
+  }
+}
+
+async function pushJob(job) {
+  for (let attempt = 0; attempt < 6; attempt++) {
+    const r = await GH.readJSON(cfg.path);
+    if (!r) throw new Error(`repo 裡找不到 ${cfg.path}。`);
+    const data = normalize(r.data);
+    job.mutate(data);
+    touch(data);
+    try {
+      await GH.write(cfg.path, utf8ToB64(JSON.stringify(data, null, 2) + '\n'), job.message, r.sha);
+      state.remote = data;
+      return;
+    } catch (e) {
+      const conflict = e.status === 409 || (e.status === 422 && /sha/i.test(e.ghMessage || ''));
+      if (!conflict) throw e;
+      await sleep(300 + Math.random() * 500 * (attempt + 1));
+    }
+  }
+  throw new Error('和另一個人的修改一直衝突，請稍後再按一次儲存。');
+}
+
+/* Tries the new settings; only keeps them if the itinerary loads. */
+async function signIn(next) {
+  const prev = cfg;
+  cfg = Object.assign({}, cfg, next);
+  try {
+    const r = await GH.readJSON(cfg.path);
+    if (!r) throw new Error(`已連上「${cfg.repo}」，但裡面沒有 ${cfg.path}。請先把 data.json 上傳到這個 repo。`);
+    if (!normalize(r.data).days.length) throw new Error(`${cfg.path} 裡沒有任何天數，請確認上傳的是正確的檔案。`);
+    saveCfg();
+    state.queue = [];
+    adoptRemote(r.data);
+    state.loadError = '';
+    state.lastPull = Date.now();
+    setSync('ok', '已同步');
+    render();
+  } catch (e) {
+    cfg = prev;
+    throw e;
+  }
+}
+
+function signOut() {
+  store.del(cacheKey());
+  store.del(PIN_KEY);
+  store.del(FAIL_KEY);
+  cfg.token = '';
+  saveCfg();
+  Object.assign(state, { data: null, remote: null, queue: [], loadError: '', dayId: null, view: 'day' });
+  blobUrls.forEach((u) => URL.revokeObjectURL(u));
+  blobUrls.clear();
+  state.sheets.slice().forEach((s) => s.close(true));
+  if (lockEl) unlock();
+  render();
+  window.scrollTo({ top: 0 });
+}
+
+/* ------------------------------------------------------------------ */
+/*  Screenshots                                                        */
+/* ------------------------------------------------------------------ */
+const blobUrls = new Map();
+const inflight = new Map();
+function fileUrl(file) {
+  if (blobUrls.has(file.path)) return Promise.resolve(blobUrls.get(file.path));
+  if (!connected()) return Promise.reject(new Error('未登入'));
+  if (!inflight.has(file.path)) {
+    inflight.set(file.path, GH.readBlob(file.path)
+      .then((b) => { const u = URL.createObjectURL(b); blobUrls.set(file.path, u); return u; })
+      .finally(() => inflight.delete(file.path)));
+  }
+  return inflight.get(file.path);
+}
+
+/* Shrinks phone screenshots before upload while keeping text readable. */
+function compressImage(file) {
+  return new Promise((resolve, reject) => {
+    const src = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const w = img.naturalWidth, hgt = img.naturalHeight;
+      const scale = Math.min(1, 1280 / w, 4200 / hgt);
+      const c = document.createElement('canvas');
+      c.width = Math.max(1, Math.round(w * scale));
+      c.height = Math.max(1, Math.round(hgt * scale));
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(src);
+      c.toBlob((b) => (b ? resolve(b) : reject(new Error('無法處理這張圖片'))), 'image/jpeg', 0.85);
+    };
+    img.onerror = () => { URL.revokeObjectURL(src); reject(new Error('無法讀取這張圖片，請改用 JPG 或 PNG。')); };
+    img.src = src;
+  });
+}
+
+/* ------------------------------------------------------------------ */
+/*  Unlock PIN (per device)                                            */
+/* ------------------------------------------------------------------ */
+const canPin = () => Boolean(window.isSecureContext && window.crypto && crypto.subtle);
+function pinRecord() { try { return JSON.parse(store.get(PIN_KEY) || 'null'); } catch { return null; } }
+async function hashPin(pin, salt, iterations) {
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(pin), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt, iterations }, key, 256);
+  return bytesToB64(new Uint8Array(bits));
+}
+async function savePin(pin) {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iterations = 200000;
+  const hash = await hashPin(pin, salt, iterations);
+  store.set(PIN_KEY, JSON.stringify({ v: 1, len: pin.length, salt: bytesToB64(salt), iterations, hash }));
+  store.del(FAIL_KEY);
+}
+async function checkPin(pin) {
+  const rec = pinRecord();
+  return !rec || (await hashPin(pin, b64ToBytes(rec.salt), rec.iterations)) === rec.hash;
+}
+function failState() { try { return Object.assign({ count: 0, until: 0 }, JSON.parse(store.get(FAIL_KEY) || '{}')); } catch { return { count: 0, until: 0 }; } }
+function registerFail() {
+  const f = failState();
+  f.count += 1;
+  if (f.count % 5 === 0) f.until = Date.now() + Math.min(30000 * 2 ** (f.count / 5 - 1), 15 * 60000);
+  store.set(FAIL_KEY, JSON.stringify(f));
+  return f;
+}
+
+let lockEl = null, lockTimer = null, lockKeys = null, hiddenAt = 0;
+
+function lockApp() {
+  const rec = pinRecord();
+  if (!rec || lockEl || !connected()) return;
+  let entry = '', busy = false;
+  const dots = h('div', { class: 'pin-dots', 'aria-hidden': 'true' });
+  const msg = h('p', { class: 'pin-msg', role: 'status' }, '輸入解鎖密碼');
+  const drawDots = () => dots.replaceChildren(...Array.from({ length: rec.len }, (_, i) => h('span', { class: i < entry.length ? 'on' : '' })));
+  const waiting = () => {
+    const left = Math.ceil((failState().until - Date.now()) / 1000);
+    if (left > 0) { msg.textContent = `錯太多次了，請 ${left} 秒後再試`; msg.className = 'pin-msg err'; return true; }
+    return false;
+  };
+
+  const press = async (key) => {
+    if (busy || waiting()) return;
+    if (key === 'del') entry = entry.slice(0, -1);
+    else if (entry.length < rec.len) entry += key;
+    msg.textContent = '輸入解鎖密碼'; msg.className = 'pin-msg';
+    drawDots();
+    if (entry.length < rec.len) return;
+    busy = true;
+    const ok = await checkPin(entry);
+    busy = false;
+    if (ok) { store.del(FAIL_KEY); unlock(); return; }
+    registerFail();
+    entry = '';
+    drawDots();
+    if (!waiting()) { msg.textContent = '密碼不對，再試一次'; msg.className = 'pin-msg err'; }
+    panel.classList.remove('shake'); void panel.offsetWidth; panel.classList.add('shake');
+  };
+
+  const forgot = () => {
+    if (confirm('忘記密碼的話，要在這台裝置登出，再用 GitHub token 重新登入。\n行程資料不會受影響。確定嗎？')) signOut();
+  };
+  const keypad = h('div', { class: 'keypad' },
+    ['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((k) => h('button', { type: 'button', onclick: () => press(k) }, k)),
+    h('button', { class: 'aux', type: 'button', onclick: forgot }, '忘記密碼'),
+    h('button', { type: 'button', onclick: () => press('0') }, '0'),
+    h('button', { class: 'aux', type: 'button', 'aria-label': '刪除', onclick: () => press('del') }, icon('back')));
+  const panel = h('div', { class: 'lock-panel' },
+    h('div', { class: 'sign' },
+      h('div', { class: 'sign-face' }, h('div', { class: 'sign-area' }, '行程')),
+      h('div', { class: 'sign-band' }, h('span', { class: 'band-text' }, '已鎖定'))),
+    dots, msg, keypad);
+  lockEl = h('div', { class: 'lock', role: 'dialog', 'aria-modal': 'true', 'aria-label': '輸入解鎖密碼' }, panel);
+  drawDots();
+  waiting();
+  lockTimer = setInterval(() => { if (!busy && failState().until && !waiting() && /秒後/.test(msg.textContent)) { msg.textContent = '輸入解鎖密碼'; msg.className = 'pin-msg'; } }, 1000);
+  lockKeys = (e) => {
+    if (/^[0-9]$/.test(e.key)) { e.preventDefault(); press(e.key); }
+    else if (e.key === 'Backspace') { e.preventDefault(); press('del'); }
+  };
+  document.addEventListener('keydown', lockKeys);
+  document.querySelectorAll('.toast').forEach((t) => t.remove());
+  document.body.classList.add('is-locked');
+  document.body.append(lockEl);
+}
+
+function unlock() {
+  if (!lockEl) return;
+  lockEl.remove();
+  lockEl = null;
+  clearInterval(lockTimer);
+  document.removeEventListener('keydown', lockKeys);
+  document.body.classList.remove('is-locked');
+}
+
+function openPinSheet({ afterSignIn = false } = {}) {
+  const opts = { inputmode: 'numeric', pattern: '[0-9]*', maxlength: '8', autocomplete: 'new-password' };
+  const a = input('', 'password', Object.assign({ placeholder: '4 到 8 位數字' }, opts));
+  const b = input('', 'password', Object.assign({ placeholder: '再輸入一次' }, opts));
+  const err = h('p', { class: 'form-error', hidden: true });
+  const save = h('button', { class: 'btn primary', type: 'button' }, '設定密碼');
+  const sheet = openSheet(pinRecord() ? '更改解鎖密碼' : '設定解鎖密碼',
+    h('div', null,
+      h('p', { class: 'lead' }, '打開行程，或離開超過 5 分鐘再回來時，要先輸入這組數字。密碼只存在這台裝置，妹妹要在自己的手機另外設定。'),
+      err, field('解鎖密碼', a), field('再輸入一次', b)),
+    [h('button', { class: 'btn ghost', type: 'button', onclick: () => sheet.close(true) }, afterSignIn ? '先略過' : '取消'), save]);
+  save.addEventListener('click', async () => {
+    const p1 = a.value.trim(), p2 = b.value.trim();
+    const fail = (t) => { err.textContent = t; err.hidden = false; };
+    if (!/^\d{4,8}$/.test(p1)) return fail('請輸入 4 到 8 位數字。');
+    if (p1 !== p2) return fail('兩次輸入的不一樣。');
+    save.disabled = true;
+    await savePin(p1);
+    sheet.close(true);
+    toast('已設定解鎖密碼');
+  });
+  setTimeout(() => a.focus(), 250);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Rendering                                                          */
+/* ------------------------------------------------------------------ */
+const main = $('main');
+
+function render() {
+  const authed = connected();
+  document.body.classList.toggle('signed-out', !authed);
+  if (!authed) {
+    $('tripTitle').textContent = '旅行行程';
+    document.title = '旅行行程';
+    $('addBtn').hidden = true;
+    renderSignIn();
+    return;
+  }
+  const title = state.data ? state.data.title : '旅行行程';
+  $('tripTitle').textContent = title;
+  document.title = title;
+  document.querySelectorAll('.views button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.view === state.view)));
+  $('addBtn').hidden = state.view !== 'day' || !state.data;
+  const count = state.data ? state.data.days.reduce((n, d) => n + d.items.filter((i) => i.booking === 'needed').length, 0) : 0;
+  $('todoCount').hidden = !count;
+  $('todoCount').textContent = count;
+
+  if (!state.data) {
+    main.replaceChildren(state.loadError
+      ? h('div', { class: 'notice error' }, h('p', null, `無法載入行程：${state.loadError}`),
+          h('button', { class: 'btn small ghost', type: 'button', onclick: () => pull() }, '重試'),
+          h('button', { class: 'btn small ghost', type: 'button', onclick: openSettings }, '設定'))
+      : h('div', { class: 'empty-day' }, '載入行程中…'));
+    return;
+  }
+  if (state.view === 'todo') renderTodo(); else renderDay();
+}
+
+function renderSignIn() {
+  const name = input(cfg.name, 'text', { placeholder: '例如：姊姊', autocomplete: 'nickname' });
+  const owner = input(cfg.owner, 'text', { placeholder: 'repo 擁有者的 GitHub 帳號', autocapitalize: 'off', autocomplete: 'off', spellcheck: 'false' });
+  const repo = input(cfg.repo, 'text', { placeholder: '例如：trip-data', autocapitalize: 'off', autocomplete: 'off', spellcheck: 'false' });
+  const branch = input(cfg.branch, 'text', { autocapitalize: 'off', spellcheck: 'false' });
+  const path = input(cfg.path, 'text', { autocapitalize: 'off', spellcheck: 'false' });
+  const token = input('', 'password', { placeholder: 'github_pat_… 或 ghp_…', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false' });
+  const status = h('p', { class: 'status-line', role: 'status', hidden: true });
+  const show = (t, err) => { status.textContent = t; status.className = 'status-line' + (err ? ' err' : ''); status.hidden = false; };
+  const btn = h('button', { class: 'btn primary block', type: 'button' }, '登入');
+
+  const go = async () => {
+    const next = { name: name.value.trim(), owner: owner.value.trim(), repo: repo.value.trim(), branch: branch.value.trim() || 'main', path: path.value.trim() || 'data.json', token: token.value.trim() };
+    if (!next.name) return show('請填你的名字，修改紀錄會顯示是誰改的。', true);
+    if (!next.owner || !next.repo || !next.token) return show('GitHub 帳號、資料 repo 和 token 都要填。', true);
+    btn.disabled = true;
+    show('登入中…');
+    try {
+      await signIn(next);
+      if (canPin() && !pinRecord()) openPinSheet({ afterSignIn: true });
+    } catch (e) {
+      show(e.message, true);
+      btn.disabled = false;
+    }
+  };
+  btn.addEventListener('click', go);
+  token.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
+
+  main.replaceChildren(h('section', { class: 'sign' },
+    h('div', { class: 'sign-face' }, h('div', { class: 'sign-area' }, '登入')),
+    h('div', { class: 'sign-band' }, h('span', { class: 'band-text' }, '登入後才看得到行程')),
+    h('div', { class: 'login-body' },
+      h('p', null, '行程存在私人的 GitHub repo，每個人用自己的 token 登入。'),
+      field('你的名字', name),
+      field('GitHub 帳號', owner, '資料 repo 擁有者的帳號。妹妹這裡也填姊姊的帳號。'),
+      field('資料 repo', repo),
+      field('Token', token, 'Token 只存在這台裝置，不會放進網址或 repo。'),
+      h('details', { class: 'advanced' }, h('summary', null, '進階設定'),
+        h('div', { class: 'row2' }, field('分支', branch), field('檔案', path))),
+      btn, status)));
+}
+
+function currentIndex() {
+  const days = state.data.days;
+  let idx = days.findIndex((d) => d.id === state.dayId);
+  if (idx < 0) {
+    idx = Math.max(0, days.findIndex((d) => d.date === todayStr()));
+    state.dayId = days[idx] ? days[idx].id : null;
+  }
+  return idx;
+}
+
+function goDay(idx) {
+  const day = state.data && state.data.days[idx];
+  if (!day) return;
+  state.dayId = day.id;
+  state.view = 'day';
+  render();
+  window.scrollTo({ top: 0 });
+}
+
+function renderDay() {
+  const days = state.data.days;
+  if (!days.length) { main.replaceChildren(h('div', { class: 'empty-day' }, 'data.json 裡沒有任何天數。')); return; }
+  const idx = currentIndex();
+  const day = days[idx], prev = days[idx - 1], next = days[idx + 1];
+
+  const sign = h('section', { class: 'sign', 'aria-label': '日期' },
+    h('button', { class: 'sign-face', type: 'button', onclick: () => openDaySheet(day.id), 'aria-label': '修改這天的地點和住宿' },
+      h('div', { class: 'sign-area' + (day.area ? '' : ' empty') }, day.area || '點這裡填地點'),
+      h('div', { class: 'sign-day' }, `${dayName(idx)}　${md(day.date)}（${wd(day.date)}）`)),
+    h('div', { class: 'sign-band' },
+      h('button', { class: 'prev', type: 'button', disabled: !prev, onclick: () => goDay(idx - 1), 'aria-label': '前一天' },
+        h('span', { class: 'arr' }, '◀'), prev ? h('span', { class: 'lbl' }, `${md(prev.date)} ${prev.area}`) : null),
+      h('button', { class: 'next', type: 'button', disabled: !next, onclick: () => goDay(idx + 1), 'aria-label': '後一天' },
+        next ? h('span', { class: 'lbl' }, `${md(next.date)} ${next.area}`) : null, h('span', { class: 'arr' }, '▶'))));
+
+  const strip = h('div', { class: 'strip', 'aria-label': '選擇日期' },
+    days.map((d, i) => h('button', { class: 'chip-day', type: 'button', 'aria-current': String(i === idx), onclick: () => goDay(i) },
+      h('span', { class: 'd' }, md(d.date)), h('span', { class: 'w' }, wd(d.date)),
+      d.items.some((it) => it.booking === 'needed') ? h('span', { class: 'flag', title: '有項目需要預約' }) : null)));
+
+  const hotelUrl = safeUrl(day.hotel.url);
+  const stay = h('div', { class: 'stay', role: 'button', tabindex: '0', onclick: () => openDaySheet(day.id),
+      onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDaySheet(day.id); } } },
+    icon('bed'),
+    h('div', { class: 'stay-text' }, h('small', null, '今晚住宿'), h('strong', null, day.hotel.name || '還沒填')),
+    hotelUrl ? h('a', { class: 'open', href: hotelUrl, target: '_blank', rel: 'noopener noreferrer', onclick: (e) => e.stopPropagation() }, '開啟') : null);
+
+  const items = sortedItems(day);
+  const list = items.length
+    ? h('ol', { class: 'timeline' }, items.map(itemEl))
+    : h('div', { class: 'empty-day' }, '這天還沒有安排，按右下角「新增」加入第一個行程。');
+
+  main.replaceChildren(sign, strip, stay, list);
+  requestAnimationFrame(() => {
+    const on = strip.querySelector('[aria-current=true]');
+    if (on) strip.scrollLeft = on.offsetLeft - strip.clientWidth / 2 + on.clientWidth / 2;
+  });
+}
+
+function notesEl(text) {
+  const p = h('p', { class: 'notes' });
+  const re = /https?:\/\/[^\s<>"'，。、）)]+/g;
+  let last = 0, m;
+  while ((m = re.exec(text))) {
+    if (m.index > last) p.append(text.slice(last, m.index));
+    const url = safeUrl(m[0]);
+    p.append(url ? h('a', { href: url, target: '_blank', rel: 'noopener noreferrer', onclick: (e) => e.stopPropagation() }, m[0]) : m[0]);
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) p.append(text.slice(last));
+  return p;
+}
+
+function thumbEl(file) {
+  const img = h('img', { alt: file.name || '截圖', loading: 'lazy' });
+  const btn = h('button', { class: 'thumb', type: 'button', 'aria-label': '查看截圖', onclick: (e) => { e.stopPropagation(); openViewer(file); } }, img);
+  fileUrl(file).then((u) => { img.src = u; }).catch(() => btn.classList.add('broken'));
+  return btn;
+}
+
+function itemEl(it) {
+  const time = it.time
+    ? [h('span', { class: 't-start' }, it.time), it.end ? h('span', { class: 't-end' }, it.end) : null]
+    : h('span', { class: 't-none' }, '時間未定');
+  const badge = it.booking === 'needed' ? h('span', { class: 'badge need' }, '需預約')
+    : it.booking === 'done' ? h('span', { class: 'badge done' }, '已預約') : null;
+  return h('li', { class: `item type-${it.type}` },
+    h('div', { class: 't' }, time),
+    h('div', { class: 'body', role: 'button', tabindex: '0', 'aria-label': `編輯 ${it.title}`,
+        onclick: () => openEditor(it.id), onkeydown: (e) => { if (e.key === 'Enter') openEditor(it.id); } },
+      h('div', { class: 'item-title' }, it.title || '（沒有標題）'),
+      badge ? h('div', { class: 'badges' }, badge) : null,
+      it.notes ? notesEl(it.notes) : null,
+      it.links.length ? h('div', { class: 'links' }, it.links.map((l) =>
+        h('a', { class: 'link-chip', href: l.url, target: '_blank', rel: 'noopener noreferrer', onclick: (e) => e.stopPropagation() }, icon('link'), h('span', null, linkLabel(l))))) : null,
+      it.files.length ? h('div', { class: 'thumbs' }, it.files.map(thumbEl)) : null,
+      it.updatedBy ? h('div', { class: 'meta' }, `${it.updatedBy} 修改於 ${stampText(it.updatedAt)}`) : null));
+}
+
+function renderTodo() {
+  const groups = [], done = [];
+  state.data.days.forEach((day, i) => {
+    const items = sortedItems(day);
+    const need = items.filter((it) => it.booking === 'needed');
+    if (need.length) groups.push({ day, i, items: need });
+    items.filter((it) => it.booking === 'done').forEach((it) => done.push({ day, it }));
+  });
+  const total = groups.reduce((n, g) => n + g.items.length, 0);
+  const row = (day, it, isDone) => h('div', { class: 'todo-row' + (isDone ? ' done' : ''), role: 'button', tabindex: '0', onclick: () => openEditor(it.id),
+      onkeydown: (e) => { if (e.key === 'Enter') openEditor(it.id); } },
+    h('div', { class: 'txt' },
+      h('div', { class: 'item-title' }, it.title),
+      h('div', { class: 'sub' }, `${md(day.date)}（${wd(day.date)}）${it.time ? ' ' + it.time : ''}${isDone && it.updatedBy ? `，${it.updatedBy} 已處理` : ''}`)),
+    isDone ? null : h('button', { class: 'btn small primary', type: 'button', onclick: (e) => {
+      e.stopPropagation();
+      commit(M.setBooking(it.id, 'done', who(), new Date().toISOString()), `${who()}：「${it.title}」已預約`);
+    } }, '已訂好'));
+
+  main.replaceChildren(...[
+    h('h2', { class: 'todo-head' }, total ? `還有 ${total} 項要預約` : '需要預約的都處理好了'),
+    total ? null : h('div', { class: 'empty-day' }, '在行程裡把「預約」設成「需預約」，就會出現在這裡。'),
+    ...groups.map((g) => [h('div', { class: 'todo-day' }, `${dayName(g.i)} ${md(g.day.date)}（${wd(g.day.date)}）${g.day.area}`), ...g.items.map((it) => row(g.day, it, false))]),
+    done.length ? h('div', { class: 'todo-day' }, '已預約') : null,
+    ...done.map(({ day, it }) => row(day, it, true)),
+  ].flat().filter(Boolean));
+}
+
+/* ------------------------------------------------------------------ */
+/*  Sheets, viewer, toast                                              */
+/* ------------------------------------------------------------------ */
+function openSheet(title, body, foot = [], { guard } = {}) {
+  const prevFocus = document.activeElement;
+  const closeBtn = h('button', { class: 'icon-btn', type: 'button', 'aria-label': '關閉' }, icon('close'));
+  const panel = h('div', { class: 'sheet', role: 'dialog', 'aria-modal': 'true', 'aria-label': title },
+    h('div', { class: 'sheet-head' }, h('h2', { class: 'sheet-title' }, title), closeBtn),
+    h('div', { class: 'sheet-body' }, body),
+    foot.length ? h('div', { class: 'sheet-foot' }, foot) : null);
+  const backdrop = h('div', { class: 'backdrop' }, panel);
+  const api = {
+    close(force) {
+      if (!force && guard && !guard()) return;
+      backdrop.remove();
+      state.sheets = state.sheets.filter((s) => s !== api);
+      if (!state.sheets.length) document.body.classList.remove('locked');
+      if (prevFocus && prevFocus.focus && document.contains(prevFocus)) prevFocus.focus({ preventScroll: true });
+    },
+  };
+  closeBtn.addEventListener('click', () => api.close());
+  backdrop.addEventListener('click', (e) => { if (e.target === backdrop) api.close(); });
+  state.sheets.push(api);
+  document.body.classList.add('locked');
+  document.body.append(backdrop);
+  const first = panel.querySelector('.sheet-body input, .sheet-body textarea');
+  if (first && window.matchMedia('(min-width: 700px)').matches) first.focus();
+  return api;
+}
+
+function openViewer(file) {
+  const img = h('img', { alt: file.name || '截圖' });
+  const dl = h('a', { download: (file.name || 'screenshot').replace(/\.[^.]+$/, '') + '.jpg', hidden: true }, '下載');
+  const wrap = h('div', { class: 'viewer', role: 'dialog', 'aria-modal': 'true', 'aria-label': '截圖' },
+    h('div', { class: 'viewer-bar' }, h('span', { class: 'name' }, file.name || '截圖'), dl,
+      h('button', { class: 'icon-btn', type: 'button', 'aria-label': '關閉', onclick: () => api.close() }, icon('close'))),
+    h('div', { class: 'viewer-img' }, img));
+  const api = { close() { wrap.remove(); state.sheets = state.sheets.filter((s) => s !== api); if (!state.sheets.length) document.body.classList.remove('locked'); } };
+  fileUrl(file).then((u) => { img.src = u; dl.href = u; dl.hidden = false; }).catch((e) => toast('截圖載入失敗：' + e.message));
+  state.sheets.push(api);
+  document.body.classList.add('locked');
+  document.body.append(wrap);
+}
+
+let toastTimer;
+function toast(msg) {
+  if (lockEl) return;
+  document.querySelectorAll('.toast').forEach((t) => t.remove());
+  const t = h('div', { class: 'toast', role: 'status' }, msg);
+  document.body.append(t);
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.remove(), 3200);
+}
+
+function field(label, control, hint) {
+  return h('div', { class: 'field' }, h('label', { class: 'label' }, label), control, hint ? h('span', { class: 'hint' }, hint) : null);
+}
+function input(value, type = 'text', extra = {}) { return h('input', Object.assign({ class: 'input', type, value: value || '' }, extra)); }
+function seg(options, value, onChange) {
+  const buttons = options.map((o) => h('button', { type: 'button', 'aria-pressed': String(o.id === value), onclick: () => {
+    buttons.forEach((b, i) => b.setAttribute('aria-pressed', String(options[i].id === o.id)));
+    onChange(o.id);
+  } }, o.label));
+  return h('div', { class: 'seg', role: 'group' }, buttons);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Item editor                                                        */
+/* ------------------------------------------------------------------ */
+function openEditor(itemId) {
+  const found = itemId ? findItem(state.data, itemId) : null;
+  const base = found ? clone(found.item)
+    : { id: uid(), order: Date.now(), time: '', end: '', title: '', type: 'sight', booking: '', notes: '', links: [], files: [] };
+  let dayId = found ? found.day.id : state.dayId;
+  let type = base.type, booking = base.booking;
+  const keepFiles = [...base.files];
+  const removedFiles = [];
+  const pending = [];
+
+  const title = input(base.title, 'text', { placeholder: '例如：搭機場巴士到飯店', enterkeyhint: 'done' });
+  const daySel = h('select', { class: 'input' }, state.data.days.map((d, i) =>
+    h('option', { value: d.id, selected: d.id === dayId }, `${dayName(i)} ${md(d.date)}（${wd(d.date)}）${d.area}`)));
+  daySel.addEventListener('change', () => { dayId = daySel.value; });
+  const start = input(base.time, 'time');
+  const end = input(base.end, 'time');
+  const notes = h('textarea', { class: 'input', rows: '4', placeholder: '班次、票價、注意事項…' });
+  notes.value = base.notes;
+
+  const linkList = h('div');
+  const addLinkRow = (l = { label: '', url: '' }) => {
+    const row = h('div', { class: 'link-row' },
+      input(l.label, 'text', { placeholder: '名稱', 'aria-label': '連結名稱' }),
+      input(l.url, 'url', { placeholder: '貼上網址', 'aria-label': '網址', inputmode: 'url', autocapitalize: 'off' }),
+      h('button', { class: 'icon-btn', type: 'button', 'aria-label': '移除連結', onclick: () => row.remove() }, icon('close')));
+    linkList.append(row);
+  };
+  base.links.forEach(addLinkRow);
+
+  const fileBox = h('div', { class: 'files' });
+  const picker = h('input', { type: 'file', accept: 'image/*', multiple: true });
+  const addTile = h('label', { class: 'add-file' }, icon('image'), '加入截圖', picker);
+  const drawFiles = () => {
+    fileBox.replaceChildren(
+      ...keepFiles.map((f) => {
+        const img = h('img', { alt: f.name || '截圖' });
+        fileUrl(f).then((u) => { img.src = u; }).catch(() => {});
+        return h('div', { class: 'file-tile' }, img, h('button', { class: 'x', type: 'button', 'aria-label': '移除截圖', onclick: () => {
+          keepFiles.splice(keepFiles.indexOf(f), 1); removedFiles.push(f); drawFiles();
+        } }, icon('close')));
+      }),
+      ...pending.map((p) => h('div', { class: 'file-tile new' }, h('img', { src: p.preview, alt: p.file.name }),
+        h('button', { class: 'x', type: 'button', 'aria-label': '移除截圖', onclick: () => {
+          URL.revokeObjectURL(p.preview); pending.splice(pending.indexOf(p), 1); drawFiles();
+        } }, icon('close')))),
+      addTile);
+  };
+  picker.addEventListener('change', () => {
+    [...picker.files].forEach((file) => pending.push({ file, preview: URL.createObjectURL(file) }));
+    picker.value = '';
+    drawFiles();
+  });
+  drawFiles();
+
+  const errorEl = h('p', { class: 'form-error', hidden: true });
+  const collectLinks = () => [...linkList.children].map((row) => {
+    const [l, u] = row.querySelectorAll('input');
+    return { label: l.value.trim(), url: safeUrl(u.value) };
+  }).filter((l) => l.url);
+  const snapshot = () => JSON.stringify([title.value, dayId, start.value, end.value, type, booking, notes.value, collectLinks(), keepFiles.length, pending.length]);
+  const initial = snapshot();
+
+  const body = h('div', null,
+    errorEl,
+    field('標題', title),
+    field('日期', daySel),
+    h('div', { class: 'row2' }, field('開始', start), field('結束（可不填）', end)),
+    h('button', { class: 'textbtn clear-time', type: 'button', onclick: () => { start.value = ''; end.value = ''; } }, '清除時間（改成時間未定）'),
+    field('類型', seg(TYPES, type, (v) => { type = v; })),
+    field('預約', seg(BOOKINGS, booking, (v) => { booking = v; })),
+    field('備註', notes),
+    h('div', { class: 'field' }, h('span', { class: 'label' }, '連結'), linkList,
+      h('button', { class: 'textbtn', type: 'button', onclick: () => addLinkRow() }, '＋ 新增連結'),
+      h('span', { class: 'hint' }, '訂房確認、Google 雲端硬碟裡的票券 PDF、地圖都可以貼。')),
+    h('div', { class: 'field' }, h('span', { class: 'label' }, '截圖'), fileBox,
+      h('span', { class: 'hint' }, '存到 GitHub 前會自動縮小。')),
+    found && found.item.updatedBy ? h('p', { class: 'meta' }, `最後由 ${found.item.updatedBy} 修改於 ${stampText(found.item.updatedAt)}`) : null,
+    found ? h('button', { class: 'btn danger block', type: 'button', style: 'margin-top:18px', onclick: () => {
+      if (!confirm(`確定刪除「${base.title}」？`)) return;
+      sheet.close(true);
+      commit(M.deleteItem(base.id), `${who()}：刪除「${base.title}」`).then(() => cleanupFiles(base.files));
+    } }, '刪除這個項目') : null);
+
+  const saveLabel = found ? '儲存修改' : '加入行程';
+  const saveBtn = h('button', { class: 'btn primary', type: 'button' }, saveLabel);
+  const sheet = openSheet(found ? '編輯行程' : '新增行程', body,
+    [h('button', { class: 'btn ghost', type: 'button', onclick: () => sheet.close() }, '取消'), saveBtn],
+    { guard: () => snapshot() === initial || confirm('還沒儲存，確定要關閉嗎？') });
+
+  saveBtn.addEventListener('click', async () => {
+    const t = title.value.trim();
+    const fail = (msg) => { errorEl.textContent = msg; errorEl.hidden = false; };
+    if (!t) { fail('請填標題。'); title.focus(); return; }
+    const s = validTime(start.value), e = s ? validTime(end.value) : '';
+    if (s && e && e < s) return fail('結束時間比開始時間早。');
+    if (pending.length && !navigator.onLine) return fail('目前沒有網路，截圖無法上傳。');
+    errorEl.hidden = true;
+    saveBtn.disabled = true;
+
+    const uploaded = [];
+    try {
+      for (let i = 0; i < pending.length; i++) {
+        saveBtn.textContent = `上傳截圖 ${i + 1}/${pending.length}…`;
+        const blob = await compressImage(pending[i].file);
+        const path = `attachments/${dayId}/${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}.jpg`;
+        await GH.writeNew(path, bytesToB64(new Uint8Array(await blob.arrayBuffer())), `${who()}：上傳「${t}」的截圖`);
+        blobUrls.set(path, URL.createObjectURL(blob));
+        uploaded.push({ path, name: pending[i].file.name });
+      }
+    } catch (err) {
+      // Keep what already went up, so a retry doesn't upload it twice.
+      uploaded.forEach((u) => { keepFiles.push(u); pending.shift(); });
+      drawFiles();
+      fail('截圖上傳失敗：' + err.message);
+      saveBtn.disabled = false;
+      saveBtn.textContent = saveLabel;
+      return;
+    }
+    pending.forEach((p) => URL.revokeObjectURL(p.preview));
+
+    const item = Object.assign({}, base, {
+      title: t, time: s, end: e, type, booking, notes: notes.value.replace(/\s+$/, ''),
+      links: collectLinks(), files: [...keepFiles, ...uploaded],
+      updatedBy: who(), updatedAt: new Date().toISOString(),
+    });
+    sheet.close(true);
+    if (state.view === 'day') state.dayId = dayId;
+    await commit(M.upsertItem(item, dayId), `${who()}：${found ? '修改' : '新增'}「${t}」`);
+    cleanupFiles(removedFiles);
+  });
+}
+
+function cleanupFiles(files) {
+  if (!connected() || state.queue.length) return;
+  files.filter((f) => f.path).forEach((f) => GH.remove(f.path, `${who()}：刪除截圖`).catch(() => {}));
+}
+
+/* ------------------------------------------------------------------ */
+/*  Day sheet (area + hotel)                                           */
+/* ------------------------------------------------------------------ */
+function openDaySheet(dayId) {
+  const idx = state.data.days.findIndex((d) => d.id === dayId);
+  const day = state.data.days[idx];
+  if (!day) return;
+  const area = input(day.area, 'text', { placeholder: '例如：市區' });
+  const hotel = input(day.hotel.name, 'text', { placeholder: '飯店名稱' });
+  const url = input(day.hotel.url, 'url', { placeholder: '訂房確認或地圖連結', inputmode: 'url', autocapitalize: 'off' });
+  const values = () => JSON.stringify([area.value, hotel.value, url.value]);
+  const initial = values();
+  const sheet = openSheet(`${dayName(idx)} ${md(day.date)}（${wd(day.date)}）`,
+    h('div', null,
+      field('地點', area, '顯示在站名牌上。'),
+      field('今晚住宿', hotel),
+      field('住宿連結', url, '訂房確認信、Google 地圖或雲端硬碟連結都可以。')),
+    [h('button', { class: 'btn ghost', type: 'button', onclick: () => sheet.close() }, '取消'),
+     h('button', { class: 'btn primary', type: 'button', onclick: () => {
+       sheet.close(true);
+       commit(M.updateDay(dayId, { area: area.value.trim(), hotel: { name: hotel.value.trim(), url: safeUrl(url.value) } }),
+         `${who()}：修改${dayName(idx)}的地點和住宿`);
+     } }, '儲存')],
+    { guard: () => values() === initial || confirm('還沒儲存，確定要關閉嗎？') });
+}
+
+/* ------------------------------------------------------------------ */
+/*  Settings                                                           */
+/* ------------------------------------------------------------------ */
+function openSettings() {
+  const name = input(cfg.name, 'text', { autocomplete: 'nickname' });
+  const owner = input(cfg.owner, 'text', { autocapitalize: 'off', autocomplete: 'off', spellcheck: 'false' });
+  const repo = input(cfg.repo, 'text', { autocapitalize: 'off', autocomplete: 'off', spellcheck: 'false' });
+  const branch = input(cfg.branch, 'text', { autocapitalize: 'off', spellcheck: 'false' });
+  const path = input(cfg.path, 'text', { autocapitalize: 'off', spellcheck: 'false' });
+  const token = input('', 'password', { placeholder: '不換 token 就留白', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false' });
+  const status = h('p', { class: 'status-line', hidden: true });
+  const show = (t, err) => { status.textContent = t; status.className = 'status-line' + (err ? ' err' : ''); status.hidden = false; };
+
+  const saveBtn = h('button', { class: 'btn primary block', type: 'button' }, '儲存並重新同步');
+  saveBtn.addEventListener('click', async () => {
+    const next = { name: name.value.trim(), owner: owner.value.trim(), repo: repo.value.trim(), branch: branch.value.trim() || 'main', path: path.value.trim() || 'data.json', token: token.value.trim() || cfg.token };
+    if (!next.name) return show('名字不能空白。', true);
+    if (!next.owner || !next.repo) return show('GitHub 帳號和資料 repo 都要填。', true);
+    if (state.queue.length) return show('還有修改沒存到 GitHub，等同步完成再改設定。', true);
+    const movingRepo = ['owner', 'repo', 'branch', 'path'].some((k) => next[k] !== cfg[k]);
+    const oldCache = cacheKey();
+    saveBtn.disabled = true;
+    show('連線中…');
+    try {
+      await signIn(next);
+      if (movingRepo) store.del(oldCache);
+      sheet.close(true);
+      toast('已儲存設定');
+    } catch (e) {
+      show(e.message, true);
+      saveBtn.disabled = false;
+    }
+  });
+
+  const shareBtn = h('button', { class: 'btn ghost', type: 'button', onclick: async () => {
+    const link = `${location.origin}${location.pathname}?` + new URLSearchParams({ owner: cfg.owner, repo: cfg.repo, branch: cfg.branch, path: cfg.path });
+    try { await navigator.clipboard.writeText(link); toast('已複製連結（不含 token）'); } catch { prompt('複製這個連結傳給妹妹：', link); }
+  } }, '複製登入連結給妹妹');
+
+  const pinBox = h('div', { class: 'stack' });
+  const drawPin = () => {
+    if (!canPin()) { pinBox.replaceChildren(h('p', { class: 'hint' }, '這個網址不支援解鎖密碼，需要用 https 開啟（GitHub Pages 會自動是 https）。')); return; }
+    pinBox.replaceChildren(...(pinRecord()
+      ? [h('p', { class: 'lead' }, '這台裝置已設定解鎖密碼。'),
+         h('button', { class: 'btn ghost', type: 'button', onclick: () => { sheet.close(true); lockApp(); } }, '現在鎖定'),
+         h('button', { class: 'btn ghost', type: 'button', onclick: () => { sheet.close(true); openPinSheet(); } }, '更改解鎖密碼'),
+         h('button', { class: 'btn ghost', type: 'button', onclick: () => {
+           if (!confirm('要移除這台裝置的解鎖密碼嗎？')) return;
+           store.del(PIN_KEY); store.del(FAIL_KEY); drawPin(); toast('已移除解鎖密碼');
+         } }, '移除解鎖密碼')]
+      : [h('p', { class: 'lead' }, '設定後，打開行程要先輸入數字密碼。每台裝置各自設定。'),
+         h('button', { class: 'btn ghost', type: 'button', onclick: () => { sheet.close(true); openPinSheet(); } }, '設定解鎖密碼')]));
+  };
+  drawPin();
+
+  const exportBtn = h('button', { class: 'btn ghost', type: 'button', onclick: () => {
+    const blob = new Blob([JSON.stringify(state.data, null, 2)], { type: 'application/json' });
+    const a = h('a', { href: URL.createObjectURL(blob), download: `trip-backup-${todayStr()}.json` });
+    document.body.append(a); a.click(); a.remove();
+  } }, '下載備份（JSON）');
+
+  const sheet = openSheet('設定', h('div', null,
+    h('h3', { class: 'section-title' }, '解鎖密碼'),
+    pinBox,
+    h('h3', { class: 'section-title' }, '帳號'),
+    field('你的名字', name, '修改紀錄會顯示這個名字。'),
+    field('GitHub 帳號', owner),
+    field('資料 repo', repo),
+    h('div', { class: 'row2' }, field('分支', branch), field('檔案', path)),
+    field('更換 Token', token),
+    saveBtn, status,
+    h('h3', { class: 'section-title' }, '其他'),
+    h('div', { class: 'stack' },
+      shareBtn,
+      h('a', { class: 'btn ghost', href: `https://github.com/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}/commits/${encodeURIComponent(cfg.branch)}`, target: '_blank', rel: 'noopener noreferrer' }, '在 GitHub 看修改紀錄'),
+      exportBtn,
+      h('button', { class: 'btn danger', type: 'button', onclick: () => {
+        const warn = state.queue.length ? `還有 ${state.queue.length} 項修改沒存到 GitHub，登出會遺失。\n` : '';
+        if (confirm(`${warn}要在這台裝置登出嗎？會清除 token、解鎖密碼和離線資料，GitHub 上的行程不受影響。`)) signOut();
+      } }, '在這台裝置登出'))));
+}
+
+/* ------------------------------------------------------------------ */
+/*  Wiring                                                             */
+/* ------------------------------------------------------------------ */
+$('settingsBtn').append(icon('gear'));
+$('addBtn').append(icon('plus'), '新增');
+$('settingsBtn').addEventListener('click', openSettings);
+$('addBtn').addEventListener('click', () => openEditor(null));
+$('syncBtn').addEventListener('click', () => { if (state.queue.length) flush(); else pull(); });
+document.querySelectorAll('.views button').forEach((b) => b.addEventListener('click', () => {
+  state.view = b.dataset.view;
+  render();
+  window.scrollTo({ top: 0 });
+}));
+
+document.addEventListener('keydown', (e) => {
+  if (lockEl) return;
+  if (e.key === 'Escape' && state.sheets.length) { state.sheets[state.sheets.length - 1].close(); return; }
+  if (state.sheets.length || state.view !== 'day' || !state.data || !connected() || /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return;
+  if (e.key === 'ArrowLeft') goDay(currentIndex() - 1);
+  if (e.key === 'ArrowRight') goDay(currentIndex() + 1);
+});
+
+let touchStart = null;
+main.addEventListener('touchstart', (e) => {
+  const t = e.touches[0];
+  touchStart = e.touches.length === 1 && !e.target.closest('.strip, .thumbs, .links') ? { x: t.clientX, y: t.clientY, at: Date.now() } : null;
+}, { passive: true });
+main.addEventListener('touchend', (e) => {
+  if (!touchStart || state.view !== 'day' || !state.data || !connected()) return;
+  const t = e.changedTouches[0];
+  const dx = t.clientX - touchStart.x, dy = t.clientY - touchStart.y;
+  if (Math.abs(dx) > 70 && Math.abs(dy) < 45 && Date.now() - touchStart.at < 600) goDay(currentIndex() + (dx < 0 ? 1 : -1));
+  touchStart = null;
+}, { passive: true });
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') { hiddenAt = Date.now(); return; }
+  if (hiddenAt && Date.now() - hiddenAt > LOCK_AFTER_MS) lockApp();
+  hiddenAt = 0;
+  if (connected()) { if (state.queue.length) flush(); else pull({ quiet: true }); }
+});
+window.addEventListener('online', () => { if (connected()) { if (state.queue.length) flush(); else pull({ quiet: true }); } });
+window.addEventListener('beforeunload', (e) => { if (state.queue.length) { e.preventDefault(); e.returnValue = ''; } });
+setInterval(() => {
+  if (!connected() || document.visibilityState !== 'visible') return;
+  if (state.queue.length) { if (navigator.onLine) flush(); return; }
+  if (!state.sheets.length && !lockEl && Date.now() - state.lastPull > 45000) pull({ quiet: true });
+}, 15000);
+
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+/* Start */
+if (connected()) {
+  if (pinRecord()) lockApp();
+  try {
+    const cached = JSON.parse(store.get(cacheKey()) || 'null');
+    if (cached) { state.remote = normalize(cached); state.data = clone(state.remote); }
+  } catch {}
+  render();
+  setSync('saving', '同步中…');
+  pull({ quiet: Boolean(state.data) });
+} else {
+  render();
+}
+
+})();
+</script>
+</body>
+</html>
