@@ -103,7 +103,7 @@ Once she's set up on her home screen, you can both delete (收回) the invite me
 - The first time, tap **加入建議清單** for a common list for a trip from Taiwan to Japan (passport, Visit Japan Web, eSIM, cash, medicine, power bank rules, and so on), then add, edit, or delete items with **新增** or by tapping an item.
 - Each item has a category, an optional note (links in it are tappable), and optionally who's responsible.
 - **所有人負責:** set 誰負責 to **所有人** for things each person has to do themselves (e.g. passport, Visit Japan Web). The item then shows a chip for each person (爸 媽 培 菲); anyone can tap a chip to tick that person, and the item only counts as done once all four are ticked. The box on the left shows how many have ticked, e.g. 2/4. The chip for the person using this phone has a blue outline.
-- **行李 has subcategories** such as 衣物, 盥洗用品, 電子產品 and 藥品, each with its own count (e.g. 1/3). Use **＋ 新增** next to a subcategory to add an item straight into it, or **＋ 新增小分類** to start a new one (e.g. 伴手禮). In an item's editor, pick a subcategory or type a new name. Tap a subcategory's name to rename it; all its items follow.
+- **行李 has subcategories** (衣物, 盥洗用品, 電子產品 and 藥品 to start), each with its own count (e.g. 1/3). Use **＋ 新增** next to a subcategory to add an item straight into it; in an item's editor you can move it to another subcategory. The admin taps **管理小分類** (at the bottom of 行李) to rename, reorder (↑ ↓), delete (✕) or add subcategories. Renaming keeps the items; deleting moves its items to 未分類.
 - Everyone can edit this list, including members.
 
 ## Admin and members
@@ -146,7 +146,7 @@ You can also edit `data.json` directly on GitHub. The structure:
 {
   "title": "家族旅行",
   "mapUrl": "",
-  "prep": { "items": [{ "id": "x1", "section": "行李", "sub": "衣物", "text": "換洗衣服", "detail": "", "owner": "", "done": false }] },
+  "prep": { "subs": ["衣物", "盥洗用品", "電子產品", "藥品"], "items": [{ "id": "x1", "section": "行李", "sub": "衣物", "text": "換洗衣服", "detail": "", "owner": "", "done": false }] },
   "split": {
     "people": [{ "id": "p1", "name": "姊姊" }, { "id": "p2", "name": "妹妹" }],
     "currency": "TWD",

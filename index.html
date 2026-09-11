@@ -217,6 +217,8 @@ main{padding-top:12px;padding-bottom:calc(110px + var(--safe-b))}
 .prep-sub .textbtn{margin-left:auto;min-height:30px;padding:2px 0}
 .prep-row.nested{margin-left:14px}
 .add-sub{display:block;margin:4px 0 0 14px}
+.sub-row{display:grid;grid-template-columns:1fr 40px 40px 40px;gap:4px;margin-bottom:6px}
+.sub-row .icon-btn{width:40px;height:46px;color:var(--ink-2);font-size:18px}
 .owner{display:inline-block;margin-top:4px;font-size:12px;font-weight:600;color:var(--sea);background:var(--t-stay-bg);border-radius:4px;padding:1px 7px}
 .who-am-i{margin-bottom:12px}
 
@@ -506,7 +508,7 @@ function normalizePrep(raw) {
       id: String(it.id || uid()),
       order: Number.isFinite(it.order) ? it.order : i,
       section: PREP_SECTIONS.includes(it.section) ? it.section : '其他',
-      sub: it.section === '行李' ? String(it.sub || SUGGESTED_SUB[it.text] || '') : '',
+      sub: it.section === '行李' ? (typeof it.sub === 'string' ? it.sub : SUGGESTED_SUB[it.text] || '') : '', // older items had no sub
       text: String(it.text || ''),
       detail: String(it.detail || ''),
       owner: String(it.owner || ''),
@@ -514,7 +516,15 @@ function normalizePrep(raw) {
       done: Boolean(it.done),
       updatedBy: String(it.updatedBy || ''), updatedAt: String(it.updatedAt || ''),
     })),
+    subs: Array.isArray(x.subs) ? [...new Set(x.subs.map((v) => String(v).trim()).filter(Boolean))] : null,
   };
+}
+/* 行李 subcategories in display order: the managed list (or the defaults), plus any name still used by an item. */
+function luggageSubList(prep) {
+  const base = Array.isArray(prep.subs) ? prep.subs : LUGGAGE_SUBS;
+  const extra = [];
+  prep.items.forEach((x) => { if (x.section === '行李' && x.sub && !base.includes(x.sub) && !extra.includes(x.sub)) extra.push(x.sub); });
+  return [...base, ...extra];
 }
 function normalizeSplit(raw) {
   const sp = raw && typeof raw === 'object' ? raw : {};
@@ -636,9 +646,15 @@ const M = {
     const it = d.prep.items.find((x) => x.id === id);
     if (it) Object.assign(it, { done, updatedBy: by, updatedAt: at });
   },
-  renamePrepSub: (from, to) => (d) => {
+  /* renames: { oldName: newName }; removed: names whose items move to 未分類. */
+  setLuggageSubs: (list, renames, removed) => (d) => {
     d.prep = normalizePrep(d.prep);
-    d.prep.items.forEach((x) => { if (x.section === '行李' && x.sub === from) x.sub = to; });
+    d.prep.subs = clone(list);
+    d.prep.items.forEach((x) => {
+      if (x.section !== '行李' || !x.sub) return;
+      if (renames[x.sub]) x.sub = renames[x.sub];
+      else if (removed.includes(x.sub)) x.sub = '';
+    });
   },
   deletePrep: (id) => (d) => { d.prep = normalizePrep(d.prep); d.prep.items = d.prep.items.filter((x) => x.id !== id); },
   splitSettings: (patch) => (d) => { d.split = Object.assign(normalizeSplit(d.split), clone(patch)); },
@@ -1531,7 +1547,7 @@ function renderPrep() {
     card,
     ...PREP_SECTIONS.map((sec) => {
       const list = sorted.filter((x) => x.section === sec);
-      if (!list.length) return [];
+      if (!list.length && sec !== '行李') return [];
       if (sec !== '行李') return [h('div', { class: 'todo-day' }, sec), ...list.map((it) => row(it))];
       return [h('div', { class: 'todo-day' }, sec), ...luggageGroups(list, row)];
     }),
@@ -1539,32 +1555,65 @@ function renderPrep() {
   ].flat().filter(Boolean));
 }
 
-/* 行李 is split into small groups such as 衣物 or 電子產品. */
-function luggageSubsInUse(list) {
-  const custom = [];
-  list.forEach((x) => { if (x.sub && !LUGGAGE_SUBS.includes(x.sub) && !custom.includes(x.sub)) custom.push(x.sub); });
-  return [...LUGGAGE_SUBS.filter((sub) => list.some((x) => x.sub === sub)), ...custom];
-}
+/* 行李 is split into small groups such as 衣物 or 電子產品; the admin manages the list. */
 function luggageGroups(list, row) {
-  const subs = luggageSubsInUse(list);
+  const subs = [...luggageSubList(state.data.prep)];
   if (list.some((x) => !x.sub)) subs.push('');
   const out = [];
   subs.forEach((sub) => {
     const items = list.filter((x) => x.sub === sub);
     const done = items.filter((x) => x.done).length;
     out.push(h('div', { class: 'prep-sub' },
-      sub
-        ? h('button', { class: 'sub-name', type: 'button', title: '重新命名', onclick: () => {
-            const next = (prompt('小分類名稱', sub) || '').trim();
-            if (next && next !== sub) commit(M.renamePrepSub(sub, next), `${who()}：把行李小分類「${sub}」改成「${next}」`);
-          } }, sub)
-        : h('span', { class: 'sub-name' }, '未分類'),
+      h('span', { class: 'sub-name' }, sub || '未分類'),
       h('span', { class: 'sub-count' }, `${done}/${items.length}`),
       h('button', { class: 'textbtn', type: 'button', onclick: () => openPrepSheet(null, { section: '行李', sub }) }, '＋ 新增')));
     items.forEach((it) => out.push(row(it, true)));
   });
-  out.push(h('button', { class: 'textbtn add-sub', type: 'button', onclick: () => openPrepSheet(null, { section: '行李', newSub: true }) }, '＋ 新增小分類'));
+  if (isAdmin()) out.push(h('button', { class: 'textbtn add-sub', type: 'button', onclick: openLuggageSubsSheet }, '管理小分類'));
   return out;
+}
+
+function openLuggageSubsSheet() {
+  if (!isAdmin()) return;
+  const prep = state.data.prep;
+  const current = luggageSubList(prep);
+  const usedBy = (name) => prep.items.filter((x) => x.section === '行李' && x.sub === name).length;
+  const err = h('p', { class: 'form-error', hidden: true });
+  const list = h('div');
+  const addRow = (orig) => {
+    const nameInput = input(orig || '', 'text', { placeholder: '小分類名稱', 'aria-label': '小分類名稱' });
+    const rowEl = h('div', { class: 'sub-row' }, nameInput,
+      h('button', { class: 'icon-btn', type: 'button', 'aria-label': '往上移', onclick: () => { const prev = rowEl.previousElementSibling; if (prev) list.insertBefore(rowEl, prev); } }, '↑'),
+      h('button', { class: 'icon-btn', type: 'button', 'aria-label': '往下移', onclick: () => { const next = rowEl.nextElementSibling; if (next) list.insertBefore(next, rowEl); } }, '↓'),
+      h('button', { class: 'icon-btn', type: 'button', 'aria-label': '刪除', onclick: () => {
+        const n = orig ? usedBy(orig) : 0;
+        if (n && !confirm(`「${orig}」裡有 ${n} 個項目，刪除後會移到「未分類」。確定嗎？`)) return;
+        rowEl.remove();
+      } }, icon('close')));
+    rowEl.dataset.orig = orig || '';
+    list.append(rowEl);
+    return nameInput;
+  };
+  current.forEach((name) => addRow(name));
+  const rows = () => [...list.children].map((r) => ({ orig: r.dataset.orig, name: r.querySelector('input').value.trim() }));
+  const initial = JSON.stringify(rows());
+
+  const sheet = openSheet('行李小分類', h('div', null,
+      err, list,
+      h('button', { class: 'textbtn', type: 'button', onclick: () => addRow('').focus() }, '＋ 新增小分類')),
+    [h('button', { class: 'btn ghost', type: 'button', onclick: () => sheet.close() }, '取消'),
+     h('button', { class: 'btn primary', type: 'button', onclick: () => {
+       const fail = (m) => { err.textContent = m; err.hidden = false; };
+       const all = rows().filter((r) => r.orig || r.name);
+       if (all.some((r) => r.orig && !r.name)) return fail('名稱不能空白；不要的話請按 ✕ 刪除。');
+       const names = all.map((r) => r.name);
+       if (new Set(names).size !== names.length) return fail('小分類名稱不能重複。');
+       const renames = Object.fromEntries(all.filter((r) => r.orig && r.orig !== r.name).map((r) => [r.orig, r.name]));
+       const removed = current.filter((name) => !all.some((r) => r.orig === name));
+       sheet.close(true);
+       commit(M.setLuggageSubs(names, renames, removed), `${who()}：更新行李小分類`);
+     } }, '儲存')],
+    { guard: () => JSON.stringify(rows()) === initial || confirm('還沒儲存，確定要關閉嗎？') });
 }
 
 function openPrepSheet(id, preset = {}) {
@@ -1576,17 +1625,12 @@ function openPrepSheet(id, preset = {}) {
   const text = input(base.text, 'text', { placeholder: '例如：填好入境資料' });
   const detail = h('textarea', { class: 'input', rows: '3', placeholder: '說明、網址（可不填）' });
   detail.value = base.detail;
-  // Luggage subcategory: pick one of the chips or type a new name.
-  const subInput = input(base.sub, 'text', { placeholder: '或輸入新的小分類' });
-  const subChoices = [...new Set([...LUGGAGE_SUBS, ...luggageSubsInUse(state.data.prep.items.filter((x) => x.section === '行李'))])];
-  const subChips = h('div', { class: 'seg' });
-  const drawSubChips = () => subChips.replaceChildren(
-    h('button', { type: 'button', 'aria-pressed': String(!subInput.value.trim()), onclick: () => { subInput.value = ''; drawSubChips(); } }, '不分'),
-    ...subChoices.map((name) => h('button', { type: 'button', 'aria-pressed': String(subInput.value.trim() === name), onclick: () => { subInput.value = name; drawSubChips(); } }, name)));
-  subInput.addEventListener('input', drawSubChips);
-  drawSubChips();
-  const subField = h('div', { class: 'field', hidden: section !== '行李' }, h('span', { class: 'label' }, '小分類'), subChips, h('div', { style: 'margin-top:8px' }, subInput));
-  const snapshot = () => JSON.stringify([text.value, detail.value, section, owner, subInput.value]);
+  // Luggage subcategory, chosen from the admin-managed list.
+  let sub = base.sub;
+  const subField = h('div', { class: 'field', hidden: section !== '行李' }, h('span', { class: 'label' }, '小分類'),
+    seg([{ id: '', label: '不分' }, ...luggageSubList(state.data.prep).map((name) => ({ id: name, label: name }))], sub, (v) => { sub = v; }),
+    isAdmin() ? h('button', { class: 'textbtn', type: 'button', onclick: () => { sheet.close(); if (!state.sheets.length) openLuggageSubsSheet(); } }, '管理小分類') : null);
+  const snapshot = () => JSON.stringify([text.value, detail.value, section, owner, sub]);
   const initial = snapshot();
   const body = h('div', null,
     err,
@@ -1606,7 +1650,7 @@ function openPrepSheet(id, preset = {}) {
      h('button', { class: 'btn primary', type: 'button', onclick: () => {
        const t = text.value.trim();
        if (!t) { err.textContent = '請填事項。'; err.hidden = false; return; }
-       const item = Object.assign({}, base, { text: t, detail: detail.value.trim(), section, sub: section === '行李' ? subInput.value.trim() : '', owner, updatedBy: who(), updatedAt: new Date().toISOString() });
+       const item = Object.assign({}, base, { text: t, detail: detail.value.trim(), section, sub: section === '行李' ? sub : '', owner, updatedBy: who(), updatedAt: new Date().toISOString() });
        if (owner === '*' && base.owner !== '*') { item.doneBy = base.done ? people.map((p) => p.id) : []; item.done = Boolean(base.done); }
        if (owner === '*') item.done = people.every((p) => item.doneBy.includes(p.id));
        if (owner !== '*') item.doneBy = [];
@@ -1614,7 +1658,7 @@ function openPrepSheet(id, preset = {}) {
        commit(M.upsertPrep(item), `${who()}：${found ? '修改' : '新增'}行前事項「${t}」`);
      } }, found ? '儲存修改' : '加入')],
     { guard: () => snapshot() === initial || confirm('還沒儲存，確定要關閉嗎？') });
-  if (!found) setTimeout(() => (preset.newSub ? subInput : text).focus(), 250);
+  if (!found) setTimeout(() => text.focus(), 250);
 }
 
 /* ---- Map tab: the itinerary's places on an interactive map ---- */
