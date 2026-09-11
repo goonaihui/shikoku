@@ -106,6 +106,12 @@ main{padding-top:12px;padding-bottom:calc(110px + var(--safe-b))}
 .badge.need{background:var(--mikan);color:#fff}
 .badge.done{background:var(--olive-soft);color:var(--olive)}
 .badge.confirm{background:var(--grape);color:#fff}
+.badge.cost{background:var(--panel);color:var(--ink);border:1px solid var(--line);font-weight:600;font-variant-numeric:tabular-nums}
+.cost-box{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--bg)}
+.cost-box .field{margin-bottom:10px}
+.cost-box details.advanced{margin:0}
+.cost-box .share-list{margin-top:6px}
+.linked-item{display:flex;align-items:center;gap:8px;margin:0 0 14px;font-size:14px;color:var(--ink-2)}
 .notes{margin:5px 0 0;font-size:14px;color:var(--ink-2);white-space:pre-wrap;overflow-wrap:anywhere}
 .links{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .link-chip{display:inline-flex;align-items:center;gap:5px;max-width:100%;min-height:34px;padding:5px 11px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:13px;color:var(--sea);text-decoration:none}
@@ -299,7 +305,7 @@ select.input{background-image:linear-gradient(45deg,transparent 50%,var(--ink-2)
       <button type="button" role="tab" data-view="todo" aria-selected="false">待處理<span class="count" id="todoCount" hidden></span></button>
       <button type="button" role="tab" data-view="confirm" aria-selected="false">待確認<span class="count confirm" id="confirmCount" hidden></span></button>
       <button type="button" role="tab" data-view="map" aria-selected="false">地圖</button>
-      <button type="button" role="tab" data-view="split" aria-selected="false">分帳</button>
+      <button type="button" role="tab" data-view="split" aria-selected="false">花費</button>
     </div>
   </div>
 </header>
@@ -429,6 +435,7 @@ function normalizeSplit(raw) {
       shares: Object.fromEntries(Object.entries(e.shares && typeof e.shares === 'object' ? e.shares : {})
         .map(([k, v]) => [String(k), Math.max(0, Math.round(Number(v) || 0))]).filter(([, v]) => v > 0)),
       dayId: String(e.dayId || ''),
+      itemId: String(e.itemId || ''),
       category: CATS.some((c) => c.id === e.category) ? e.category : 'other',
       note: String(e.note || ''),
       files: normalizeFiles(e.files),
@@ -971,7 +978,7 @@ function timelineRows(idx) {
       }
       prev = { label: it.title, loc: it.location, end: it.end || null };
     }
-    rows.push(itemEl(it));
+    rows.push(itemEl(it, costOf(it.id)));
   });
   if (prev && !prev.isHotel && day.hotel.name) {
     const hop = hopEl(prev, { label: '飯店', loc: hotelLoc(day.hotel) }, null, true);
@@ -1250,7 +1257,11 @@ function thumbEl(file) {
   return btn;
 }
 
-function itemEl(it) {
+const TYPE_TO_CAT = { transport: 'transport', meal: 'food', stay: 'stay', sight: 'ticket', other: 'other' };
+function costOf(itemId) { return state.data.split.expenses.find((e) => e.kind === 'expense' && e.itemId === itemId) || null; }
+function itemTitleOf(itemId) { const f = itemId ? findItem(state.data, itemId) : null; return f ? f.item.title : ''; }
+
+function itemEl(it, cost) {
   const time = it.time
     ? [h('span', { class: 't-start' }, it.time), it.end ? h('span', { class: 't-end' }, it.end) : null]
     : h('span', { class: 't-none' }, '時間未定');
@@ -1262,7 +1273,8 @@ function itemEl(it) {
     h('div', { class: 'body', role: 'button', tabindex: '0', 'aria-label': `編輯 ${it.title}`,
         onclick: () => openEditor(it.id), onkeydown: (e) => { if (e.key === 'Enter') openEditor(it.id); } },
       h('div', { class: 'item-title' }, it.title || '（沒有標題）'),
-      badge ? h('div', { class: 'badges' }, badge) : null,
+      badge || cost ? h('div', { class: 'badges' }, badge,
+        cost ? h('span', { class: 'badge cost' }, `${personName(state.data.split, cost.paidBy)}付 ${money(cost.amount, cost.currency)}`) : null) : null,
       it.notes ? notesEl(it.notes) : null,
       it.location || it.links.length ? h('div', { class: 'links' }, locationChips(it.location), it.links.map((l) =>
         h('a', { class: 'link-chip', href: l.url, target: '_blank', rel: 'noopener noreferrer', onclick: (e) => e.stopPropagation() }, icon('link'), h('span', null, linkLabel(l))))) : null,
@@ -1554,11 +1566,49 @@ function openEditor(itemId) {
   base.links.forEach(addLinkRow);
   const files = attachmentPicker(base.files, fail);
 
+  // Cost for this stop, kept as a linked entry in the 花費 tab.
+  const sp = state.data.split;
+  const linked = found ? costOf(base.id) : null;
+  let costCur = linked ? linked.currency : 'JPY';
+  let costPayer = linked && sp.people.some((p) => p.id === linked.paidBy) ? linked.paidBy : meId(sp);
+  const costShares = Object.fromEntries(sp.people.map((p) => [p.id, linked ? linked.shares[p.id] || 0 : 1]));
+  const costAmount = input(linked ? String(linked.amount) : '', 'text', { inputmode: 'decimal', placeholder: '沒有花費就留白', autocomplete: 'off' });
+  let costSection;
+  if (!sp.people.length) {
+    costSection = h('div', { class: 'field' }, h('span', { class: 'label' }, '花費'),
+      h('span', { class: 'hint' }, isAdmin() ? '先到「花費」分頁設定一起出錢的人，就能在這裡記花費。' : '管理員設定好一起出錢的人之後，就能在這裡記花費。'));
+  } else {
+    const splitSummaryEl = h('summary', null);
+    const updateCost = () => {
+      const total = parseAmount(costAmount.value);
+      const sum = Object.values(costShares).reduce((a, n) => a + n, 0);
+      sp.people.forEach((p) => {
+        const n = costShares[p.id] || 0;
+        steppers.amounts.get(p.id).textContent = total && sum && n ? money((total * n) / sum, costCur) : '—';
+      });
+      splitSummaryEl.textContent = `怎麼分：${shareText({ shares: costShares }, sp)}`;
+    };
+    const steppers = peopleSteppers(sp, costShares, () => updateCost());
+    costAmount.addEventListener('input', updateCost);
+    costSection = h('div', { class: 'field' }, h('span', { class: 'label' }, '花費'),
+      h('div', { class: 'cost-box' },
+        h('div', { class: 'field' }, h('div', { class: 'amount-row' }, costAmount,
+          seg([{ id: 'JPY', label: '日圓' }, { id: 'TWD', label: '台幣' }], costCur, (v) => { costCur = v; updateCost(); }))),
+        h('div', { class: 'field' }, h('span', { class: 'label' }, '誰付的'),
+          seg(sp.people.map((p) => ({ id: p.id, label: p.name })), costPayer, (v) => { costPayer = v; })),
+        h('details', { class: 'advanced' }, splitSummaryEl, steppers.el,
+          h('div', { class: 'loc-tools' },
+            h('button', { class: 'textbtn', type: 'button', onclick: () => { sp.people.forEach((p) => { costShares[p.id] = 1; }); steppers.redraw(); updateCost(); } }, '大家平分'),
+            h('button', { class: 'textbtn', type: 'button', onclick: () => { sp.people.forEach((p) => { costShares[p.id] = p.id === costPayer ? 1 : 0; }); steppers.redraw(); updateCost(); } }, '只算付錢的人')))),
+      h('span', { class: 'hint' }, '會一起記到「花費」分頁，算進最後的結算。'));
+    updateCost();
+  }
+
   const collectLinks = () => [...linkList.children].map((row) => {
     const [l, u] = row.querySelectorAll('input');
     return { label: l.value.trim(), url: safeUrl(u.value) };
   }).filter((l) => l.url);
-  const snapshot = () => JSON.stringify([title.value, dayId, start.value, end.value, type, booking, notes.value, location.value, collectLinks(), files.signature()]);
+  const snapshot = () => JSON.stringify([title.value, dayId, start.value, end.value, type, booking, notes.value, location.value, collectLinks(), files.signature(), costAmount.value, costCur, costPayer, costShares]);
   const initial = snapshot();
 
   const body = h('div', null,
@@ -1569,6 +1619,7 @@ function openEditor(itemId) {
     h('button', { class: 'textbtn clear-time', type: 'button', onclick: () => { start.value = ''; end.value = ''; } }, '清除時間（改成時間未定）'),
     field('類型', seg(TYPES, type, (v) => { type = v; })),
     field('狀態', seg(BOOKINGS, booking, (v) => { booking = v; })),
+    costSection,
     h('div', { class: 'field' }, h('label', { class: 'label' }, '地點'), location,
       h('div', { class: 'loc-tools' },
         h('button', { class: 'textbtn', type: 'button', onclick: () => { location.value = title.value.trim(); } }, '用標題當地點'),
@@ -1582,9 +1633,10 @@ function openEditor(itemId) {
       h('span', { class: 'hint' }, '截圖、照片、PDF 票券或其他檔案都可以，一次可以選好幾個。照片會自動縮小；單一檔案上限 20 MB。')),
     found && found.item.updatedBy ? h('p', { class: 'meta' }, `最後由 ${found.item.updatedBy} 修改於 ${stampText(found.item.updatedAt)}`) : null,
     found ? h('button', { class: 'btn danger block', type: 'button', style: 'margin-top:18px', onclick: () => {
-      if (!confirm(`確定刪除「${base.title}」？`)) return;
+      if (!confirm(linked ? `確定刪除「${base.title}」？\n這個行程記的花費 ${money(linked.amount, linked.currency)} 也會一起刪除。` : `確定刪除「${base.title}」？`)) return;
       sheet.close(true);
-      commit(M.deleteItem(base.id), `${who()}：刪除「${base.title}」`).then(() => cleanupFiles(base.files));
+      commit((d) => { M.deleteItem(base.id)(d); d.split.expenses = d.split.expenses.filter((x) => !(x.kind === 'expense' && x.itemId === base.id)); },
+        `${who()}：刪除「${base.title}」`).then(() => cleanupFiles(base.files.concat(linked ? linked.files : [])));
     } }, '刪除這個項目') : null);
 
   const saveLabel = found ? '儲存修改' : '加入行程';
@@ -1598,6 +1650,9 @@ function openEditor(itemId) {
     if (!t) { fail('請填標題。'); title.focus(); return; }
     const s = validTime(start.value), e = s ? validTime(end.value) : '';
     if (s && e && e < s) return fail('結束時間比開始時間早。');
+    const costValue = parseAmount(costAmount.value);
+    if (sp.people.length && costAmount.value.trim() && !costValue) return fail('花費金額看不懂，請只填數字。');
+    if (costValue && !Object.values(costShares).some((n) => n > 0)) return fail('花費至少要有一個人分攤。');
     if (files.hasPending() && !navigator.onLine) return fail('目前沒有網路，附件無法上傳。');
     errorEl.hidden = true;
     saveBtn.disabled = true;
@@ -1615,9 +1670,20 @@ function openEditor(itemId) {
       links: collectLinks(), files: allFiles,
       updatedBy: who(), updatedAt: new Date().toISOString(),
     });
+    const now = new Date().toISOString();
+    const costExp = costValue && sp.people.length ? Object.assign({}, linked || { id: uid(), kind: 'expense', title: '', note: '', files: [], createdAt: now, category: TYPE_TO_CAT[type] || 'other' }, {
+      amount: costValue, currency: costCur, paidBy: costPayer,
+      shares: Object.fromEntries(Object.entries(costShares).filter(([, n]) => n > 0)),
+      dayId, itemId: base.id, updatedBy: who(), updatedAt: now,
+    }) : null;
+    const costUnchanged = linked && costExp && JSON.stringify([linked.amount, linked.currency, linked.paidBy, linked.shares, linked.dayId]) === JSON.stringify([costExp.amount, costExp.currency, costExp.paidBy, costExp.shares, costExp.dayId]);
     sheet.close(true);
     if (state.view === 'day') state.dayId = dayId;
-    await commit(M.upsertItem(item, dayId), `${who()}：${found ? '修改' : '新增'}「${t}」`);
+    await commit((d) => {
+      M.upsertItem(item, dayId)(d);
+      if (costExp && !costUnchanged) M.upsertExpense(costExp)(d);
+      else if (!costExp && linked) M.deleteExpense(linked.id)(d);
+    }, `${who()}：${found ? '修改' : '新增'}「${t}」${costExp ? `，花費 ${money(costExp.amount, costExp.currency)}` : ''}`);
     cleanupFiles(files.removed);
   });
 }
@@ -1690,13 +1756,13 @@ function renderSplit() {
   if (!sp.people.length) {
     main.replaceChildren(
       h('section', { class: 'sign' },
-        h('div', { class: 'sign-face' }, h('div', { class: 'sign-area' }, '分帳')),
+        h('div', { class: 'sign-face' }, h('div', { class: 'sign-area' }, '花費')),
         h('div', { class: 'sign-band' }, h('span', { class: 'band-text' }, '誰先付都沒關係，最後一次算清楚')),
         h('div', { class: 'login-body' },
           h('p', null, '記下每一筆花費、誰付的、要怎麼分，這裡會算出最後誰要給誰多少錢。日圓和台幣可以混著記。'),
           isAdmin()
-            ? h('button', { class: 'btn primary block', type: 'button', onclick: () => openSplitSetup() }, '開始分帳')
-            : h('p', { class: 'lead' }, '管理員設定好一起分帳的人之後，就可以開始記帳。'))));
+            ? h('button', { class: 'btn primary block', type: 'button', onclick: () => openSplitSetup() }, '開始記帳')
+            : h('p', { class: 'lead' }, '管理員設定好一起出錢的人之後，就可以開始記帳。'))));
     return;
   }
   const base = sp.currency;
@@ -1745,7 +1811,7 @@ function renderSplit() {
       h('div', { class: 'txt' },
         e.kind === 'transfer'
           ? [h('div', { class: 'ttl' }, `${personName(sp, e.paidBy)} 還給 ${personName(sp, e.to)}`), h('div', { class: 'sub' }, `${e.note || '還款'}${clip}`)]
-          : [h('div', { class: 'ttl' }, e.title || CATS.find((c) => c.id === e.category).label),
+          : [h('div', { class: 'ttl' }, e.title || itemTitleOf(e.itemId) || CATS.find((c) => c.id === e.category).label),
              h('div', { class: 'sub' }, `${personName(sp, e.paidBy)} 付，${shareText(e, sp)}${clip}`)]),
       h('div', { class: 'amt' }, h('b', null, money(e.amount, e.currency)),
         e.currency !== base ? h('small', null, `約 ${money(convert(e.amount, e.currency, sp), base)}`) : null));
@@ -1795,7 +1861,8 @@ function openExpenseSheet(id) {
 
   const errorEl = h('p', { class: 'form-error', hidden: true });
   const fail = (msg) => { errorEl.textContent = msg; errorEl.hidden = false; };
-  const title = input(base.title, 'text', { placeholder: '例如：晚餐、JR 車票', enterkeyhint: 'next' });
+  const linkedTitle = itemTitleOf(base.itemId);
+  const title = input(base.title, 'text', { placeholder: linkedTitle || '例如：晚餐、JR 車票', enterkeyhint: 'next' });
   const amount = input(base.amount ? String(base.amount) : '', 'text', { inputmode: 'decimal', placeholder: '0', autocomplete: 'off' });
   const day = daySelect(base.dayId);
   const note = h('textarea', { class: 'input', rows: '2', placeholder: '可不填' });
@@ -1823,7 +1890,9 @@ function openExpenseSheet(id) {
 
   const body = h('div', null,
     errorEl,
-    field('項目', title),
+    linkedTitle ? h('p', { class: 'linked-item' }, `來自行程「${linkedTitle}」`,
+      h('button', { class: 'textbtn', type: 'button', onclick: () => { sheet.close(); if (!state.sheets.length) openEditor(base.itemId); } }, '打開行程')) : null,
+    field('項目', title, linkedTitle ? '留白就用行程的標題。' : null),
     h('div', { class: 'field' }, h('label', { class: 'label' }, '金額'),
       h('div', { class: 'amount-row' }, amount, curSeg)),
     field('誰付的', seg(sp.people.map((p) => ({ id: p.id, label: p.name })), paidBy, (v) => { paidBy = v; })),
@@ -1853,7 +1922,7 @@ function openExpenseSheet(id) {
     if (files.hasPending() && !navigator.onLine) return fail('目前沒有網路，附件無法上傳。');
     errorEl.hidden = true;
     saveBtn.disabled = true;
-    const label = title.value.trim() || CATS.find((c) => c.id === category).label;
+    const label = title.value.trim() || linkedTitle || CATS.find((c) => c.id === category).label;
     let allFiles;
     try {
       allFiles = await files.upload('split', label, (i, n) => { saveBtn.textContent = `上傳附件 ${i}/${n}…`; });
@@ -1943,27 +2012,27 @@ function openSplitSetup() {
 
   const body = h('div', null,
     errorEl,
-    h('div', { class: 'field' }, h('span', { class: 'label' }, '一起分帳的人'), list,
+    h('div', { class: 'field' }, h('span', { class: 'label' }, '一起出錢的人'), list,
       h('button', { class: 'textbtn', type: 'button', onclick: () => addRow({ id: 'p' + uid(), name: '' }) }, '＋ 加一個人'),
       h('span', { class: 'hint' }, '只列出要出錢的人。爸媽的花費可以在記帳時，用「份數」算在你們身上。')),
     field('用哪種錢結算', seg([{ id: 'TWD', label: '台幣' }, { id: 'JPY', label: '日圓' }], currency, (v) => { currency = v; })),
     field('1 日圓 = 幾台幣', rate, '可以填你們實際換匯的匯率。'),
     h('a', { class: 'textbtn', href: 'https://www.google.com/search?q=' + encodeURIComponent('日圓 台幣 匯率'), target: '_blank', rel: 'noopener noreferrer' }, '查今天的匯率'));
 
-  const sheet = openSheet('分帳設定', body,
+  const sheet = openSheet('花費設定', body,
     [h('button', { class: 'btn ghost', type: 'button', onclick: () => sheet.close(true) }, '取消'),
      h('button', { class: 'btn primary', type: 'button', onclick: () => {
        const people = [...list.querySelectorAll('input')].map((i) => ({ id: i.dataset.pid, name: i.value.trim() })).filter((p) => p.name);
        const r = Number(rate.value.replace(/[,，\s]/g, ''));
        const fail = (m) => { errorEl.textContent = m; errorEl.hidden = false; };
-       if (people.length < 2) return fail('至少要兩個人才能分帳。');
+       if (people.length < 2) return fail('至少要兩個人才能分攤。');
        if (new Set(people.map((p) => p.name)).size !== people.length) return fail('名字不能重複。');
        const missing = sp.people.filter((p) => used(p.id) && !people.some((x) => x.id === p.id));
        if (missing.length) return fail(`${missing.map((p) => p.name).join('、')} 已經有花費紀錄，不能移除。`);
        if (!(r > 0)) return fail('匯率要是大於 0 的數字。');
        sheet.close(true);
-       commit(M.splitSettings({ people, currency, rate: Math.round(r * 10000) / 10000 }), `${who()}：更新分帳設定`);
-     } }, sp.people.length ? '儲存' : '開始分帳')]);
+       commit(M.splitSettings({ people, currency, rate: Math.round(r * 10000) / 10000 }), `${who()}：更新花費設定`);
+     } }, sp.people.length ? '儲存' : '開始記帳')]);
 }
 
 function cleanupFiles(files) {

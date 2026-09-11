@@ -11,7 +11,7 @@ The app and the data live in two separate repos:
 | Repo | Visibility | Contains |
 |---|---|---|
 | `trip` | **Public** (GitHub Pages needs this on a free account) | `index.html`, `sw.js`, this README. No trip data. |
-| `trip-data` | **Private** | `data.json` (itinerary and split bill) and `attachments/` (photos, PDFs, receipts and other files, created by the app). |
+| `trip-data` | **Private** | `data.json` (itinerary and costs) and `attachments/` (photos, PDFs, receipts and other files, created by the app). |
 
 Repo names are up to you. Neutral names like these are a good idea because the public repo name appears in the site address.
 
@@ -97,16 +97,17 @@ Once she's set up on her home screen, you can both delete (收回) the invite me
 
 ## Admin and members
 
-- **Admin** (you): a device logged in with the GitHub token, or with an invite link made for **我自己的其他裝置**. Only admin devices see the gear icon, which holds inviting, account settings, the map link, the split-bill setup, backups, and logout.
-- **Members** (your sister): devices that joined with a normal **家人** invite link. They can view and edit the itinerary, attachments, to-dos and expenses, but have no gear icon.
+- **Admin** (you): a device logged in with the GitHub token, or with an invite link made for **我自己的其他裝置**. Only admin devices see the gear icon, which holds inviting, account settings, the map link, the costs setup, backups, and logout.
+- **Members** (your sister): devices that joined with a normal **家人** invite link. They can view and edit the itinerary, attachments, to-dos and costs, but have no gear icon.
 - **Your own other devices:** in 邀請家人, choose **我自己的其他裝置** before generating the link. That link gives admin access, so only send it to yourself.
 - **Getting admin back on a device:** open the site address with `#admin` at the end (for example `https://<your-username>.github.io/trip/#admin`) and paste your GitHub token. Devices that were logged in before this update start as members, so do this once on your own phone.
 - This hides settings from members; it isn't a security wall. Anyone with an invite link can still edit the trip data, which is why links go in private chats only.
 
-## Split bill (分帳)
+## Costs (花費)
 
-- **Set up once (admin):** open the **分帳** tab → **開始分帳**. List the people who pay (e.g. 姊姊 and 妹妹), pick the currency to settle in, and set the exchange rate (1 日圓 = ? 台幣). Use the rate you actually exchanged at if you like.
-- **Log a cost:** tap **記一筆**. Enter what it was, the amount in 日圓 or 台幣, who paid, and how to split it. Everyone gets 1 share by default. Change the shares to split unevenly: for example, if 姊姊 covers the parents' portion, give 姊姊 more shares; 0 shares means that person isn't part of it. You can attach receipt photos.
+- **Set up once (admin):** open the **花費** tab → **開始記帳**. List the people who pay (e.g. 姊姊 and 妹妹), pick the currency to settle in, and set the exchange rate (1 日圓 = ? 台幣). Use the rate you actually exchanged at if you like.
+- **Cost of a stop:** open any stop in the itinerary and fill in **花費**: the amount (日圓 or 台幣), who paid, and, under 怎麼分, how to split it (everyone shares equally by default). The stop then shows e.g. 「妹妹付 ¥1,000」, and the cost is added to the **花費** tab and the final settlement. Clear the amount to remove it; deleting the stop removes its cost too.
+- **Other costs:** in the **花費** tab, tap **記一筆**. Enter what it was, the amount in 日圓 or 台幣, who paid, and how to split it. Everyone gets 1 share by default. Change the shares to split unevenly: for example, if 姊姊 covers the parents' portion, give 姊姊 more shares; 0 shares means that person isn't part of it. You can attach receipt photos.
 - **See who owes whom:** the top card shows the total, what each person paid and owes, and the fewest payments that settle everything, e.g. 「妹妹 給 姊姊 NT$1,160」.
 - **Settle up:** when someone pays the other back, tap **記錄已給** next to that line (or **記錄還款**). The balances update right away.
 - Costs paid before the trip (flights, hotels) go under **出發前／行程外**.
