@@ -2,7 +2,7 @@
 
 A small mobile-first web app for our family trip. Both of us can edit it from our phones, attach screenshots (booking confirmations, tickets), and add links to Google Drive files. There is no server: the page runs on GitHub Pages and saves everything to a private GitHub repo.
 
-**What's public and what isn't:** the public site is only an empty app with a login screen. `index.html` contains no trip information. The itinerary and screenshots live in a private repo and can only be loaded with a GitHub token. On top of that, each phone can set a number PIN that locks the app when it's opened.
+**What's public and what isn't:** the public site is only an empty app with a login screen. `index.html` contains no trip information. The itinerary and screenshots live in a private repo and can only be loaded with a GitHub token. Once a phone is logged in, it stays logged in: next time, the app opens straight to the itinerary.
 
 ## How it's set up
 
@@ -11,7 +11,7 @@ The app and the data live in two separate repos:
 | Repo | Visibility | Contains |
 |---|---|---|
 | `trip` | **Public** (GitHub Pages needs this on a free account) | `index.html`, `sw.js`, this README. No trip data. |
-| `trip-data` | **Private** | `data.json` (the itinerary) and `attachments/` (screenshots, created by the app). |
+| `trip-data` | **Private** | `data.json` (itinerary and split bill) and `attachments/` (photos, PDFs, receipts and other files, created by the app). |
 
 Repo names are up to you. Neutral names like these are a good idea because the public repo name appears in the site address.
 
@@ -50,20 +50,19 @@ A token is like a password that lets the app read and save the itinerary.
 
 Use a **fine-grained** token like this, not a classic one. It can only touch `trip-data`, and the app refuses to put classic tokens into invite links.
 
-### 4. Log in and set a PIN (you)
+### 4. Log in (you)
 
 1. Open the site on your phone.
 2. Tap **用 GitHub token 登入（設定的人用）**, then fill in your name (e.g. 姊姊), your GitHub username, `trip-data`, and the token.
 3. Tap **用 token 登入**.
-4. Set a **解鎖密碼** (4–8 digits), or skip it for now.
 
 ### 5. Invite your sister
 
 Your sister doesn't need a GitHub account.
 
-1. In the app: gear icon → **邀請家人** → check the name → **產生邀請連結**.
+1. In the app: gear icon → **邀請家人** → keep **家人** selected, check the name → **產生邀請連結**.
 2. Tap **傳送邀請** and pick LINE (or **複製邀請連結** and paste it into a chat). **Send it in a private chat only**: anyone with the link can view and edit the itinerary.
-3. She taps the link, checks her name, taps **開始使用**, and sets her own PIN. That's it.
+3. She taps the link, checks her name, and taps **開始使用**. That's it: from then on the app opens straight to the itinerary on that phone.
 
 **If the link opens inside LINE:** the page suggests opening it in Safari or Chrome instead (LINE's ⋯ menu → open in browser). It still works inside LINE, but the browser is better for everyday use.
 
@@ -83,22 +82,46 @@ Once she's set up on her home screen, you can both delete (收回) the invite me
 - **Switch days:** tap the day chips, the arrows on the blue sign, or swipe left/right.
 - **Edit the place name or tonight's hotel:** tap the sign or the hotel row.
 - **Add, edit, or delete a stop:** tap **新增**, or tap any stop.
-- **Bookings:** set 預約 to 需預約 and the stop shows up in the **待預約** tab. Tap **已訂好** once it's booked.
-- **Screenshots:** in the editor, tap **加入截圖**. Images are shrunk before upload (text stays readable) and stored in `attachments/` in the data repo.
-- **Google Drive files:** add them under 連結. For PDFs and other files, Drive links work better than screenshots. Set Drive sharing so your sister's Google account can open them.
+- **To-dos:** every stop has a 狀態: 無, 待處理, 待確認, or 已完成.
+  - **待處理** is for things to do, like booking, buying, or reserving. They're listed in the **待處理** tab; tap **完成** when done.
+  - **待確認** is for things not decided yet, like whether to buy a pass. They're listed in the **待確認** tab; tap **確認了** once decided.
+  - Each tab keeps its finished items at the bottom. A dot on the date chips shows which days still have open items (orange for 待處理, purple for 待確認).
+- **Attachments:** in the editor, tap **加入附件** and pick as many files as you like at once: screenshots, photos, PDF tickets, or anything else, up to 20 MB each. Photos are shrunk before upload (text stays readable). Tap an attachment to open it: images and PDFs open inside the app, other files can be downloaded. Everything is stored in `attachments/` in the data repo.
+- **Google Drive files:** for anything bigger than 20 MB, add a Drive link under 連結. Set Drive sharing so your sister's Google account can open it.
+- **Places:** fill in **地點** on a stop (a place name, an address, or a pasted Google Maps link). The stop then shows a place button that opens Google Maps and a **路線** button with public-transport directions from where you are. The hotel row has a **路線** button too, for getting back.
+- **Getting between stops:** when two stops in a row both have a 地點, a small row appears between them suggesting how to get there, e.g. 「步行約 12 分鐘」 or 「電車或巴士，粗估 35 分鐘，計程車約 15 分鐘」, with a **路線** button that opens Google Maps for that exact leg. Each day also starts with a suggestion from last night's hotel and ends with one back to tonight's hotel. If the time you left between two stops looks too short, the row shows an orange warning.
+  - The times are rough estimates based on distance, not real timetables. Use **路線** for actual trains and buses.
+  - To estimate distances, the app looks up each place name once on OpenStreetMap and remembers it on the phone. It understands Traditional Chinese spellings like 道後溫泉. If a place can't be found, write it more fully (add the station or an address). For hotels, pasting a desktop Google Maps link (one containing @latitude,longitude) into the hotel's 連結 field lets it estimate the trip back.
+  - You can turn the estimates off in Settings. Only the place names are sent, never dates or other trip details.
+- **地圖 tab:** shows your Google My Maps map. The first time, the admin taps **加入地圖** and pastes the map's share link (in My Maps, set sharing to "anyone with the link can view"). Below the map is the list of that day's places, each with **地圖** and **路線**.
 
-## The PIN, honestly
+## Admin and members
 
-- The PIN is saved separately on each phone (and separately for the iPhone home screen version). Your sister's PIN and yours are independent.
-- It stops someone who picks up an unlocked phone from opening the itinerary. It is not what keeps strangers out; that's the private repo and the token.
-- After 5 wrong tries it makes you wait 30 seconds, and the wait doubles after every further 5.
-- **Forgot it?** Tap 忘記密碼 on the lock screen. That logs this phone out; log back in with an invite link (or your token). The itinerary itself isn't affected.
+- **Admin** (you): a device logged in with the GitHub token, or with an invite link made for **我自己的其他裝置**. Only admin devices see the gear icon, which holds inviting, account settings, the map link, the split-bill setup, backups, and logout.
+- **Members** (your sister): devices that joined with a normal **家人** invite link. They can view and edit the itinerary, attachments, to-dos and expenses, but have no gear icon.
+- **Your own other devices:** in 邀請家人, choose **我自己的其他裝置** before generating the link. That link gives admin access, so only send it to yourself.
+- **Getting admin back on a device:** open the site address with `#admin` at the end (for example `https://<your-username>.github.io/trip/#admin`) and paste your GitHub token. Devices that were logged in before this update start as members, so do this once on your own phone.
+- This hides settings from members; it isn't a security wall. Anyone with an invite link can still edit the trip data, which is why links go in private chats only.
+
+## Split bill (分帳)
+
+- **Set up once (admin):** open the **分帳** tab → **開始分帳**. List the people who pay (e.g. 姊姊 and 妹妹), pick the currency to settle in, and set the exchange rate (1 日圓 = ? 台幣). Use the rate you actually exchanged at if you like.
+- **Log a cost:** tap **記一筆**. Enter what it was, the amount in 日圓 or 台幣, who paid, and how to split it. Everyone gets 1 share by default. Change the shares to split unevenly: for example, if 姊姊 covers the parents' portion, give 姊姊 more shares; 0 shares means that person isn't part of it. You can attach receipt photos.
+- **See who owes whom:** the top card shows the total, what each person paid and owes, and the fewest payments that settle everything, e.g. 「妹妹 給 姊姊 NT$1,160」.
+- **Settle up:** when someone pays the other back, tap **記錄已給** next to that line (or **記錄還款**). The balances update right away.
+- Costs paid before the trip (flights, hotels) go under **出發前／行程外**.
+- Both of you can add costs at the same time; entries never overwrite each other.
+
+## Staying logged in
+
+- A phone stays logged in until the admin taps **在這台裝置登出** in Settings on that phone, or until the token expires. Set the token's expiration to after the trip so nobody gets logged out in Japan.
+- On iPhone, Safari and the home screen icon count as two separate places, so each needs one login (see step 6).
 
 ## How syncing works
 
 - Every save re-reads the latest `data.json` from GitHub, applies your change on top, and saves again. If you and your sister edit **different stops** at the same moment, both changes are kept. If you both edit **the same stop**, the later save wins for that stop.
 - The app checks for your sister's changes when you open it, when you come back to the tab, and about once a minute while it's open. The sync pill in the top bar also refreshes when tapped.
-- **No signal?** The app still opens (it keeps a copy of the page and the last synced itinerary on the phone, still behind the PIN). Edits made offline show as 「N 項未儲存」 and upload automatically when you're back online. Don't close the page until they're saved. Screenshots need a connection to upload and to load.
+- **No signal?** The app still opens (it keeps a copy of the page and the last synced itinerary on the phone). Edits made offline show as 「N 項未儲存」 and upload automatically when you're back online. Don't close the page until they're saved. Attachments need a connection to upload and to open.
 - **History:** every change is a commit in `trip-data`, labelled with who made it (設定 → 在 GitHub 看修改紀錄). To undo a mistake, you can restore an older version of `data.json` from there.
 - **Backup:** 設定 → 下載備份（JSON）.
 
@@ -109,6 +132,16 @@ You can also edit `data.json` directly on GitHub. The structure:
 ```json
 {
   "title": "家族旅行",
+  "mapUrl": "",
+  "split": {
+    "people": [{ "id": "p1", "name": "姊姊" }, { "id": "p2", "name": "妹妹" }],
+    "currency": "TWD",
+    "rate": 0.205,
+    "expenses": [
+      { "id": "e1", "kind": "expense", "title": "晚餐", "amount": 6000, "currency": "JPY",
+        "paidBy": "p1", "shares": { "p1": 1, "p2": 1 }, "dayId": "d1", "category": "food", "note": "", "files": [] }
+    ]
+  },
   "days": [
     {
       "id": "d1",
@@ -123,8 +156,9 @@ You can also edit `data.json` directly on GitHub. The structure:
           "type": "transport",
           "booking": "",
           "notes": "",
+          "location": "",
           "links": [{ "label": "", "url": "https://..." }],
-          "files": [{ "path": "attachments/d1/xxxx.jpg", "name": "IMG_0001.png" }]
+          "files": [{ "path": "attachments/d1/xxxx.pdf", "name": "ticket.pdf", "type": "application/pdf", "size": 182044 }]
         }
       ]
     }
