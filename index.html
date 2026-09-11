@@ -12,7 +12,7 @@
 <title>旅行行程</title>
 <style>
 :root{
-  --bg:#E8EEED; --panel:#FFFFFF; --ink:#17293B; --ink-2:#4F6172; --ink-3:#7F909C; --line:#C9D5D6;
+  --bg:#E8EEED; --panel:#FFFFFF; --ink:#14263A; --ink-2:#3B4D5E; --ink-3:#5A6A76; --fs:1; --line:#C9D5D6;
   --sea:#1F4E7A; --sea-deep:#163A5C;
   --mikan:#C9660A; --olive:#4F7424; --olive-soft:#E3ECD5; --red:#A8322B; --grape:#6A56A8;
   --t-transport:#6FA56B; --t-transport-bg:#EAF3E6;
@@ -28,11 +28,11 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.55;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:calc(17px * var(--fs));line-height:1.55;-webkit-tap-highlight-color:transparent}
 body.locked{overflow:hidden}
 body.signed-out .views, body.signed-out #syncBtn, body.signed-out #settingsBtn, body.signed-out .fab{display:none}
 button{font:inherit;color:inherit;cursor:pointer}
-input,select,textarea{font:inherit;font-size:16px;color:var(--ink)}
+input,select,textarea{font:inherit;font-size:calc(17px * var(--fs));color:var(--ink)}
 a{color:var(--sea)}
 :focus-visible{outline:2px solid var(--sea);outline-offset:2px}
 .wrap{max-width:640px;margin:0 auto;padding:0 14px}
@@ -40,8 +40,8 @@ a{color:var(--sea)}
 /* Top bar */
 .topbar{position:sticky;top:0;z-index:20;background:var(--bg);padding-top:var(--safe-t)}
 .topbar-inner{display:flex;align-items:center;gap:8px;min-height:54px}
-.app-title{flex:1;margin:0;font-size:18px;font-weight:700;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sync{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 11px;font-size:13px;color:var(--ink-2);min-height:34px;max-width:52vw}
+.app-title{flex:1;margin:0;font-size:calc(19px * var(--fs));font-weight:700;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sync{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 11px;font-size:calc(14px * var(--fs));color:var(--ink-2);min-height:34px;max-width:52vw}
 .sync span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--ink-3);flex:0 0 auto}
 .sync[data-kind=ok] .dot{background:var(--olive)}
@@ -51,30 +51,30 @@ a{color:var(--sea)}
 .icon-btn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border:0;background:transparent;border-radius:10px;color:var(--ink)}
 .views{display:flex;gap:18px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
 .views::-webkit-scrollbar{display:none}
-.views button{flex:0 0 auto;border:0;background:none;padding:8px 0 9px;font-size:15px;color:var(--ink-2);border-bottom:2px solid transparent;margin-bottom:-1px;min-height:40px}
+.views button{flex:0 0 auto;border:0;background:none;padding:10px 0 11px;font-size:calc(16px * var(--fs));color:var(--ink-2);border-bottom:2px solid transparent;margin-bottom:-1px;min-height:40px}
 .views button[aria-selected=true]{color:var(--ink);font-weight:700;border-bottom-color:var(--ink)}
-.count{display:inline-block;min-width:20px;padding:0 6px;margin-left:4px;border-radius:999px;background:var(--mikan);color:#fff;font-size:12px;font-weight:700;line-height:20px;text-align:center}
+.count{display:inline-block;min-width:20px;padding:0 6px;margin-left:4px;border-radius:999px;background:var(--mikan);color:#fff;font-size:calc(13px * var(--fs));font-weight:700;line-height:20px;text-align:center}
 main{padding-top:12px;padding-bottom:calc(110px + var(--safe-b))}
 
 /* Station-name-board motif (day header, login, lock) */
 .sign{border-radius:10px;overflow:hidden;background:var(--panel);border:1px solid var(--line);margin-bottom:10px}
 .sign-face{display:block;width:100%;border:0;background:none;padding:16px 16px 12px;text-align:center}
 .sign-area{font-size:clamp(28px, 9vw, 40px);font-weight:800;letter-spacing:.1em;line-height:1.15;overflow-wrap:anywhere}
-.sign-area.empty{color:var(--ink-3);font-weight:600;font-size:22px;letter-spacing:.02em}
-.sign-day{margin-top:6px;color:var(--ink-2);font-size:15px;font-variant-numeric:tabular-nums}
+.sign-area.empty{color:var(--ink-3);font-weight:600;font-size:calc(22px * var(--fs));letter-spacing:.02em}
+.sign-day{margin-top:6px;color:var(--ink-2);font-size:calc(16px * var(--fs));font-variant-numeric:tabular-nums}
 .sign-band{display:flex;justify-content:space-between;align-items:stretch;background:var(--sea);color:#fff;border-top:3px solid var(--sea-deep);min-height:46px}
-.sign-band button{flex:1 1 50%;min-width:0;display:flex;align-items:center;gap:6px;border:0;background:none;color:#fff;padding:9px 14px;font-size:14px;text-align:left}
+.sign-band button{flex:1 1 50%;min-width:0;display:flex;align-items:center;gap:6px;border:0;background:none;color:#fff;padding:9px 14px;font-size:calc(15px * var(--fs));text-align:left}
 .sign-band button.next{justify-content:flex-end;text-align:right}
 .sign-band button:disabled{visibility:hidden}
 .sign-band .lbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sign-band .arr{font-size:12px;opacity:.85}
-.sign-band .band-text{flex:1;display:flex;align-items:center;justify-content:center;font-size:14px;padding:8px 14px;text-align:center}
+.sign-band .arr{font-size:calc(13px * var(--fs));opacity:.85}
+.sign-band .band-text{flex:1;display:flex;align-items:center;justify-content:center;font-size:calc(15px * var(--fs));padding:8px 14px;text-align:center}
 
 .strip{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .strip::-webkit-scrollbar{display:none}
-.chip-day{position:relative;flex:0 0 auto;min-width:50px;padding:6px 4px 5px;border:1px solid var(--line);background:var(--panel);border-radius:8px;text-align:center;line-height:1.2}
-.chip-day .d{display:block;font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
-.chip-day .w{display:block;font-size:12px;color:var(--ink-2)}
+.chip-day{position:relative;flex:0 0 auto;min-width:56px;padding:8px 6px 7px;border:1px solid var(--line);background:var(--panel);border-radius:8px;text-align:center;line-height:1.2}
+.chip-day .d{display:block;font-weight:700;font-size:calc(16px * var(--fs));font-variant-numeric:tabular-nums}
+.chip-day .w{display:block;font-size:calc(13px * var(--fs));color:var(--ink-2)}
 .chip-day[aria-current=true]{background:var(--ink);border-color:var(--ink);color:#fff}
 .chip-day[aria-current=true] .w{color:#C9D4DE}
 .chip-day .flag{position:absolute;top:4px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--mikan)}
@@ -87,25 +87,25 @@ main{padding-top:12px;padding-bottom:calc(110px + var(--safe-b))}
 .stay > svg{margin-top:8px;flex:0 0 auto}
 .stay .actions{margin-top:4px}
 .stay .links{margin-top:6px}
-.stay small{display:block;color:var(--ink-2);font-size:12px}
+.stay small{display:block;color:var(--ink-2);font-size:calc(13px * var(--fs))}
 .stay strong{display:block;font-weight:600;overflow-wrap:anywhere}
-.stay .open{flex:0 0 auto;font-size:13px;padding:6px 10px;border-radius:999px;background:var(--panel);border:1px solid var(--line);text-decoration:none;color:var(--sea)}
+.stay .open{flex:0 0 auto;font-size:calc(14px * var(--fs));padding:6px 10px;border-radius:999px;background:var(--panel);border:1px solid var(--line);text-decoration:none;color:var(--sea)}
 
 /* Timeline */
 .timeline{list-style:none;margin:0;padding:0}
-.item{display:grid;grid-template-columns:54px 1fr;gap:10px;margin-bottom:8px}
+.item{display:grid;grid-template-columns:calc(58px * var(--fs)) minmax(0,1fr);gap:10px;margin-bottom:8px}
 .t{text-align:right;padding-top:9px;font-variant-numeric:tabular-nums;line-height:1.25}
-.t-start{display:block;font-weight:700;font-size:16px}
-.t-end{display:block;font-size:13px;color:var(--ink-3)}
-.t-none{display:block;font-size:12px;color:var(--ink-3)}
+.t-start{display:block;font-weight:700;font-size:calc(17px * var(--fs))}
+.t-end{display:block;font-size:calc(14px * var(--fs));color:var(--ink-3)}
+.t-none{display:block;font-size:calc(13px * var(--fs));color:var(--ink-3)}
 .body{display:block;width:100%;text-align:left;border-left:4px solid var(--t-other);background:var(--t-other-bg);border-radius:8px;padding:9px 12px 10px;cursor:pointer}
 .type-transport .body{border-left-color:var(--t-transport);background:var(--t-transport-bg)}
 .type-sight .body{border-left-color:var(--t-sight);background:var(--t-sight-bg)}
 .type-meal .body{border-left-color:var(--t-meal);background:var(--t-meal-bg)}
 .type-stay .body{border-left-color:var(--t-stay);background:var(--t-stay-bg)}
-.item-title{font-size:16px;font-weight:600;overflow-wrap:anywhere}
+.item-title{font-size:calc(17px * var(--fs));font-weight:600;overflow-wrap:anywhere}
 .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
-.badge{font-size:12px;font-weight:700;border-radius:4px;padding:1px 7px;line-height:20px}
+.badge{font-size:calc(13px * var(--fs));font-weight:700;border-radius:4px;padding:1px 7px;line-height:20px}
 .badge.need{background:var(--mikan);color:#fff}
 .badge.done{background:var(--olive-soft);color:var(--olive)}
 .badge.confirm{background:var(--grape);color:#fff}
@@ -114,120 +114,143 @@ main{padding-top:12px;padding-bottom:calc(110px + var(--safe-b))}
 .cost-box .field{margin-bottom:10px}
 .cost-box details.advanced{margin:0}
 .cost-box .share-list{margin-top:6px}
-.linked-item{display:flex;align-items:center;gap:8px;margin:0 0 14px;font-size:14px;color:var(--ink-2)}
-.notes{margin:5px 0 0;font-size:14px;color:var(--ink-2);white-space:pre-wrap;overflow-wrap:anywhere}
+.linked-item{display:flex;align-items:center;gap:8px;margin:0 0 14px;font-size:calc(15px * var(--fs));color:var(--ink-2)}
+.notes{line-height:1.6;margin:5px 0 0;font-size:calc(15px * var(--fs));color:var(--ink-2);white-space:pre-wrap;overflow-wrap:anywhere}
 .links{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.link-chip{display:inline-flex;align-items:center;gap:5px;max-width:100%;min-height:34px;padding:5px 11px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:13px;color:var(--sea);text-decoration:none}
+.link-chip{display:inline-flex;align-items:center;gap:5px;max-width:100%;min-height:40px;padding:6px 13px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:calc(14px * var(--fs));color:var(--sea);text-decoration:none}
 .link-chip span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .thumbs{display:flex;gap:6px;margin-top:8px;overflow-x:auto;scrollbar-width:none}
 .thumbs::-webkit-scrollbar{display:none}
 .thumb{position:relative;flex:0 0 auto;width:64px;height:64px;padding:0;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--panel)}
 .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.thumb.broken::after{content:"無法載入";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--ink-3)}
-.meta{margin-top:6px;font-size:12px;color:var(--ink-3)}
+.thumb.broken::after{content:"無法載入";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:calc(12px * var(--fs));color:var(--ink-3)}
+.meta{margin-top:6px;font-size:calc(13px * var(--fs));color:var(--ink-3)}
 .link-chip.place{color:var(--ink);background:var(--panel)}
 .link-chip.route{background:var(--sea);border-color:var(--sea);color:#fff}
-.leg-arrow{align-self:center;color:var(--ink-3);font-size:14px}
+.leg-arrow{align-self:center;color:var(--ink-3);font-size:calc(15px * var(--fs))}
 .places li{flex-wrap:wrap}
 .places .btns{display:flex;gap:6px;flex:0 0 auto}
 .stay .actions{display:flex;gap:6px;flex:0 0 auto}
 .loc-tools{display:flex;gap:16px;margin-top:2px}
-.trip-map{position:relative;isolation:isolate;height:calc(100vh - 330px);height:calc(100dvh - 330px);min-height:320px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#E9EFEC}
-.trip-map.picking{cursor:crosshair;outline:3px solid var(--mikan);outline-offset:-3px}
-.map-note{position:absolute;left:10px;right:10px;bottom:10px;z-index:1000;background:rgba(255,255,255,.95);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--ink-2);box-shadow:0 2px 8px rgba(0,0,0,.12);pointer-events:none}
-.map-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 14px}
-.map-bar .spacer{flex:1}
-.pin-wrap{background:none;border:0}
-.pin{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--t-other);color:#fff;font:700 14px/1 var(--font);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.trip-map{position:relative;isolation:isolate;height:calc(100vh - 300px);height:calc(100dvh - 300px);min-height:360px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#E9EFEC}
+.trip-map.picking{cursor:crosshair;outline:4px solid var(--mikan);outline-offset:-4px}
+.map-note{position:absolute;left:10px;right:10px;bottom:10px;z-index:1000;background:#fff;border-radius:10px;padding:10px 14px;font-size:calc(16px * var(--fs));font-weight:600;color:var(--ink);box-shadow:0 2px 10px rgba(0,0,0,.18);pointer-events:none}
+.map-kind{margin:0 0 10px}
+.map-title{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;margin:4px 0 10px}
+.map-title b{font-size:calc(22px * var(--fs));font-weight:800;color:var(--ink)}
+.map-title span{font-size:calc(16px * var(--fs));color:var(--ink-2)}
+.map-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 6px}
+.map-bar .btn{flex:1 1 auto}
+.map-legend{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin:6px 2px 14px;font-size:calc(15px * var(--fs));color:var(--ink-2)}
+.map-legend span{display:inline-flex;align-items:center;gap:6px}
+.map-legend i{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--t-sight);color:#fff;font:800 12px/1 var(--font);font-style:normal;border:2px solid #fff;box-shadow:0 0 0 1px var(--line)}
+.map-legend i.hotel{border-radius:6px;background:var(--t-stay)}
+.map-legend i.arrival{background:#fff;color:var(--t-transport);box-shadow:0 0 0 2px var(--t-transport)}
+.map-legend i.line{width:26px;height:0;border:0;border-radius:0;box-shadow:none;background:none;border-top:5px solid var(--sea)}
+.map-legend i.line.dash{border-top:4px dashed #4F6172}
+.pin-wrap{background:none;border:0;overflow:visible}
+.pin{display:flex;align-items:center;justify-content:center;width:100%;height:100%;box-sizing:border-box;border-radius:50%;background:var(--t-other);color:#fff;font:800 calc(16px * var(--fs))/1 var(--font);border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.4)}
 .pin.t-transport{background:var(--t-transport)}
 .pin.t-sight{background:var(--t-sight)}
 .pin.t-meal{background:var(--t-meal)}
 .pin.t-stay,.pin.hotel{background:var(--t-stay)}
-.pin.hotel{border-radius:8px}
+.pin.hotel{border-radius:10px}
 .pin.arrival{background:#fff;color:var(--t-transport);border-color:var(--t-transport)}
 .pin.day{background:var(--sea)}
-.popup{min-width:180px;font-family:var(--font)}
-.popup b{display:block;font-size:15px;color:var(--ink)}
-.popup small{display:block;color:var(--ink-2);margin:2px 0 8px;font-size:12px}
-.popup .row{display:flex;gap:6px}
+.pin-name{position:absolute;left:calc(100% + 6px);top:50%;transform:translateY(-50%);background:#fff;border-radius:8px;padding:3px 8px;color:var(--ink);font:700 calc(14px * var(--fs))/1.3 var(--font);box-shadow:0 1px 5px rgba(0,0,0,.3);white-space:nowrap;pointer-events:none}
+.pin-name.lbl-me{left:50%;top:auto;bottom:calc(100% + 6px);transform:translateX(-50%)}
+.trip-map.hide-labels .pin-name:not(.lbl-me){display:none}
+.me-dot{display:block;width:100%;height:100%;box-sizing:border-box;border-radius:50%;background:#1A73E8;border:3px solid #fff;box-shadow:0 0 0 6px rgba(26,115,232,.25)}
+.leaflet-touch .leaflet-bar a{width:44px;height:44px;line-height:44px;font-size:24px}
+.leaflet-popup-content{margin:14px 16px}
+.popup{min-width:200px;font-family:var(--font)}
+.popup b{display:block;font-size:calc(18px * var(--fs));line-height:1.35;color:var(--ink)}
+.popup small{display:block;color:var(--ink-2);margin:4px 0 10px;font-size:calc(15px * var(--fs))}
+.popup .row{display:flex;flex-wrap:wrap;gap:8px}
+.popup .row .btn{flex:1 1 auto}
 .popup a.btn{color:#fff}
 .popup a.btn.ghost{color:var(--ink)}
+.popup .textbtn{font-size:calc(15px * var(--fs))}
 .leaflet-container{font-family:var(--font)}
-.places .num{flex:0 0 auto;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;background:var(--t-other)}
+.leaflet-control-attribution{font-size:11px}
+.places li{padding:10px 10px 10px 12px;gap:12px}
+.places .num{flex:0 0 auto;width:calc(32px * var(--fs));height:calc(32px * var(--fs));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:calc(15px * var(--fs));background:var(--t-other)}
 .places .num.t-transport{background:var(--t-transport)}
 .places .num.t-sight{background:var(--t-sight)}
 .places .num.t-meal{background:var(--t-meal)}
 .places .num.t-stay,.places .num.hotel{background:var(--t-stay)}
-.places .num.hotel{border-radius:6px}
+.places .num.hotel{border-radius:8px}
+.places .num.arrival{background:#fff;color:var(--t-transport);box-shadow:inset 0 0 0 3px var(--t-transport)}
+.places .when{display:block;font-weight:800;color:var(--ink);font-size:calc(15px * var(--fs));font-variant-numeric:tabular-nums}
 .places li .txt{cursor:pointer}
-.todo-section{display:flex;align-items:center;gap:8px;font-size:17px;margin:18px 0 4px}
+.todo-section{display:flex;align-items:center;gap:8px;font-size:calc(18px * var(--fs));margin:18px 0 4px}
 .todo-section:first-of-type{margin-top:4px}
-.todo-row .tag{font-size:12px;color:var(--ink-3);margin-left:6px}
+.todo-row .tag{font-size:calc(13px * var(--fs));color:var(--ink-3);margin-left:6px}
 .map-frame{display:block;width:100%;height:calc(100vh - 300px);height:calc(100dvh - 300px);min-height:340px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
 .map-actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}
 .places{list-style:none;margin:0;padding:0}
 .places li{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 8px 8px 12px;margin-bottom:6px}
 .places .txt{flex:1;min-width:0}
-.places .txt div{font-weight:600;overflow-wrap:anywhere}
-.places .txt small{display:block;color:var(--ink-2);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.section-head{font-size:15px;margin:0 0 8px}
+.places .txt div{font-weight:700;font-size:calc(17px * var(--fs));overflow-wrap:anywhere}
+.places .txt small{display:block;color:var(--ink-2);font-size:calc(14px * var(--fs));overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.section-head{font-size:calc(16px * var(--fs));margin:0 0 8px}
 .pdf-pages{width:100%;max-width:900px;display:flex;flex-direction:column;align-items:center;gap:10px;padding:0 0 20px}
 .pdf-pages canvas{display:block;max-width:100%;height:auto;background:#fff}
-.viewer-note{color:#fff;text-align:center;padding:40px 20px;font-size:15px}
-.viewer-note b{display:block;font-size:28px;margin-bottom:8px}
+.viewer-note{color:#fff;text-align:center;padding:40px 20px;font-size:calc(16px * var(--fs))}
+.viewer-note b{display:block;font-size:calc(28px * var(--fs));margin-bottom:8px}
 .empty-day{padding:28px 16px;text-align:center;color:var(--ink-2);background:var(--panel);border-radius:8px;border:1px dashed var(--line)}
 
-.notice{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--ink-3);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:14px;color:var(--ink-2)}
+.notice{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--ink-3);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:calc(15px * var(--fs));color:var(--ink-2)}
 .notice p{margin:0;flex:1 1 220px}
 .notice.error{border-left-color:var(--red)}
 
 /* Travel between stops */
-.hop{display:grid;grid-template-columns:54px 1fr;gap:10px;margin:-4px 0 4px}
-.hop-body{display:flex;align-items:center;gap:10px;margin-left:1px;padding:4px 0 4px 13px;border-left:2px dashed var(--ink-3);min-height:42px}
-.hop-text{flex:1;min-width:0;font-size:13px;color:var(--ink-2);line-height:1.4}
+.hop{display:grid;grid-template-columns:calc(58px * var(--fs)) minmax(0,1fr);gap:10px;margin:-4px 0 4px}
+.hop-body{min-width:0;display:flex;align-items:center;gap:10px;margin-left:1px;padding:4px 0 4px 13px;border-left:2px dashed var(--ink-3);min-height:42px}
+.hop-text{flex:1;min-width:0;font-size:calc(14px * var(--fs));color:var(--ink-2);line-height:1.4}
 .hop-text b{color:var(--ink);font-weight:600}
 .hop-text .from{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hop-warn{display:block;color:var(--mikan);font-weight:700}
-.hop-go{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;min-height:34px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--sea);font-size:13px;text-decoration:none}
+.hop-go{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;min-height:40px;padding:6px 13px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--sea);font-size:calc(14px * var(--fs));text-decoration:none}
 
 /* Before the trip */
 .prep-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:6px}
-.prep-card strong{display:block;font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
-.prep-card small{color:var(--ink-2);font-size:13px}
+.prep-card strong{display:block;font-size:calc(22px * var(--fs));font-weight:800;font-variant-numeric:tabular-nums}
+.prep-card small{color:var(--ink-2);font-size:calc(14px * var(--fs))}
 .bar{height:8px;border-radius:999px;background:var(--bg);overflow:hidden;margin-top:8px}
 .bar span{display:block;height:100%;background:var(--olive);border-radius:999px}
 .prep-row{display:flex;align-items:flex-start;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 12px 8px 8px;margin-bottom:6px}
-.check{flex:0 0 auto;width:40px;height:40px;border-radius:10px;border:2px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;color:transparent;font-size:20px;font-weight:800}
+.check{flex:0 0 auto;width:40px;height:40px;border-radius:10px;border:2px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;color:transparent;font-size:calc(20px * var(--fs));font-weight:800}
 .check[aria-pressed=true]{background:var(--olive);border-color:var(--olive);color:#fff}
-.check.tally{color:var(--ink-2);font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;cursor:default}
-.check.tally[aria-pressed=true]{color:#fff;font-size:20px}
+.check.tally{color:var(--ink-2);font-size:calc(14px * var(--fs));font-weight:700;font-variant-numeric:tabular-nums;cursor:default}
+.check.tally[aria-pressed=true]{color:#fff;font-size:calc(20px * var(--fs))}
 .who-ticks{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.who-ticks button{display:inline-flex;align-items:center;gap:4px;min-height:34px;padding:4px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:14px;font-weight:600;color:var(--ink)}
+.who-ticks button{display:inline-flex;align-items:center;gap:5px;min-height:42px;padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:calc(15px * var(--fs));font-weight:600;color:var(--ink)}
 .who-ticks button::before{content:"";width:14px;height:14px;border-radius:4px;border:2px solid var(--line);box-sizing:border-box}
 .who-ticks button[aria-pressed=true]{background:var(--olive);border-color:var(--olive);color:#fff}
-.who-ticks button[aria-pressed=true]::before{content:"✓";border:0;width:auto;height:auto;font-size:13px;line-height:1}
+.who-ticks button[aria-pressed=true]::before{content:"✓";border:0;width:auto;height:auto;font-size:calc(14px * var(--fs));line-height:1}
 .who-ticks button.me{box-shadow:0 0 0 2px var(--sea) inset}
 .prep-row .txt{flex:1;min-width:0;padding-top:8px;cursor:pointer}
 .prep-row .ttl{font-weight:600;overflow-wrap:anywhere}
 .prep-row.done .ttl{text-decoration:line-through;color:var(--ink-3)}
 .prep-row .notes{margin-top:2px}
 .prep-sub{display:flex;align-items:center;gap:8px;margin:12px 0 6px 2px}
-.prep-sub .sub-name{border:0;background:none;padding:2px 0;font-size:15px;font-weight:700;color:var(--ink);min-height:30px}
-.prep-sub .sub-count{font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.prep-sub .sub-name{border:0;background:none;padding:2px 0;font-size:calc(16px * var(--fs));font-weight:700;color:var(--ink);min-height:30px}
+.prep-sub .sub-count{font-size:calc(13px * var(--fs));color:var(--ink-3);font-variant-numeric:tabular-nums}
 .prep-sub .textbtn{margin-left:auto;min-height:30px;padding:2px 0}
 .prep-row.nested{margin-left:14px}
 .add-sub{display:block;margin:4px 0 0 14px}
-.sub-row{display:grid;grid-template-columns:1fr 40px 40px 40px;gap:4px;margin-bottom:6px}
-.sub-row .icon-btn{width:40px;height:46px;color:var(--ink-2);font-size:18px}
-.owner{display:inline-block;margin-top:4px;font-size:12px;font-weight:600;color:var(--sea);background:var(--t-stay-bg);border-radius:4px;padding:1px 7px}
+.sub-row{display:grid;grid-template-columns:minmax(0,1fr) 40px 40px 40px;gap:4px;margin-bottom:6px}
+.sub-row .icon-btn{width:40px;height:46px;color:var(--ink-2);font-size:calc(19px * var(--fs))}
+.owner{display:inline-block;margin-top:4px;font-size:calc(13px * var(--fs));font-weight:600;color:var(--sea);background:var(--t-stay-bg);border-radius:4px;padding:1px 7px}
 .who-am-i{margin-bottom:12px}
 
 /* Split bill */
 .split-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:14px}
 .split-total{padding:14px 16px 10px}
-.split-total small{display:block;color:var(--ink-2);font-size:13px}
-.split-total strong{display:block;font-size:30px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.01em;line-height:1.2}
-.split-total .rate{display:flex;align-items:center;gap:8px;margin-top:4px;font-size:13px;color:var(--ink-2)}
+.split-total small{display:block;color:var(--ink-2);font-size:calc(14px * var(--fs))}
+.split-total strong{display:block;font-size:calc(30px * var(--fs));font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.01em;line-height:1.2}
+.split-total .rate{display:flex;align-items:center;gap:8px;margin-top:4px;font-size:calc(14px * var(--fs));color:var(--ink-2)}
 .split-total .rate .textbtn{min-height:28px;padding:2px 0}
 .people{list-style:none;margin:0;padding:0 16px}
 .people li{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:9px 0;border-top:1px solid var(--line)}
@@ -235,15 +258,15 @@ main{padding-top:12px;padding-bottom:calc(110px + var(--safe-b))}
 .people .net{font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
 .people .net.plus{color:var(--olive)}
 .people .net.minus{color:var(--mikan)}
-.people .sub{grid-column:1 / -1;font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.people .sub{grid-column:1 / -1;font-size:calc(14px * var(--fs));color:var(--ink-2);font-variant-numeric:tabular-nums}
 .settle{background:var(--sea);color:#fff;padding:10px 16px 12px;border-top:3px solid var(--sea-deep)}
-.settle p{margin:0 0 6px;font-size:13px;opacity:.85}
+.settle p{margin:0 0 6px;font-size:calc(14px * var(--fs));opacity:.85}
 .move{display:flex;align-items:center;gap:10px;padding:6px 0}
-.move .txt{flex:1;min-width:0;font-size:15px}
+.move .txt{flex:1;min-width:0;font-size:calc(16px * var(--fs))}
 .move .txt b{font-variant-numeric:tabular-nums}
 .move .btn{background:#fff;color:var(--sea);border:0}
 .split-tools{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 6px}
-.exp-day{font-size:13px;color:var(--ink-2);margin:16px 0 6px;font-weight:600}
+.exp-day{font-size:calc(14px * var(--fs));color:var(--ink-2);margin:16px 0 6px;font-weight:600}
 .exp{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--t-other);border-radius:8px;padding:9px 12px;margin-bottom:6px;cursor:pointer}
 .exp.cat-transport{border-left-color:var(--t-transport)}
 .exp.cat-stay{border-left-color:var(--t-stay)}
@@ -253,37 +276,37 @@ main{padding-top:12px;padding-bottom:calc(110px + var(--safe-b))}
 .exp.transfer{border-left-color:var(--sea);background:var(--t-stay-bg)}
 .exp .txt{flex:1;min-width:0}
 .exp .ttl{font-weight:600;overflow-wrap:anywhere}
-.exp .sub{font-size:13px;color:var(--ink-2)}
+.exp .sub{font-size:calc(14px * var(--fs));color:var(--ink-2)}
 .exp .amt{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-.exp .amt b{display:block;font-size:16px}
-.exp .amt small{display:block;font-size:12px;color:var(--ink-3)}
-.amount-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}
+.exp .amt b{display:block;font-size:calc(17px * var(--fs))}
+.exp .amt small{display:block;font-size:calc(13px * var(--fs));color:var(--ink-3)}
+.amount-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end}
 .share-list{border:1px solid var(--line);border-radius:8px;padding:2px 12px;background:#fff}
 .share-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--line)}
 .share-row:first-child{border-top:0}
 .share-row .who{flex:1;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.share-row .amt{min-width:76px;text-align:right;color:var(--ink-2);font-size:14px;font-variant-numeric:tabular-nums}
+.share-row .amt{min-width:76px;text-align:right;color:var(--ink-2);font-size:calc(15px * var(--fs));font-variant-numeric:tabular-nums}
 .stepper{display:flex;align-items:center;border:1px solid var(--line);border-radius:999px;overflow:hidden;flex:0 0 auto}
-.stepper button{width:38px;height:36px;border:0;background:#fff;font-size:18px;line-height:1}
+.stepper button{width:44px;height:42px;border:0;background:#fff;font-size:calc(19px * var(--fs));line-height:1}
 .stepper span{min-width:26px;text-align:center;font-variant-numeric:tabular-nums;font-weight:600}
-.person-row{display:grid;grid-template-columns:1fr 40px;gap:6px;margin-bottom:6px}
+.person-row{display:grid;grid-template-columns:minmax(0,1fr) 40px;gap:6px;margin-bottom:6px}
 .person-row .icon-btn{width:40px;height:46px;color:var(--ink-3)}
 .person-row .icon-btn:disabled{opacity:.3}
 
 /* Booking view */
-.todo-head{font-size:20px;margin:4px 0 12px}
-.todo-day{font-size:13px;color:var(--ink-2);margin:16px 0 6px;font-weight:600}
+.todo-head{font-size:calc(20px * var(--fs));margin:4px 0 12px}
+.todo-day{font-size:calc(14px * var(--fs));color:var(--ink-2);margin:16px 0 6px;font-weight:600}
 .todo-row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--mikan);border-radius:8px;padding:10px 10px 10px 12px;margin-bottom:6px;cursor:pointer}
 .todo-row.done{border-left-color:var(--olive);opacity:.8}
 .todo-row .txt{flex:1;min-width:0}
-.todo-row .sub{font-size:13px;color:var(--ink-2)}
-.todo-row .item-title{font-size:15px}
+.todo-row .sub{font-size:calc(14px * var(--fs));color:var(--ink-2)}
+.todo-row .item-title{font-size:calc(16px * var(--fs))}
 
 /* Login */
 .login-body{padding:16px 16px 18px}
-.login-body > p{margin:0 0 16px;color:var(--ink-2);font-size:14px}
+.login-body > p{margin:0 0 16px;color:var(--ink-2);font-size:calc(15px * var(--fs))}
 details.advanced{margin:-4px 0 14px}
-details.advanced summary{cursor:pointer;color:var(--sea);font-size:14px;padding:6px 0;min-height:34px}
+details.advanced summary{cursor:pointer;color:var(--sea);font-size:calc(15px * var(--fs));padding:6px 0;min-height:34px}
 details.advanced[open] summary{margin-bottom:8px}
 
 /* Buttons & forms */
@@ -291,29 +314,29 @@ details.advanced[open] summary{margin-bottom:8px}
 .btn.primary{background:var(--sea);color:#fff}
 .btn.ghost{background:var(--panel);border:1px solid var(--line);color:var(--ink)}
 .btn.danger{background:var(--panel);border:1px solid #E6C3BF;color:var(--red)}
-.btn.small{min-height:38px;padding:6px 12px;font-size:14px;border-radius:8px}
+.btn.small{min-height:42px;padding:7px 14px;font-size:calc(15px * var(--fs));border-radius:8px}
 .btn.block{width:100%}
 .btn:disabled{opacity:.55;cursor:default}
 .fab{position:fixed;z-index:15;right:max(16px, calc((100vw - 640px) / 2 + 16px));bottom:calc(18px + var(--safe-b));display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;background:var(--sea);color:#fff;font-weight:700;padding:12px 20px 12px 16px;min-height:50px;box-shadow:0 6px 18px rgba(22,58,92,.3)}
 .fab[hidden]{display:none}
 
 .field{margin-bottom:14px}
-.label{display:block;font-size:13px;color:var(--ink-2);margin-bottom:5px;font-weight:600}
-.hint{display:block;font-size:12px;color:var(--ink-3);margin-top:4px}
-.lead{margin:0 0 14px;font-size:14px;color:var(--ink-2)}
-.input{display:block;width:100%;border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:#fff;min-height:46px;-webkit-appearance:none;appearance:none}
+.label{display:block;font-size:calc(14px * var(--fs));color:var(--ink-2);margin-bottom:5px;font-weight:600}
+.hint{display:block;font-size:calc(13px * var(--fs));color:var(--ink-3);margin-top:4px}
+.lead{margin:0 0 14px;font-size:calc(15px * var(--fs));color:var(--ink-2)}
+.input{display:block;width:100%;min-width:0;border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:#fff;min-height:46px;-webkit-appearance:none;appearance:none}
 textarea.input{min-height:96px;resize:vertical;line-height:1.5}
 select.input{background-image:linear-gradient(45deg,transparent 50%,var(--ink-2) 50%),linear-gradient(135deg,var(--ink-2) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
 .input:focus{outline:2px solid var(--sea);outline-offset:0;border-color:var(--sea)}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
 .seg{display:flex;flex-wrap:wrap;gap:6px}
-.seg button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;min-height:38px;font-size:14px}
+.seg button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 15px;min-height:44px;font-size:calc(15px * var(--fs))}
 .seg button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
-.textbtn{border:0;background:none;color:var(--sea);padding:6px 0;font-size:14px;min-height:34px}
+.textbtn{border:0;background:none;color:var(--sea);padding:8px 0;font-size:calc(15px * var(--fs));min-height:42px}
 .textbtn.clear-time{margin:-8px 0 12px}
-.check-line{display:flex;align-items:center;gap:10px;margin:4px 0 6px;font-size:15px}
+.check-line{display:flex;align-items:center;gap:10px;margin:4px 0 6px;font-size:calc(16px * var(--fs))}
 .check-line input{width:22px;height:22px;accent-color:var(--sea)}
-.link-row{display:grid;grid-template-columns:1fr 1.4fr 40px;gap:6px;margin-bottom:6px}
+.link-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) 40px;gap:6px;margin-bottom:6px}
 .link-row .icon-btn{width:40px;height:46px;color:var(--ink-3)}
 .files{display:flex;flex-wrap:wrap;gap:8px}
 .file-tile{position:relative;width:76px;height:76px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--panel)}
@@ -321,28 +344,28 @@ select.input{background-image:linear-gradient(45deg,transparent 50%,var(--ink-2)
 .file-tile .x{position:absolute;top:3px;right:3px;width:26px;height:26px;border-radius:50%;border:0;background:rgba(23,41,59,.78);color:#fff;display:flex;align-items:center;justify-content:center;padding:0}
 .file-tile .x svg{width:14px;height:14px}
 .file-tile .doc, .thumb .doc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px;background:var(--t-stay-bg);color:var(--ink)}
-.doc b{font-size:13px;letter-spacing:.04em}
-.doc small{font-size:10px;line-height:1.2;color:var(--ink-2);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.doc b{font-size:calc(14px * var(--fs));letter-spacing:.04em}
+.doc small{font-size:11px;line-height:1.2;color:var(--ink-2);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tile-open{position:absolute;inset:0;border:0;padding:0;background:none;display:block}
-.file-tile.new::after{content:"未上傳";position:absolute;left:0;right:0;bottom:0;font-size:11px;text-align:center;background:rgba(201,102,10,.9);color:#fff;line-height:18px}
-.add-file{position:relative;width:76px;height:76px;border-radius:8px;border:1px dashed var(--ink-3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;color:var(--ink-2);background:#fff;cursor:pointer}
+.file-tile.new::after{content:"未上傳";position:absolute;left:0;right:0;bottom:0;font-size:calc(12px * var(--fs));text-align:center;background:rgba(201,102,10,.9);color:#fff;line-height:18px}
+.add-file{position:relative;width:76px;height:76px;border-radius:8px;border:1px dashed var(--ink-3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:calc(13px * var(--fs));color:var(--ink-2);background:#fff;cursor:pointer}
 .add-file input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
-.form-error{color:var(--red);font-size:14px;margin:0 0 10px}
+.form-error{color:var(--red);font-size:calc(15px * var(--fs));margin:0 0 10px}
 .login-body .textbtn{display:block;margin:12px auto 0}
-.or{display:flex;align-items:center;gap:10px;color:var(--ink-3);font-size:13px;margin:16px 0 10px}
+.or{display:flex;align-items:center;gap:10px;color:var(--ink-3);font-size:calc(14px * var(--fs));margin:16px 0 10px}
 .or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
-.section-title{font-size:15px;margin:22px 0 10px;padding-top:14px;border-top:1px solid var(--line)}
+.section-title{font-size:calc(16px * var(--fs));margin:22px 0 10px;padding-top:14px;border-top:1px solid var(--line)}
 .section-title:first-child{margin-top:0;padding-top:0;border-top:0}
 .stack{display:flex;flex-direction:column;gap:8px}
-.status-line{font-size:14px;color:var(--ink-2);margin:8px 0 0}
+.status-line{font-size:calc(15px * var(--fs));color:var(--ink-2);margin:8px 0 0}
 .status-line.err{color:var(--red)}
 
 /* Sheets */
 .backdrop{position:fixed;inset:0;z-index:50;background:rgba(15,30,45,.45);display:flex;align-items:flex-end;justify-content:center;animation:fade .15s ease-out}
-.sheet{width:100%;max-width:640px;max-height:92vh;max-height:92dvh;background:var(--panel);border-radius:16px 16px 0 0;display:flex;flex-direction:column;animation:rise .22s ease-out}
+.sheet{width:100%;min-width:0;max-width:640px;max-height:92vh;max-height:92dvh;background:var(--panel);border-radius:16px 16px 0 0;display:flex;flex-direction:column;animation:rise .22s ease-out}
 .sheet-head{display:flex;align-items:center;gap:8px;padding:10px 8px 10px 16px;border-bottom:1px solid var(--line)}
-.sheet-title{flex:1;margin:0;font-size:17px}
-.sheet-body{overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.sheet-title{flex:1;margin:0;font-size:calc(18px * var(--fs))}
+.sheet-body{min-width:0;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .sheet-foot{display:flex;gap:10px;padding:10px 16px calc(10px + var(--safe-b));border-top:1px solid var(--line)}
 .sheet-foot .btn.primary{flex:1}
 @media (min-width:700px){
@@ -352,15 +375,24 @@ select.input{background-image:linear-gradient(45deg,transparent 50%,var(--ink-2)
 }
 .viewer{position:fixed;inset:0;z-index:80;background:rgba(8,16,24,.95);display:flex;flex-direction:column;animation:fade .15s ease-out}
 .viewer-bar{display:flex;align-items:center;gap:8px;padding:calc(6px + var(--safe-t)) 8px 6px 14px;color:#fff}
-.viewer-bar .name{flex:1;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.85}
+.viewer-bar .name{flex:1;font-size:calc(15px * var(--fs));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.85}
 .viewer-bar .icon-btn{color:#fff}
-.viewer-bar a{color:#fff;font-size:14px;padding:8px 10px}
+.viewer-bar a{color:#fff;font-size:calc(15px * var(--fs));padding:8px 10px}
 .viewer-img{flex:1;overflow:auto;display:flex;align-items:flex-start;justify-content:center;padding-bottom:var(--safe-b)}
 .viewer-img img{max-width:100%;height:auto;display:block}
-.toast{position:fixed;z-index:90;left:50%;bottom:calc(84px + var(--safe-b));transform:translateX(-50%);max-width:calc(100vw - 32px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;box-shadow:0 6px 18px rgba(0,0,0,.2);animation:fade .15s ease-out}
+.toast{position:fixed;z-index:90;left:50%;bottom:calc(84px + var(--safe-b));transform:translateX(-50%);max-width:calc(100vw - 32px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;font-size:calc(15px * var(--fs));box-shadow:0 6px 18px rgba(0,0,0,.2);animation:fade .15s ease-out}
 @keyframes fade{from{opacity:0}to{opacity:1}}
 @keyframes rise{from{transform:translateY(24px);opacity:.6}to{transform:none;opacity:1}}
+@media (max-width:360px){.row2{grid-template-columns:minmax(0,1fr)}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.text-size{font-weight:800;font-size:calc(17px * var(--fs));letter-spacing:-.02em}
+.font-options{display:flex;flex-direction:column;gap:10px}
+.font-opt{display:flex;align-items:baseline;justify-content:space-between;gap:12px;width:100%;text-align:left;border:2px solid var(--line);background:#fff;border-radius:12px;padding:14px 16px;font-weight:700;color:var(--ink)}
+.font-opt small{font-weight:500;color:var(--ink-2);font-size:.85em}
+.font-opt[aria-pressed=true]{border-color:var(--sea);background:var(--t-stay-bg)}
+.field-warn{margin:6px 0 0;font-size:calc(15px * var(--fs));color:var(--mikan);font-weight:600;line-height:1.5}
+.field-warn .textbtn{display:block;font-weight:600}
 </style>
 </head>
 <body class="signed-out">
@@ -368,6 +400,7 @@ select.input{background-image:linear-gradient(45deg,transparent 50%,var(--ink-2)
   <div class="wrap">
     <div class="topbar-inner">
       <h1 class="app-title" id="tripTitle">旅行行程</h1>
+      <button class="icon-btn text-size" id="fontBtn" type="button" aria-label="字體大小">Aa</button>
       <button class="sync" id="syncBtn" type="button" data-kind="saving"><span class="dot"></span><span id="syncText">同步中…</span></button>
       <button class="icon-btn" id="settingsBtn" type="button" aria-label="設定"></button>
     </div>
@@ -972,25 +1005,45 @@ function sizeText(n) { return !n ? '' : n < 1024 * 1024 ? `${Math.max(1, Math.ro
 function docTile(f) { return h('span', { class: 'doc' }, h('b', null, fileLabel(f)), h('small', null, f.name || '')); }
 
 /* Google Maps links. Without an origin, directions start from where you are. */
-const isMapsLink = (s) => /^https?:\/\/(maps\.app\.goo\.gl|goo\.gl\/maps|(www\.)?google\.[a-z.]+\/maps)/i.test(String(s || '').trim());
+const isMapsLink = (s) => /^https?:\/\/(maps\.app\.goo\.gl|goo\.gl\/maps|maps\.google\.[a-z.]+|(www\.)?google\.[a-z.]+\/maps)/i.test(String(s || '').trim());
+/* The place name inside a full Google Maps link, e.g. /maps/place/NAME/ or ?q=NAME */
+function placeNameFromUrl(u) {
+  try {
+    const x = new URL(String(u || '').trim());
+    const q = x.searchParams.get('q') || x.searchParams.get('query') || x.searchParams.get('destination') || x.searchParams.get('daddr');
+    if (q && !coordsFromText(q)) return q.trim();
+    const m = /\/maps\/(?:place|search)\/([^/@]+)/.exec(x.pathname);
+    if (m) return decodeURIComponent(m[1]).replace(/\+/g, ' ').trim();
+  } catch {}
+  return '';
+}
+/* Something Google Maps can search or route to: coordinates or a name. Empty for short share links. */
+function placeQuery(loc) {
+  const t = String(loc || '').trim();
+  if (!t) return '';
+  const c = coordsFromText(t);
+  if (c) return `${c.lat},${c.lng}`;
+  return isMapsLink(t) ? placeNameFromUrl(t) : t;
+}
+const isShortShareLink = (l) => isMapsLink(l) && !placeQuery(l);
 function placeUrl(loc) { return isMapsLink(loc) ? safeUrl(loc) : 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(loc); }
 function routeUrl(loc) {
-  const c = coordsFromText(String(loc || ''));
-  if (c) return `https://www.google.com/maps/dir/?api=1&travelmode=transit&destination=${c.lat},${c.lng}`;
-  return isMapsLink(loc) ? '' : 'https://www.google.com/maps/dir/?api=1&travelmode=transit&destination=' + encodeURIComponent(loc);
+  const q = placeQuery(loc);
+  return q ? 'https://www.google.com/maps/dir/?api=1&travelmode=transit&destination=' + encodeURIComponent(q) : '';
 }
-function placeLabel(loc) { return isMapsLink(loc) ? 'Google 地圖' : /^\s*-?\d{1,2}\.\d+\s*,\s*-?\d{1,3}\.\d+\s*$/.test(loc) ? '地圖上的位置' : loc; }
+function placeLabel(loc) { return isMapsLink(loc) ? (placeNameFromUrl(loc) || 'Google 地圖') : /^\s*-?\d{1,2}\.\d+\s*,\s*-?\d{1,3}\.\d+\s*$/.test(loc) ? '地圖上的位置' : loc; }
 function myMapsId(url) { const m = /[?&]mid=([A-Za-z0-9_-]+)/.exec(String(url || '')); return m ? m[1] : ''; }
 /* Directions between two places; '' if either is a short share link we can't read. */
 function legUrl(fromLoc, toLoc, mode = 'transit') {
-  const usable = (l) => l && !(isMapsLink(l) && !coordsFromText(l));
-  if (!usable(fromLoc) || !usable(toLoc)) return '';
-  const ask = (l) => { const c = coordsFromText(l); return c ? `${c.lat},${c.lng}` : l; };
-  return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(ask(fromLoc))}&destination=${encodeURIComponent(ask(toLoc))}&travelmode=${mode}`;
+  const a = placeQuery(fromLoc), b = placeQuery(toLoc);
+  if (!a || !b) return '';
+  return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(a)}&destination=${encodeURIComponent(b)}&travelmode=${mode}`;
 }
 /* Where a stop starts and ends. Transport stops can have separate departure and arrival places. */
+/* A Google Maps link in a stop's 連結 can stand in for an empty 地點. */
+function mapsLinkIn(links) { const l = (links || []).find((x) => isMapsLink(x.url) && placeQuery(x.url)); return l ? l.url : ''; }
 function stopPoints(it) {
-  const a = it.location, b = it.type === 'transport' ? it.locationTo : '';
+  const a = it.location || mapsLinkIn(it.links), b = it.type === 'transport' ? it.locationTo : '';
   return { entry: a || b, exit: b || a, both: Boolean(a && b) };
 }
 function itemPlaceChips(it) {
@@ -1040,13 +1093,14 @@ function geoOf(loc) {
   if (!text) return null;
   const direct = coordsFromText(text);
   if (direct) return direct;
-  if (isMapsLink(text) || !geoEnabled()) return null;
-  const hit = geoCache[geoKey(text)];
+  const name = isMapsLink(text) ? placeNameFromUrl(text) : text;
+  if (!name || !geoEnabled()) return null;
+  const hit = geoCache[geoKey(name)];
   if (hit && hit.lat != null) return hit;
-  if (!hit || (hit.none && Date.now() - hit.at > 3 * 86400000)) queueGeo(text);
+  if (!hit || (hit.none && Date.now() - hit.at > 3 * 86400000)) queueGeo(name);
   return null;
 }
-const geoWaiting = (loc) => geoQueue.includes(geoKey(loc));
+const geoWaiting = (loc) => geoQueue.includes(geoKey(isMapsLink(loc) ? placeNameFromUrl(loc) : loc));
 function queueGeo(text) {
   const k = geoKey(text);
   if (geoQueue.includes(k) || !navigator.onLine) return;
@@ -1067,9 +1121,14 @@ async function pumpGeo() {
   while (geoQueue.length) {
     const k = geoQueue[0];
     try {
-      let found = await nominatim(k);
-      const alt = toJpChars(k);
-      if (!found && alt !== k) { await sleep(1100); found = await nominatim(alt); }
+      // Try the text as written, in Japanese characters, then just its first part (a name before an address).
+      const first = (t) => t.split(/[\s,，、（(〒]/).filter(Boolean)[0] || '';
+      const tries = [...new Set([k, toJpChars(k), first(k), first(toJpChars(k))])].filter((t) => t.length >= 2);
+      let found = null;
+      for (let i = 0; i < tries.length && !found; i++) {
+        if (i) await sleep(1100);
+        found = await nominatim(tries[i]);
+      }
       geoCache[k] = found || { none: true, at: Date.now() };
       store.set(GEO_KEY, JSON.stringify(geoCache));
       clearTimeout(geoRenderTimer);
@@ -1096,10 +1155,8 @@ function hopEl(from, to, gapMin, quietFail = false) {
   if (!from.loc || !to.loc) return null;
   const same = geoKey(from.loc) === geoKey(to.loc);
   if (same) return null;
-  const shortLink = (l) => isMapsLink(l) && !coordsFromText(l);
-  if (shortLink(from.loc) || shortLink(to.loc)) return null;
+  if (isShortShareLink(from.loc) || isShortShareLink(to.loc)) return null;
   const a = geoOf(from.loc), b = geoOf(to.loc);
-  const ask = (l) => { const c = coordsFromText(l); return c ? `${c.lat},${c.lng}` : l; };
   let mode = 'transit', lines, warn = null;
 
   if (a && b) {
@@ -1145,8 +1202,7 @@ function hopEl(from, to, gapMin, quietFail = false) {
 function hotelLoc(hotel) {
   if (!hotel) return '';
   if (hotel.location) return hotel.location;
-  const withCoords = (hotel.links || []).find((l) => coordsFromText(l.url));
-  return withCoords ? withCoords.url : hotel.name;
+  return mapsLinkIn(hotel.links) || hotel.name;
 }
 
 /* Timeline rows for a day, with travel suggestions between stops that have a place. */
@@ -1677,7 +1733,7 @@ function loadLeaflet() {
   }
   return leafletPromise;
 }
-const mapUI = { el: null, map: null, layer: null, markers: new Map(), fitKey: '', pick: false };
+const mapUI = { el: null, map: null, layer: null, meLayer: null, markers: new Map(), fitKey: '', pick: false };
 
 /* The places of one day in visiting order: last night's hotel, each stop (and a transport stop's arrival), tonight's hotel. */
 function dayPlaces(dayIdx) {
@@ -1706,20 +1762,28 @@ function popupEl(p) {
     h('b', null, p.label),
     h('small', null, `${state.mapAll ? dayName(p.dayIdx) + '　' : ''}${p.sub}`),
     h('div', { class: 'row' },
-      h('a', { class: 'btn small ghost', href: placeUrl(p.loc), target: '_blank', rel: 'noopener noreferrer' }, 'Google 地圖'),
-      route ? h('a', { class: 'btn small primary', href: route, target: '_blank', rel: 'noopener noreferrer' }, '路線') : null),
-    p.it ? h('button', { class: 'textbtn', type: 'button', onclick: () => openEditor(p.it.id) }, '編輯行程') : null);
+      route ? h('a', { class: 'btn small primary', href: route, target: '_blank', rel: 'noopener noreferrer' }, '怎麼去') : null,
+      h('a', { class: 'btn small ghost', href: placeUrl(p.loc), target: '_blank', rel: 'noopener noreferrer' }, 'Google 地圖')),
+    p.it ? h('button', { class: 'textbtn', type: 'button', onclick: () => openEditor(p.it.id) }, '編輯這個行程') : null);
 }
+
+const escapeHtml = (t) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const shorten = (t, n = 10) => (t.length > n ? t.slice(0, n) + '…' : t);
 
 function drawTripMap(L, places, fitKey) {
   if (!mapUI.map) {
-    mapUI.map = L.map(mapUI.el, { zoomControl: true }).setView([36.2, 138.25], 5);
+    mapUI.map = L.map(mapUI.el, { zoomControl: true, tap: true }).setView([36.2, 138.25], 5);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
       subdomains: 'abcd', maxZoom: 19, referrerPolicy: 'strict-origin-when-cross-origin',
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
     }).addTo(mapUI.map);
     mapUI.map.attributionControl.setPrefix('<a href="https://leafletjs.com">Leaflet</a>');
     mapUI.layer = L.layerGroup().addTo(mapUI.map);
+    mapUI.meLayer = L.layerGroup().addTo(mapUI.map);
+    // Names next to pins only when zoomed in enough to read them.
+    const labels = () => { mapUI.el.classList.toggle('hide-labels', mapUI.map.getZoom() < 11); requestAnimationFrame(declutterLabels); }; // after labels have moved
+    mapUI.map.on('zoomend moveend', labels);
+    mapUI.map.whenReady(labels);
     mapUI.map.on('click', (e) => {
       if (!mapUI.pick) return;
       setPickMode(false);
@@ -1731,6 +1795,8 @@ function drawTripMap(L, places, fitKey) {
   map.invalidateSize();
   mapUI.layer.clearLayers();
   mapUI.markers.clear();
+  const fs = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--fs')) || 1;
+  const size = Math.round(36 * fs);
 
   const located = places.filter((p) => p.ll);
   let prev = null;
@@ -1738,17 +1804,19 @@ function drawTripMap(L, places, fitKey) {
     const latlng = [p.ll.lat, p.ll.lng];
     if (prev && prev.dayIdx === p.dayIdx) {
       const leg = p.kind === 'arrival';
-      L.polyline([[prev.ll.lat, prev.ll.lng], latlng], { color: leg ? '#1F4E7A' : '#7F909C', weight: leg ? 4 : 3, opacity: 0.85, dashArray: leg ? null : '6 8' }).addTo(mapUI.layer);
+      L.polyline([[prev.ll.lat, prev.ll.lng], latlng], { color: leg ? '#1F4E7A' : '#4F6172', weight: leg ? 5 : 4, opacity: 0.9, dashArray: leg ? null : '8 10' }).addTo(mapUI.layer);
     }
     prev = p;
     if (p.hidden) return;
     const label = p.kind === 'hotel' ? '宿' : state.mapAll ? String(p.dayIdx + 1) : String(p.n);
     const cls = p.kind === 'hotel' ? 'hotel' : state.mapAll ? 'day' : `t-${p.it.type}${p.kind === 'arrival' ? ' arrival' : ''}`;
+    const name = state.mapAll ? '' : p.kind === 'hotel' ? shorten(p.label) : p.kind === 'arrival' ? `抵達 ${shorten(placeLabel(p.loc), 8)}` : shorten(p.label);
+    const nameHtml = name ? `<span class="pin-name${p.kind === 'hotel' ? ' lbl-hotel' : ''}">${escapeHtml(name)}</span>` : '';
     const marker = L.marker(latlng, {
-      icon: L.divIcon({ className: 'pin-wrap', html: `<span class="pin ${cls}">${label}</span>`, iconSize: [30, 30], iconAnchor: [15, 15], popupAnchor: [0, -14] }),
+      icon: L.divIcon({ className: 'pin-wrap', html: `<span class="pin ${cls}">${label}</span>${nameHtml}`, iconSize: [size, size], iconAnchor: [size / 2, size / 2], popupAnchor: [0, -size / 2] }),
       title: p.label, riseOnHover: true, zIndexOffset: p.kind === 'hotel' ? -100 : 0,
     }).addTo(mapUI.layer);
-    marker.bindPopup(popupEl(p));
+    marker.bindPopup(popupEl(p), { maxWidth: 280, autoPanPaddingTopLeft: [16, 64], autoPanPaddingBottomRight: [16, 16] });
     mapUI.markers.set(p.key, marker);
   });
 
@@ -1756,8 +1824,10 @@ function drawTripMap(L, places, fitKey) {
   if (mapUI.fitKey !== key) {
     mapUI.fitKey = key;
     if (located.length === 1) map.setView([located[0].ll.lat, located[0].ll.lng], 15);
-    else if (located.length > 1) map.fitBounds(L.latLngBounds(located.map((p) => [p.ll.lat, p.ll.lng])), { padding: [36, 36], maxZoom: 16 });
+    else if (located.length > 1) map.fitBounds(L.latLngBounds(located.map((p) => [p.ll.lat, p.ll.lng])), { padding: [48, 48], maxZoom: 16 });
   }
+  mapUI.el.classList.toggle('hide-labels', map.getZoom() < 11);
+  requestAnimationFrame(declutterLabels);
   const waiting = places.some((p) => !p.ll && p.loc && geoWaiting(p.loc));
   const note = mapUI.el.querySelector('.map-note');
   const text = mapUI.pick ? '點地圖上的位置，新增一個行程。'
@@ -1765,6 +1835,35 @@ function drawTripMap(L, places, fitKey) {
     : !places.length ? '這天的行程還沒有填地點。' : !located.length ? '找不到這些地點的位置，可以把地點寫得更完整。' : '';
   if (text) { if (note) note.textContent = text; else mapUI.el.append(h('div', { class: 'map-note' }, text)); }
   else if (note) note.remove();
+}
+
+/* Hide name labels that would sit on top of another label or pin; stops win over hotels. */
+function declutterLabels() {
+  if (!mapUI.el || mapUI.el.classList.contains('hide-labels')) return;
+  const hit = (a, b) => a.left < b.right - 2 && a.right > b.left + 2 && a.top < b.bottom - 2 && a.bottom > b.top + 2;
+  const pins = [...mapUI.el.querySelectorAll('.pin')].map((el) => el.getBoundingClientRect());
+  const taken = [];
+  [...mapUI.el.querySelectorAll('.pin-name:not(.lbl-me)')]
+    .sort((a, b) => a.classList.contains('lbl-hotel') - b.classList.contains('lbl-hotel'))
+    .forEach((label) => {
+      label.style.visibility = '';
+      const r = label.getBoundingClientRect();
+      if (taken.some((t) => hit(t, r)) || pins.some((t) => hit(t, r))) label.style.visibility = 'hidden';
+      else taken.push(r);
+    });
+}
+
+function showMyLocation() {
+  if (!navigator.geolocation) return toast('這支手機不能取得位置。');
+  toast('正在找你的位置…');
+  navigator.geolocation.getCurrentPosition((pos) => {
+    if (!mapUI.map || !window.L) return;
+    const L = window.L, ll = [pos.coords.latitude, pos.coords.longitude];
+    mapUI.meLayer.clearLayers();
+    L.marker(ll, { icon: L.divIcon({ className: 'pin-wrap', html: '<span class="me-dot"></span><span class="pin-name lbl-me">你在這裡</span>', iconSize: [22, 22], iconAnchor: [11, 11] }), title: '你在這裡', zIndexOffset: 1000 })
+      .addTo(mapUI.meLayer);
+    mapUI.map.setView(ll, Math.max(mapUI.map.getZoom(), 15));
+  }, () => toast('沒辦法取得位置。請確認手機的定位有打開，並允許這個網頁使用位置。'), { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
 }
 
 function setPickMode(on) {
@@ -1779,12 +1878,12 @@ function renderMap() {
   const mid = myMapsId(state.data.mapUrl);
   if (!mid && state.mapKind === 'mymaps') state.mapKind = 'trip';
   const kindSeg = mid || isAdmin()
-    ? seg([{ id: 'trip', label: '行程地圖' }, { id: 'mymaps', label: '我的地圖' }], state.mapKind || 'trip', (v) => { state.mapKind = v; setPickMode(false); render(); })
+    ? h('div', { class: 'map-kind' }, seg([{ id: 'trip', label: '行程地圖' }, { id: 'mymaps', label: '我的地圖' }], state.mapKind || 'trip', (v) => { state.mapKind = v; setPickMode(false); render(); }))
     : null;
 
   if (state.mapKind === 'mymaps') {
     main.replaceChildren(...[
-      h('div', { class: 'map-bar' }, kindSeg),
+      kindSeg,
       mid
         ? [h('iframe', { class: 'map-frame', src: `https://www.google.com/maps/d/embed?mid=${encodeURIComponent(mid)}`, title: '我的地圖', loading: 'lazy', allowfullscreen: true, referrerpolicy: 'strict-origin-when-cross-origin' }),
            h('div', { class: 'map-actions' },
@@ -1798,41 +1897,61 @@ function renderMap() {
   }
 
   const idx = currentIndex();
+  const day = days[idx];
   const strip = h('div', { class: 'strip', 'aria-label': '選擇日期' },
-    h('button', { class: 'chip-day', type: 'button', 'aria-current': String(Boolean(state.mapAll)), onclick: () => { state.mapAll = true; render(); } },
+    h('button', { class: 'chip-day', type: 'button', 'aria-current': String(Boolean(state.mapAll)), onclick: () => { state.mapAll = true; setPickMode(false); render(); } },
       h('span', { class: 'd' }, '全部'), h('span', { class: 'w' }, `${days.length} 天`)),
     days.map((d, i) => h('button', { class: 'chip-day', type: 'button', 'aria-current': String(!state.mapAll && i === idx), onclick: () => { state.mapAll = false; state.dayId = d.id; render(); } },
       h('span', { class: 'd' }, md(d.date)), h('span', { class: 'w' }, wd(d.date)))));
+
+  const title = state.mapAll
+    ? h('div', { class: 'map-title' }, h('b', null, '整趟旅程'), h('span', null, `數字是第幾天`))
+    : h('div', { class: 'map-title' }, h('b', null, day.area || dayName(idx)), h('span', null, `${dayName(idx)}　${md(day.date)}（${wd(day.date)}）`));
 
   const places = state.mapAll ? days.flatMap((d, i) => dayPlaces(i)) : dayPlaces(idx);
   if (!mapUI.el) mapUI.el = h('div', { class: 'trip-map', role: 'region', 'aria-label': '行程地圖' });
   mapUI.el.classList.toggle('picking', mapUI.pick);
 
+  const hasArrival = places.some((p) => p.kind === 'arrival');
+  const legend = state.mapAll ? null : h('div', { class: 'map-legend', 'aria-hidden': 'true' },
+    h('span', null, h('i', null, '1'), '行程順序'),
+    h('span', null, h('i', { class: 'hotel' }, '宿'), '飯店'),
+    hasArrival ? h('span', null, h('i', { class: 'arrival' }, '1'), '抵達地') : null,
+    hasArrival ? h('span', null, h('i', { class: 'line' }), '搭車、搭船') : null,
+    h('span', null, h('i', { class: 'line dash' }), '移動'));
+
   const bar = h('div', { class: 'map-bar' },
-    kindSeg, h('span', { class: 'spacer' }),
+    h('button', { class: 'btn small ghost', type: 'button', onclick: showMyLocation }, '我在哪裡'),
     state.mapAll ? null : h('button', { class: `btn small ${mapUI.pick ? 'primary' : 'ghost'}`, type: 'button', onclick: () => setPickMode(!mapUI.pick) }, mapUI.pick ? '取消新增' : '＋ 在地圖上新增'));
 
   const focus = (p) => {
     const m = mapUI.markers.get(p.hidden ? p.key.replace(/b$/, 'a') : p.key);
     if (!m || !mapUI.map) return;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    mapUI.map.setView(m.getLatLng(), Math.max(mapUI.map.getZoom(), 15));
-    m.openPopup();
+    const top = mapUI.el.getBoundingClientRect().top + window.scrollY - document.querySelector('.topbar').offsetHeight - 8;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    mapUI.map.setView(m.getLatLng(), Math.max(mapUI.map.getZoom(), 15), { animate: false });
+    m.openPopup(); // after the view settles, so the popup can pan fully into sight
   };
   const rows = (state.mapAll ? [] : places.filter((p) => !p.hidden)).map((p) => {
     const route = p.kind === 'arrival' ? legUrl(p.it.location, p.it.locationTo) : routeUrl(p.loc);
-    const numCls = p.kind === 'hotel' ? 'hotel' : `t-${p.it.type}`;
+    const numCls = p.kind === 'hotel' ? 'hotel' : p.kind === 'arrival' ? 'arrival' : `t-${p.it.type}`;
+    const when = p.kind === 'hotel' ? p.sub : p.kind === 'arrival' ? (p.it.end || '') : (p.it.time || '');
+    const where = p.kind === 'hotel' ? '' : p.kind === 'arrival' ? `抵達 ${placeLabel(p.loc)}` : placeLabel(p.loc);
     return h('li', null,
-      h('span', { class: `num ${numCls}` }, p.kind === 'hotel' ? '宿' : p.kind === 'arrival' ? `${p.n}′` : String(p.n)),
+      h('span', { class: `num ${numCls}` }, p.kind === 'hotel' ? '宿' : String(p.n)),
       h('div', { class: 'txt', role: 'button', tabindex: '0', onclick: () => focus(p), onkeydown: (e) => { if (e.key === 'Enter') focus(p); } },
-        h('div', null, p.label), h('small', null, p.ll ? p.sub : `${p.sub}（地圖上找不到）`)),
-      h('div', { class: 'btns' },
-        route ? h('a', { class: 'btn small primary', href: route, target: '_blank', rel: 'noopener noreferrer' }, '路線') : null));
+        when ? h('span', { class: 'when' }, when) : null,
+        h('div', null, p.label),
+        where || !p.ll ? h('small', null, `${where}${p.ll ? '' : '（地圖上找不到）'}`) : null),
+      route ? h('a', { class: 'btn small primary', href: route, target: '_blank', rel: 'noopener noreferrer' }, '怎麼去') : null);
   });
 
   main.replaceChildren(...[
+    kindSeg,
     strip,
+    title,
     mapUI.el,
+    legend,
     bar,
     rows.length ? h('ul', { class: 'places' }, rows) : null,
   ].filter(Boolean));
@@ -2156,21 +2275,23 @@ function openEditor(itemId, preset = null) {
   const end = input(base.end, 'time');
   const notes = h('textarea', { class: 'input', rows: '4', placeholder: '班次、票價、注意事項…' });
   notes.value = base.notes;
-  const location = input(base.location, 'text', { placeholder: '景點名稱、地址，或 Google 地圖連結', autocapitalize: 'off' });
-  const locationTo = input(base.locationTo, 'text', { placeholder: '車站、港口、地址，或 Google 地圖連結', autocapitalize: 'off' });
+  const location = input(base.location, 'text', { placeholder: '景點名稱或地址', autocapitalize: 'off' });
+  const locationTo = input(base.locationTo, 'text', { placeholder: '車站、港口或地址', autocapitalize: 'off' });
+  const addMapLink = (url, label) => itemLinks.add(url, label);
+  const locWarn = placeField(location, addMapLink);
   const locLabel = h('label', { class: 'label' });
-  const toField = h('div', { class: 'field' }, h('label', { class: 'label' }, '抵達地'), locationTo);
+  const toField = h('div', { class: 'field' }, h('label', { class: 'label' }, '抵達地'), locationTo, placeField(locationTo, addMapLink));
   const fillBtn = h('button', { class: 'textbtn', type: 'button' });
   const locHint = h('span', { class: 'hint' });
   const updateLocFields = () => {
     const tr = type === 'transport';
     locLabel.textContent = tr ? '出發地' : '地點';
-    location.placeholder = tr ? '車站、港口、地址，或 Google 地圖連結' : '景點名稱、地址，或 Google 地圖連結';
+    location.placeholder = tr ? '車站、港口或地址' : '景點名稱或地址';
     toField.hidden = !tr;
     fillBtn.textContent = tr ? '從標題帶入出發地和抵達地' : '用標題當地點';
     locHint.textContent = tr
       ? '標題寫成「甲地 → 乙地」的話可以直接帶入。填了兩個地點，行程上會出現這段的「路線」按鈕。'
-      : '填了之後，行程上會出現「地圖」和「路線」按鈕，前後有地點的行程之間也會建議怎麼移動。';
+      : '填名稱或地址。也可以在 Google 地圖按「分享」→「複製」，直接貼上。';
   };
   /* "客運 縣廳通 → 大街道" → start 縣廳通, arrival 大街道 */
   const MODE_WORDS = /^(客運|巴士|公車|電車|火車|列車|渡輪|普通渡輪|高速船|高速|船|JR|搭|坐|搭乘|計程車|機場巴士|新幹線|地鐵|纜車|走路|步行)$/i;
@@ -2204,12 +2325,12 @@ function openEditor(itemId, preset = null) {
     h('button', { class: 'textbtn clear-time', type: 'button', onclick: () => { start.value = ''; end.value = ''; } }, '清除時間（改成時間未定）'),
     field('類型', seg(TYPES, type, (v) => { type = v; updateLocFields(); })),
     field('狀態', seg(BOOKINGS, booking, (v) => { booking = v; })),
-    h('div', { class: 'field' }, locLabel, location), toField,
+    h('div', { class: 'field' }, locLabel, location, locWarn), toField,
     h('div', { class: 'field' },
       h('div', { class: 'loc-tools' }, fillBtn,
         h('button', { class: 'textbtn', type: 'button', onclick: () => {
           const a = location.value.trim(), b = type === 'transport' ? locationTo.value.trim() : '';
-          const url = a && b ? legUrl(a, b) : (a || b) ? placeUrl(a || b) : '';
+          const url = a && b ? (legUrl(a, b) || placeUrl(a)) : (a || b) ? placeUrl(a || b) : '';
           if (url) window.open(url, '_blank', 'noopener');
         } }, '在地圖上確認')),
       locHint),
@@ -2624,6 +2745,33 @@ function cleanupFiles(files) {
 /* ------------------------------------------------------------------ */
 /*  Day sheet (area + hotel)                                           */
 /* ------------------------------------------------------------------ */
+/* Place input helpers: pasting Google Maps share text keeps the name and moves the link to 連結;
+   a bare short share link gets a warning, because it doesn't say where the place is. */
+function placeField(inp, addLink) {
+  const moveBtn = addLink ? h('button', { class: 'textbtn', type: 'button', onclick: () => {
+    addLink(inp.value.trim(), 'Google 地圖');
+    inp.value = '';
+    check();
+    inp.focus();
+  } }, '把網址移到「連結」，改填名稱') : null;
+  const warn = h('p', { class: 'field-warn', hidden: true }, '這是手機分享的短網址，看不出地點在哪裡，地圖和路線都用不了。請填地點名稱或地址。', moveBtn);
+  const check = () => { warn.hidden = !isShortShareLink(inp.value.trim()); };
+  inp.addEventListener('input', check);
+  inp.addEventListener('paste', (e) => {
+    const text = (e.clipboardData && e.clipboardData.getData('text')) || '';
+    const url = (text.match(/https?:\/\/\S+/g) || []).find(isMapsLink);
+    if (!url) return;
+    const lines = text.replace(/https?:\/\/\S+/g, '\n').split(/\n+/).map((t) => t.trim()).filter(Boolean);
+    if (!lines.length) return;
+    e.preventDefault();
+    inp.value = lines[0];
+    if (addLink) addLink(url, 'Google 地圖');
+    check();
+  });
+  check();
+  return warn;
+}
+
 /* Link rows shared by the itinerary editor and the hotel editor. */
 function linkRows(initial) {
   const list = h('div');
@@ -2637,6 +2785,10 @@ function linkRows(initial) {
   initial.forEach(add);
   return {
     el: h('div', null, list, h('button', { class: 'textbtn', type: 'button', onclick: () => add() }, '＋ 新增連結')),
+    add: (url, label = '') => {
+      const clean = safeUrl(url);
+      if (clean && ![...list.children].some((row) => safeUrl(row.querySelectorAll('input')[1].value) === clean)) add({ label, url: clean });
+    },
     values: () => [...list.children].map((row) => {
       const [l, u] = row.querySelectorAll('input');
       return { label: l.value.trim(), url: safeUrl(u.value) };
@@ -2659,8 +2811,9 @@ function openDaySheet(dayId) {
   const fail = (m) => { errorEl.textContent = m; errorEl.hidden = false; };
   const area = input(day.area, 'text', { placeholder: '例如：市區' });
   const hotel = input(day.hotel.name, 'text', { placeholder: '飯店名稱' });
-  const where = input(day.hotel.location, 'text', { placeholder: '地址，或 Google 地圖連結', autocapitalize: 'off' });
+  const where = input(day.hotel.location, 'text', { placeholder: '飯店地址', autocapitalize: 'off' });
   const links = linkRows(day.hotel.links);
+  const whereWarn = placeField(where, (url, label) => links.add(url, label));
   const files = attachmentPicker(day.hotel.files, fail);
   const applyAll = h('input', { type: 'checkbox', checked: run.length > 1 });
   const values = () => JSON.stringify([area.value, hotel.value, where.value, links.values(), files.signature(), applyAll.checked]);
@@ -2674,7 +2827,8 @@ function openDaySheet(dayId) {
       field('地點', area, '顯示在站名牌上。'),
       h('h3', { class: 'section-title' }, '今晚住宿'),
       field('飯店名稱', hotel),
-      field('飯店地址或地圖連結', where, '用來開「路線」和估算回飯店要多久。沒填的話會用飯店名稱找。'),
+      h('div', { class: 'field' }, h('label', { class: 'label' }, '飯店地址'), where, whereWarn,
+        h('span', { class: 'hint' }, '用來開「路線」。沒填的話會用飯店名稱找。')),
       h('div', { class: 'field' }, h('span', { class: 'label' }, '連結'), links.el,
         h('span', { class: 'hint' }, '訂房確認、飯店官網、Google 雲端硬碟都可以貼。')),
       h('div', { class: 'field' }, h('span', { class: 'label' }, '附件'), files.el,
@@ -2859,12 +3013,26 @@ function openSettings() {
       } }, '在這台裝置登出'))));
 }
 
+/* Text size, chosen per device (handy for parents). */
+const FONT_KEY = 'trip:font';
+function applyFont() { document.documentElement.style.setProperty('--fs', store.get(FONT_KEY) || '1'); }
+function openFontSheet() {
+  const current = store.get(FONT_KEY) || '1';
+  const sheet = openSheet('字體大小', h('div', { class: 'font-options' },
+    [{ id: '1', label: '標準' }, { id: '1.15', label: '大' }, { id: '1.3', label: '特大' }].map((o) =>
+      h('button', { class: 'font-opt', type: 'button', 'aria-pressed': String(o.id === current), style: `font-size:calc(17px * ${o.id})`,
+        onclick: () => { store.set(FONT_KEY, o.id); applyFont(); sheet.close(true); render(); } },
+        o.label, h('small', null, '今天的行程')))));
+}
+applyFont();
+
 /* ------------------------------------------------------------------ */
 /*  Wiring                                                             */
 /* ------------------------------------------------------------------ */
 $('settingsBtn').append(icon('gear'));
 
 $('settingsBtn').addEventListener('click', openSettings);
+$('fontBtn').addEventListener('click', openFontSheet);
 $('addBtn').addEventListener('click', () => { if (state.view === 'split') openExpenseSheet(null); else if (state.view === 'prep') openPrepSheet(null); else openEditor(null); });
 $('syncBtn').addEventListener('click', () => { if (state.queue.length) flush(); else pull(); });
 document.querySelectorAll('.views button').forEach((b) => b.addEventListener('click', () => {

@@ -79,22 +79,30 @@ Once she's set up on her home screen, you can both delete (收回) the invite me
 
 ## Using it
 
+- **Text size:** tap **Aa** at the top to choose 標準, 大 or 特大. It's saved on each phone, so your parents can pick a larger size on theirs.
+
 - **Switch days:** tap the day chips, the arrows on the blue sign, or swipe left/right.
 - **Edit the place name or tonight's hotel:** tap the sign or the hotel name. The hotel can have an address or map link (used for 路線 and travel estimates), any number of links (booking confirmation, hotel site), and attachments (booking screenshots, receipts). If you stay several nights in a row at the same hotel, tick 「這 N 晚一起更新」 to update all of them at once.
 - **Add, edit, or delete a stop:** tap **新增**, or tap any stop.
 - **To-dos:** every stop has a 狀態: 無, 待處理, 待確認, or 已完成. The **待辦** tab lists everything open, in two sections: **待處理** (things to book, buy or do; tap **完成**) and **待確認** (things not decided yet; tap **確認了**). Finished items move to 已完成 at the bottom. A dot on the date chips shows days with open items (orange for 待處理, purple for 待確認).
 - **Attachments:** in the editor, tap **加入附件** and pick as many files as you like at once: screenshots, photos, PDF tickets, or anything else, up to 20 MB each. Photos are shrunk before upload (text stays readable). Tap an attachment to open it: images and PDFs open inside the app, other files can be downloaded. Everything is stored in `attachments/` in the data repo.
 - **Google Drive files:** for anything bigger than 20 MB, add a Drive link under 連結. Set Drive sharing so your sister's Google account can open it.
-- **Places:** fill in **地點** on a stop (a place name, an address, or a pasted Google Maps link). The stop then shows a place button that opens Google Maps and a **路線** button with public-transport directions from where you are. The hotel row has a **路線** button too, for getting back.
+- **Places:** fill in **地點** on a stop with a place name or an address. The stop then shows a place button that opens Google Maps and a **路線** button with public-transport directions from where you are. The hotel row has a **路線** button too, for getting back.
+  - **Google Maps links:** a full link that contains the place name or coordinates (e.g. `google.com/maps/place/…`) works. A short link from the phone's share button (`maps.app.goo.gl/…`) does not say where the place is, and the browser isn't allowed to open it behind the scenes, so the app can't find it. The editor warns you and offers to move such a link to 連結.
+  - **Easiest way from the Google Maps app:** tap 分享 → 複製, then paste into 地點. The copied text includes the name, address and link; the app keeps the name as the place and puts the link in 連結.
+  - A Google Maps link in a stop's 連結 is also used for the map pin when 地點 is empty.
 - **Transport stops (交通):** set the type to 交通 and the place field splits into **出發地** and **抵達地**. Tap **從標題帶入出發地和抵達地** to fill them from a title like 「客運 甲地 → 乙地」 (words like 客運 or 渡輪 are dropped). The stop then shows both places and a **路線** button for that leg, and the travel suggestions use the departure place for getting there and the arrival place for what comes next.
 - **Getting between stops:** when two stops in a row both have a 地點, a small row appears between them suggesting how to get there, e.g. 「步行約 12 分鐘」 or 「電車或巴士，粗估 35 分鐘，計程車約 15 分鐘」, with a **路線** button that opens Google Maps for that exact leg. Each day also starts with a suggestion from last night's hotel and ends with one back to tonight's hotel. If the time you left between two stops looks too short, the row shows an orange warning.
   - The times are rough estimates based on distance, not real timetables. Use **路線** for actual trains and buses.
   - To estimate distances, the app looks up each place name once on OpenStreetMap and remembers it on the phone. It understands Traditional Chinese spellings like 道後溫泉. If a place can't be found, write it more fully (add the station or an address). For hotels, pasting a desktop Google Maps link (one containing @latitude,longitude) into the hotel's 連結 field lets it estimate the trip back.
   - You can turn the estimates off in Settings. Only the place names are sent, never dates or other trip details.
-- **地圖 tab:** an interactive map of the day's places. Numbered pins follow the order of the day and use the same colors as the stops (green for transport, orange for sights, purple for meals, blue for the hotel, 宿). A transport stop gets a second, white pin at its arrival place, joined by a solid line; dashed lines show moving between stops. Tap a pin (or a row in the list below the map) for **Google 地圖**, **路線**, and **編輯行程**. **全部** shows the whole trip, with pins numbered by day.
-  - **＋ 在地圖上新增:** tap it, then tap a spot on the map to create a new stop at that exact position on the selected day.
-  - Pins only appear for stops with a 地點 that the app can find (see "Getting between stops" above).
-  - **我的地圖:** switches to your Google My Maps map. That view is read-only; to add or move markers there, use **到 Google 編輯** (admin) and edit in Google My Maps itself.
+- **地圖 tab:** a map of the selected day, with the place name and date in large text above it.
+  - Big numbered pins show the order of the day, colored like the stops; 宿 is the hotel, and a white pin marks where a transport stop arrives. The legend under the map explains the pins and lines (solid = 搭車、搭船, dashed = 移動).
+  - Place names are written next to the pins when you're zoomed in enough to read them; names that would overlap another pin or name are hidden until you zoom in further.
+  - Tap a pin, or a row in the list below the map, for **怎麼去** (Google Maps directions) and **Google 地圖**. The list shows each stop's time, name and place in large text.
+  - **我在哪裡** shows your current position as a blue dot (the phone will ask for permission the first time).
+  - **＋ 在地圖上新增:** tap it, then tap a spot on the map to create a new stop there. **全部** shows the whole trip, with pins numbered by day.
+  - **我的地圖** (the switch at the top) shows your Google My Maps map. That view is read-only; to add or move markers there, use **到 Google 編輯** (admin).
   - Map tiles come from CARTO and OpenStreetMap and need an internet connection.
 
 ## 行前注意事項 (before the trip)
