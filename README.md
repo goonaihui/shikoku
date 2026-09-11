@@ -38,58 +38,45 @@ Only upload `data.json` once. After that the app keeps it updated, and uploading
 
 Don't upload `data.json` to this repo.
 
-### 3. Invite your sister to the data repo
+### 3. Create your access token
 
-1. In `trip-data`: **Settings → Collaborators → Add people** → enter her GitHub username.
-2. She accepts the invitation from her email or github.com/notifications.
-
-### 4. Create access tokens
-
-Each person makes their own token. A token is like a password for the app. Never share it or paste it into a chat.
-
-**You (the repo owner): fine-grained token**
+A token is like a password that lets the app read and save the itinerary.
 
 1. github.com → profile picture → **Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token**.
-2. Name: `trip`. Expiration: **Custom** → pick a date after the trip, about a month after you get back.
+2. Name: `trip`. Expiration: **Custom** → about a month after you get back.
 3. Repository access: **Only select repositories** → `trip-data`.
 4. Permissions → Repository permissions → **Contents: Read and write**.
 5. **Generate token** and copy it (starts with `github_pat_`).
 
-**Your sister (collaborator): classic token**
+Use a **fine-grained** token like this, not a classic one. It can only touch `trip-data`, and the app refuses to put classic tokens into invite links.
 
-GitHub's fine-grained tokens don't work for repos where you are only a collaborator, so she needs a classic token instead:
+### 4. Log in and set a PIN (you)
 
-1. **Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token (classic)**.
-2. Note: `trip`. Expiration: **Custom** → a date after the trip.
-3. Scopes: tick **repo**.
-4. **Generate token** and copy it (starts with `ghp_`).
+1. Open the site on your phone.
+2. Tap **用 GitHub token 登入（設定的人用）**, then fill in your name (e.g. 姊姊), your GitHub username, `trip-data`, and the token.
+3. Tap **用 token 登入**.
+4. Set a **解鎖密碼** (4–8 digits), or skip it for now.
 
-A classic `repo` token can access all of her private repos, so the short expiration is important. She can delete it after the trip.
+### 5. Invite your sister
 
-*Alternative:* create a free GitHub **organization**, move `trip-data` into it, and make both of you members. Then both of you can use fine-grained tokens limited to that one repo.
+Your sister doesn't need a GitHub account.
 
-### 5. Log in and set a PIN (you)
+1. In the app: gear icon → **邀請家人** → check the name → **產生邀請連結**.
+2. Tap **傳送邀請** and pick LINE (or **複製邀請連結** and paste it into a chat). **Send it in a private chat only**: anyone with the link can view and edit the itinerary.
+3. She taps the link, checks her name, taps **開始使用**, and sets her own PIN. That's it.
 
-1. Open the site on your phone. You'll see the 登入 screen.
-2. Fill in:
-   - **你的名字**: how your edits are labelled, e.g. 姊姊
-   - **GitHub 帳號**: your GitHub username
-   - **資料 repo**: `trip-data`
-   - **Token**: paste your token
-3. Tap **登入**.
-4. It then asks you to set a **解鎖密碼** (4–8 digits). From then on, the app asks for it when opened and after it has been in the background for more than 5 minutes. You can change or remove it later in Settings.
+**If the link opens inside LINE:** the page suggests opening it in Safari or Chrome instead (LINE's ⋯ menu → open in browser). It still works inside LINE, but the browser is better for everyday use.
 
-### 6. Log in your sister
+**Optional: a separate token for her.** By default the link contains your token. If you'd like to be able to cut off her access without affecting yours, create a second fine-grained token the same way (step 3) and paste it under **另外給她一個 token** before generating the link.
 
-1. In Settings, tap **複製登入連結給妹妹** and send her the link. It fills in the account and repo for her, but **not** your token.
-2. She opens it, enters her name and her own token, taps **登入**, and sets her own PIN.
+**If the link ever leaks:** on GitHub, delete the token (Settings → Developer settings → Personal access tokens), make a new one, log in again, and send a new link.
 
-### 7. Add it to the home screen
+### 6. Add it to the home screen
 
-- **iPhone (Safari):** Share button → **加入主畫面**.
-- **Android (Chrome):** ⋮ menu → **加到主畫面**.
+- **Android (Chrome):** ⋮ menu → **加到主畫面**. You stay logged in.
+- **iPhone (Safari):** Share button → **加入主畫面**. On iPhone, the home screen version keeps its own separate storage, so the first time you open it from the home screen it asks you to log in again. Copy the invite link from the chat and tap **貼上邀請連結**. For yourself, generate an invite link with your own name and use it the same way.
 
-It then opens full screen like an app.
+Once she's set up on her home screen, you can both delete (收回) the invite message.
 
 ## Using it
 
@@ -102,10 +89,10 @@ It then opens full screen like an app.
 
 ## The PIN, honestly
 
-- The PIN is saved separately on each phone. Your sister's PIN and yours are independent.
+- The PIN is saved separately on each phone (and separately for the iPhone home screen version). Your sister's PIN and yours are independent.
 - It stops someone who picks up an unlocked phone from opening the itinerary. It is not what keeps strangers out; that's the private repo and the token.
 - After 5 wrong tries it makes you wait 30 seconds, and the wait doubles after every further 5.
-- **Forgot it?** Tap 忘記密碼 on the lock screen. That logs this phone out (token and PIN are cleared), and you log in again with your token. The itinerary itself isn't affected.
+- **Forgot it?** Tap 忘記密碼 on the lock screen. That logs this phone out; log back in with an invite link (or your token). The itinerary itself isn't affected.
 
 ## How syncing works
 
@@ -154,8 +141,9 @@ You can also edit `data.json` directly on GitHub. The structure:
 
 | Message | Fix |
 |---|---|
-| Token 無效或已過期 | Create a new token (step 4) and paste it in Settings. |
-| 找不到 repo | Check the GitHub username and repo name. For your sister, make sure she accepted the collaborator invite and is using a **classic** token with the `repo` scope. |
+| Token 無效或已過期 | Create a new token (step 3) and paste it in Settings → 更換 Token. |
+| 找不到 repo | Check the GitHub username and repo name, and that the token was created with `trip-data` selected. |
+| 這個邀請已經失效 | The token in the link was deleted or expired. Create a token, then send a new invite link. |
 | 這個 token 沒有 repo 的寫入權限 | The fine-grained token needs **Contents: Read and write** on `trip-data`. |
 | 已連上…但裡面沒有 data.json | Upload `data.json` to the private data repo (step 1). |
 | 找不到分支 | The data repo is empty. Add a README to it (step 1). |
@@ -164,5 +152,6 @@ You can also edit `data.json` directly on GitHub. The structure:
 ## Privacy notes
 
 - Anyone who finds the site address sees only the login screen. Without a token that can read `trip-data`, the page can't load anything.
-- Tokens stay on each phone's browser. On a shared or borrowed device, use **在這台裝置登出** in Settings when you're done.
+- Tokens stay on each phone's browser, and the invite link is removed from the address bar as soon as it's opened. The link itself still sits in the chat, which is why it should only go in a private chat and be deleted afterwards.
+- On a shared or borrowed device, use **在這台裝置登出** in Settings when you're done.
 - If you uploaded an earlier version of `index.html` that had the itinerary built in, that old version is still in the public repo's history. To remove it completely, delete the public repo (**Settings → Danger Zone → Delete this repository**), create it again, and upload the new files.

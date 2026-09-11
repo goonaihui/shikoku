@@ -185,6 +185,9 @@ select.input{background-image:linear-gradient(45deg,transparent 50%,var(--ink-2)
 .add-file{position:relative;width:76px;height:76px;border-radius:8px;border:1px dashed var(--ink-3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;color:var(--ink-2);background:#fff;cursor:pointer}
 .add-file input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
 .form-error{color:var(--red);font-size:14px;margin:0 0 10px}
+.login-body .textbtn{display:block;margin:12px auto 0}
+.or{display:flex;align-items:center;gap:10px;color:var(--ink-3);font-size:13px;margin:16px 0 10px}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
 .section-title{font-size:15px;margin:22px 0 10px;padding-top:14px;border-top:1px solid var(--line)}
 .section-title:first-child{margin-top:0;padding-top:0;border-top:0}
 .stack{display:flex;flex-direction:column;gap:8px}
@@ -412,6 +415,44 @@ const cacheKey = () => `trip:data:${cfg.owner}/${cfg.repo}@${cfg.branch}/${cfg.p
   }
   if ([...qs.keys()].length) history.replaceState(null, '', location.pathname + location.hash);
 })();
+
+/* Invite links: everything needed to log in, packed after "#join=".
+   The part after # is never sent to any server, and is removed from the
+   address bar as soon as the page reads it. */
+const IN_APP = /\bLine\/|FBAN|FBAV|Instagram|MicroMessenger/i.test(navigator.userAgent);
+const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const STANDALONE = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+const b64url = (str) => utf8ToB64(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+function unb64url(s) { s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; return b64ToUtf8(s); }
+function makeInvite(c, name) {
+  const p = { v: 1, o: c.owner, r: c.repo, t: c.token, n: name || '' };
+  if (c.branch && c.branch !== 'main') p.b = c.branch;
+  if (c.path && c.path !== 'data.json') p.p = c.path;
+  return `${location.origin}${location.pathname}#join=${b64url(JSON.stringify(p))}`;
+}
+function parseInvite(text) {
+  const m = /[#&?]join=([A-Za-z0-9_-]{20,})/.exec(String(text || ''));
+  if (!m) return null;
+  try {
+    const p = JSON.parse(unb64url(m[1]));
+    if (!p.o || !p.r || !p.t) return null;
+    return { owner: String(p.o), repo: String(p.r), branch: String(p.b || 'main'), path: String(p.p || 'data.json'), token: String(p.t), name: String(p.n || '') };
+  } catch { return null; }
+}
+function clearInviteFromUrl() { if (/join=/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search); }
+let pendingInvite = parseInvite(location.hash);
+if (pendingInvite && connected()) { pendingInvite = null; clearInviteFromUrl(); }
+// Inside LINE and similar apps, keep it in the address bar so "open in browser" carries it over.
+if (pendingInvite && !IN_APP) clearInviteFromUrl();
+
+async function probeToken(c) {
+  const url = `https://api.github.com/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/contents/` +
+    c.path.split('/').map(encodeURIComponent).join('/') + '?ref=' + encodeURIComponent(c.branch);
+  try {
+    const res = await fetch(url, { headers: { Authorization: `Bearer ${c.token}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }, cache: 'no-store' });
+    return res.status;
+  } catch { return 0; }
+}
 
 /* ------------------------------------------------------------------ */
 /*  GitHub contents API                                                */
@@ -772,7 +813,7 @@ function openPinSheet({ afterSignIn = false } = {}) {
   const save = h('button', { class: 'btn primary', type: 'button' }, '設定密碼');
   const sheet = openSheet(pinRecord() ? '更改解鎖密碼' : '設定解鎖密碼',
     h('div', null,
-      h('p', { class: 'lead' }, '打開行程，或離開超過 5 分鐘再回來時，要先輸入這組數字。密碼只存在這台裝置，妹妹要在自己的手機另外設定。'),
+      h('p', { class: 'lead' }, '打開行程，或離開超過 5 分鐘再回來時，要先輸入這組數字。密碼只存在這台裝置，每台手機各自設定。'),
       err, field('解鎖密碼', a), field('再輸入一次', b)),
     [h('button', { class: 'btn ghost', type: 'button', onclick: () => sheet.close(true) }, afterSignIn ? '先略過' : '取消'), save]);
   save.addEventListener('click', async () => {
@@ -800,7 +841,7 @@ function render() {
     $('tripTitle').textContent = '旅行行程';
     document.title = '旅行行程';
     $('addBtn').hidden = true;
-    renderSignIn();
+    if (pendingInvite) renderWelcome(pendingInvite); else renderSignIn();
     return;
   }
   const title = state.data ? state.data.title : '旅行行程';
@@ -823,46 +864,106 @@ function render() {
   if (state.view === 'todo') renderTodo(); else renderDay();
 }
 
-function renderSignIn() {
-  const name = input(cfg.name, 'text', { placeholder: '例如：姊姊', autocomplete: 'nickname' });
-  const owner = input(cfg.owner, 'text', { placeholder: 'repo 擁有者的 GitHub 帳號', autocapitalize: 'off', autocomplete: 'off', spellcheck: 'false' });
-  const repo = input(cfg.repo, 'text', { placeholder: '例如：trip-data', autocapitalize: 'off', autocomplete: 'off', spellcheck: 'false' });
-  const branch = input(cfg.branch, 'text', { autocapitalize: 'off', spellcheck: 'false' });
-  const path = input(cfg.path, 'text', { autocapitalize: 'off', spellcheck: 'false' });
-  const token = input('', 'password', { placeholder: 'github_pat_… 或 ghp_…', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false' });
-  const status = h('p', { class: 'status-line', role: 'status', hidden: true });
-  const show = (t, err) => { status.textContent = t; status.className = 'status-line' + (err ? ' err' : ''); status.hidden = false; };
-  const btn = h('button', { class: 'btn primary block', type: 'button' }, '登入');
+function statusLine() {
+  const el = h('p', { class: 'status-line', role: 'status', hidden: true });
+  return { el, show(text, err) { el.textContent = text; el.className = 'status-line' + (err ? ' err' : ''); el.hidden = false; } };
+}
+function afterSignIn() { if (canPin() && !pinRecord()) openPinSheet({ afterSignIn: true }); }
+function signInError(e) {
+  if (e.network) return e.message;
+  if (e.status === 401 || e.status === 404) return '這個邀請已經失效，請邀請你的人重新傳一次連結。';
+  return e.message;
+}
+function loginSign(title, band, ...body) {
+  return h('section', { class: 'sign' },
+    h('div', { class: 'sign-face' }, h('div', { class: 'sign-area' }, title)),
+    h('div', { class: 'sign-band' }, h('span', { class: 'band-text' }, band)),
+    h('div', { class: 'login-body' }, body));
+}
 
+/* Someone opened an invite link: one name field, one button. */
+function renderWelcome(inv) {
+  const name = input(inv.name, 'text', { placeholder: '例如：妹妹', autocomplete: 'nickname', enterkeyhint: 'go' });
+  const status = statusLine();
+  const btn = h('button', { class: 'btn primary block', type: 'button' }, '開始使用');
   const go = async () => {
-    const next = { name: name.value.trim(), owner: owner.value.trim(), repo: repo.value.trim(), branch: branch.value.trim() || 'main', path: path.value.trim() || 'data.json', token: token.value.trim() };
-    if (!next.name) return show('請填你的名字，修改紀錄會顯示是誰改的。', true);
-    if (!next.owner || !next.repo || !next.token) return show('GitHub 帳號、資料 repo 和 token 都要填。', true);
+    const n = name.value.trim();
+    if (!n) return status.show('請填你的名字。', true);
     btn.disabled = true;
-    show('登入中…');
+    status.show('登入中…');
     try {
-      await signIn(next);
-      if (canPin() && !pinRecord()) openPinSheet({ afterSignIn: true });
+      await signIn(Object.assign({}, inv, { name: n }));
+      pendingInvite = null;
+      clearInviteFromUrl();
+      afterSignIn();
     } catch (e) {
-      show(e.message, true);
+      status.show(signInError(e), true);
       btn.disabled = false;
     }
   };
   btn.addEventListener('click', go);
-  token.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
+  name.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
 
-  main.replaceChildren(h('section', { class: 'sign' },
-    h('div', { class: 'sign-face' }, h('div', { class: 'sign-area' }, '登入')),
-    h('div', { class: 'sign-band' }, h('span', { class: 'band-text' }, '登入後才看得到行程')),
-    h('div', { class: 'login-body' },
-      h('p', null, '行程存在私人的 GitHub repo，每個人用自己的 token 登入。'),
+  main.replaceChildren(loginSign('歡迎', '你收到一份行程邀請',
+    IN_APP ? h('div', { class: 'notice' }, h('p', null, '你現在是在 LINE 之類的 App 裡打開。建議點右上角的選單，選「用瀏覽器開啟」，之後會比較方便。')) : null,
+    h('p', null, '確認名字後按「開始使用」。你修改的地方會顯示這個名字。'),
+    field('你的名字', name),
+    btn, status.el,
+    h('button', { class: 'textbtn', type: 'button', onclick: () => { pendingInvite = null; clearInviteFromUrl(); render(); } }, '改用其他方式登入')));
+}
+
+function renderSignIn() {
+  const status = statusLine();
+  const useLink = (text) => {
+    const inv = parseInvite(text);
+    if (!inv) { status.show('這不是有效的邀請連結，請確認整段都有複製到。', true); return false; }
+    pendingInvite = inv;
+    render();
+    return true;
+  };
+  const pasteBtn = navigator.clipboard && navigator.clipboard.readText
+    ? h('button', { class: 'btn primary block', type: 'button', onclick: async () => {
+        try {
+          const text = await navigator.clipboard.readText();
+          if (!text) return status.show('剪貼簿是空的，請先複製邀請連結。', true);
+          useLink(text);
+        } catch { status.show('無法讀取剪貼簿，請長按下面的欄位貼上。', true); linkBox.focus(); }
+      } }, '貼上邀請連結')
+    : null;
+  const linkBox = input('', 'text', { placeholder: '把邀請連結貼在這裡', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', inputmode: 'url' });
+  linkBox.addEventListener('input', () => { if (parseInvite(linkBox.value)) useLink(linkBox.value); });
+
+  // Manual login for the person who set everything up.
+  const name = input(cfg.name, 'text', { placeholder: '例如：姊姊', autocomplete: 'nickname' });
+  const owner = input(cfg.owner, 'text', { autocapitalize: 'off', autocomplete: 'off', spellcheck: 'false' });
+  const repo = input(cfg.repo, 'text', { placeholder: '例如：trip-data', autocapitalize: 'off', autocomplete: 'off', spellcheck: 'false' });
+  const branch = input(cfg.branch, 'text', { autocapitalize: 'off', spellcheck: 'false' });
+  const path = input(cfg.path, 'text', { autocapitalize: 'off', spellcheck: 'false' });
+  const token = input('', 'password', { placeholder: 'github_pat_…', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false' });
+  const tokenStatus = statusLine();
+  const tokenBtn = h('button', { class: 'btn ghost block', type: 'button' }, '用 token 登入');
+  tokenBtn.addEventListener('click', async () => {
+    const next = { name: name.value.trim(), owner: owner.value.trim(), repo: repo.value.trim(), branch: branch.value.trim() || 'main', path: path.value.trim() || 'data.json', token: token.value.trim() };
+    if (!next.name) return tokenStatus.show('請填你的名字。', true);
+    if (!next.owner || !next.repo || !next.token) return tokenStatus.show('GitHub 帳號、資料 repo 和 token 都要填。', true);
+    tokenBtn.disabled = true;
+    tokenStatus.show('登入中…');
+    try { await signIn(next); afterSignIn(); } catch (e) { tokenStatus.show(e.message, true); tokenBtn.disabled = false; }
+  });
+
+  main.replaceChildren(loginSign('登入', '登入後才看得到行程',
+    h('p', null, pasteBtn ? '收到邀請連結的話，直接點開就好。如果已經在這個畫面，先複製邀請連結，再按下面的按鈕。' : '收到邀請連結的話，直接點開就好，或是把連結貼在下面。'),
+    pasteBtn,
+    pasteBtn ? h('div', { class: 'or' }, '或') : null,
+    field(pasteBtn ? '手動貼上' : '邀請連結', linkBox),
+    status.el,
+    h('details', { class: 'advanced' }, h('summary', null, '用 GitHub token 登入（設定的人用）'),
       field('你的名字', name),
-      field('GitHub 帳號', owner, '資料 repo 擁有者的帳號。妹妹這裡也填姊姊的帳號。'),
+      field('GitHub 帳號', owner, '資料 repo 擁有者的帳號。'),
       field('資料 repo', repo),
-      field('Token', token, 'Token 只存在這台裝置，不會放進網址或 repo。'),
-      h('details', { class: 'advanced' }, h('summary', null, '進階設定'),
-        h('div', { class: 'row2' }, field('分支', branch), field('檔案', path))),
-      btn, status)));
+      field('Token', token),
+      h('div', { class: 'row2' }, field('分支', branch), field('檔案', path)),
+      tokenBtn, tokenStatus.el)));
 }
 
 function currentIndex() {
@@ -917,7 +1018,12 @@ function renderDay() {
     ? h('ol', { class: 'timeline' }, items.map(itemEl))
     : h('div', { class: 'empty-day' }, '這天還沒有安排，按右下角「新增」加入第一個行程。');
 
-  main.replaceChildren(sign, strip, stay, list);
+  const homeTip = IS_IOS && !STANDALONE && !IN_APP && store.get('trip:home-tip') !== 'done'
+    ? h('div', { class: 'notice' },
+        h('p', null, '想從主畫面直接打開：按 Safari 的分享按鈕，選「加入主畫面」。第一次從主畫面打開時要再登入一次，貼上同一個邀請連結就可以。'),
+        h('button', { class: 'btn small ghost', type: 'button', onclick: () => { store.set('trip:home-tip', 'done'); render(); } }, '知道了'))
+    : null;
+  main.replaceChildren(...[homeTip, sign, strip, stay, list].filter(Boolean));
   requestAnimationFrame(() => {
     const on = strip.querySelector('[aria-current=true]');
     if (on) strip.scrollLeft = on.offsetLeft - strip.clientWidth / 2 + on.clientWidth / 2;
@@ -1258,10 +1364,47 @@ function openSettings() {
     }
   });
 
-  const shareBtn = h('button', { class: 'btn ghost', type: 'button', onclick: async () => {
-    const link = `${location.origin}${location.pathname}?` + new URLSearchParams({ owner: cfg.owner, repo: cfg.repo, branch: cfg.branch, path: cfg.path });
-    try { await navigator.clipboard.writeText(link); toast('已複製連結（不含 token）'); } catch { prompt('複製這個連結傳給妹妹：', link); }
-  } }, '複製登入連結給妹妹');
+  const inviteName = input('妹妹', 'text');
+  const inviteToken = input('', 'password', { placeholder: 'github_pat_…', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false' });
+  const inviteStatus = statusLine();
+  const inviteOut = h('div', { class: 'stack', hidden: true });
+  const inviteBtn = h('button', { class: 'btn primary', type: 'button' }, '產生邀請連結');
+  inviteBtn.addEventListener('click', async () => {
+    const n = inviteName.value.trim();
+    const own = !inviteToken.value.trim();
+    const t = inviteToken.value.trim() || cfg.token;
+    inviteOut.hidden = true;
+    if (!n) return inviteStatus.show('請填對方的名字。', true);
+    if (/^ghp_/.test(t)) {
+      return inviteStatus.show(own
+        ? '你登入用的是 classic token，它能打開你所有的 repo，不適合放進邀請連結。請建立一個只限資料 repo 的 fine-grained token，貼在「另外給她一個 token」。'
+        : '這是 classic token，能打開你所有的 repo。請改用只限資料 repo 的 fine-grained token。', true);
+    }
+    inviteBtn.disabled = true;
+    inviteStatus.show('檢查中…');
+    try {
+      if (!own) {
+        const code = await probeToken(Object.assign({}, cfg, { token: t }));
+        if (code === 0) throw new Error('連不上 GitHub，請檢查網路。');
+        if (code !== 200) throw new Error(code === 401 ? '這個 token 無效或已過期。' : '這個 token 打不開資料 repo，建立時請選這個 repo，並把 Contents 設成 Read and write。');
+      }
+      const url = makeInvite(Object.assign({}, cfg, { token: t }), n);
+      inviteOut.replaceChildren(...[
+        navigator.share ? h('button', { class: 'btn primary', type: 'button', onclick: () => {
+          navigator.share({ title: '行程邀請', text: `${n}，點這個連結就能一起看和編輯行程：`, url }).catch(() => {});
+        } }, '傳送邀請（LINE 等 App）') : null,
+        h('button', { class: 'btn ghost', type: 'button', onclick: async () => {
+          try { await navigator.clipboard.writeText(url); toast('已複製邀請連結'); } catch { prompt('複製這個邀請連結：', url); }
+        } }, '複製邀請連結'),
+        h('p', { class: 'hint' }, '拿到這個連結的人都能看和改行程，請只用私訊傳。她設定好之後，可以把訊息收回。')].filter(Boolean));
+      inviteStatus.el.hidden = true;
+      inviteOut.hidden = false;
+    } catch (e) {
+      inviteStatus.show(e.message, true);
+    } finally {
+      inviteBtn.disabled = false;
+    }
+  });
 
   const pinBox = h('div', { class: 'stack' });
   const drawPin = () => {
@@ -1288,6 +1431,12 @@ function openSettings() {
   const sheet = openSheet('設定', h('div', null,
     h('h3', { class: 'section-title' }, '解鎖密碼'),
     pinBox,
+    h('h3', { class: 'section-title' }, '邀請家人'),
+    h('p', { class: 'lead' }, '產生一個連結傳給對方，她點開、確認名字就能用，不需要 GitHub 帳號。'),
+    field('對方的名字', inviteName),
+    h('details', { class: 'advanced' }, h('summary', null, '另外給她一個 token（可以單獨停用）'),
+      field('她專用的 token', inviteToken, '不填的話，連結會使用你目前的 token。')),
+    h('div', { class: 'stack' }, inviteBtn, inviteStatus.el, inviteOut),
     h('h3', { class: 'section-title' }, '帳號'),
     field('你的名字', name, '修改紀錄會顯示這個名字。'),
     field('GitHub 帳號', owner),
@@ -1297,7 +1446,6 @@ function openSettings() {
     saveBtn, status,
     h('h3', { class: 'section-title' }, '其他'),
     h('div', { class: 'stack' },
-      shareBtn,
       h('a', { class: 'btn ghost', href: `https://github.com/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}/commits/${encodeURIComponent(cfg.branch)}`, target: '_blank', rel: 'noopener noreferrer' }, '在 GitHub 看修改紀錄'),
       exportBtn,
       h('button', { class: 'btn danger', type: 'button', onclick: () => {
